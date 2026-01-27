@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_ultimos"
+        android:title="Últimos"
+        android:icon="@android:drawable/ic_menu_today"/>
+
+    <item
+        android:id="@+id/menu_cargar"
+        android:title="Regar"
+        android:icon="@android:drawable/ic_menu_edit"/>
+
+    <item
+        android:id="@+id/menu_plantas"
+        android:title="Plantas"
+        android:icon="@android:drawable/ic_menu_agenda"/>
+
+</menu>
