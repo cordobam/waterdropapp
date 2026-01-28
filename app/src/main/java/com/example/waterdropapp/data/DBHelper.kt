@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DBHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -12,7 +15,8 @@ class DBHelper(context: Context) :
         val createTablePlantas = """
             CREATE TABLE $TABLE_NAME_PLANTAS (
                 planta_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL
+                nombre TEXT NOT NULL,
+                dias_max_sin_riego INTEGER NOT NULL
             )
         """.trimIndent()
 
@@ -58,10 +62,11 @@ class DBHelper(context: Context) :
 
     // metodos platas
 
-    fun putPlantas(nombre: String): Long {
+    fun putPlantas(nombre: String , dias: Int): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("nombre", nombre)
+            put("dias_max_sin_riego", dias)
         }
         return db.insert(TABLE_NAME_PLANTAS, null, values)
     }
@@ -84,6 +89,58 @@ class DBHelper(context: Context) :
         return lista
     }
 
+    fun obtenerEstadoPlantas(): List<EstadoPlantasDTO> {
+        val lista = mutableListOf<EstadoPlantasDTO>()
+        val db = readableDatabase
+
+        val query = """
+        SELECT 
+            p.planta_id AS planta_id,
+            p.nombre,
+            p.dias_max_sin_riego,
+            MAX(r.fecha) AS ultimo_riego
+        FROM plantas p
+        LEFT JOIN riegos r ON r.planta_id = p.planta_id
+        GROUP BY p.planta_id
+        ORDER BY p.nombre
+        """
+
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
+
+            val diasSinRegar = calcularDias(ultimo)
+            val necesita = diasSinRegar >= maxDias
+
+            lista.add(
+                EstadoPlantasDTO(
+                    plantaId = id,
+                    nombre = nombre,
+                    ultimoRiego = ultimo,
+                    diasSinRegar = diasSinRegar,
+                    necesitaRiego = necesita
+                )
+            )
+        }
+
+        cursor.close()
+        return lista
+    }
+
+    private fun calcularDias(fecha: String?): Int {
+        if (fecha == null) return Int.MAX_VALUE
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val fechaRiego = formatter.parse(fecha) ?: return Int.MAX_VALUE
+        val hoy = Date()
+
+        val diff = hoy.time - fechaRiego.time
+        return (diff / (1000 * 60 * 60 * 24)).toInt()
+    }
 
     // metodos riegos
 

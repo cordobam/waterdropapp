@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_ultimos"
-        android:title="Últimos"
+        android:id="@+id/menu_riego"
+        android:title="Estado Riego"
         android:icon="@android:drawable/ic_menu_today"/>
 
     <item
-        android:id="@+id/menu_cargar"
-        android:title="Regar"
+        android:id="@+id/menu_historial"
+        android:title="Historial"
         android:icon="@android:drawable/ic_menu_edit"/>
 
     <item
         android:id="@+id/menu_plantas"
-        android:title="Plantas"
+        android:title="Carga Plantas"
         android:icon="@android:drawable/ic_menu_agenda"/>
 
 </menu>
