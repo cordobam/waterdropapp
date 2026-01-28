@@ -132,7 +132,7 @@ class DBHelper(context: Context) :
     }
 
     private fun calcularDias(fecha: String?): Int {
-        if (fecha == null) return Int.MAX_VALUE
+        if (fecha == null) return 0//Int.MAX_VALUE
 
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val fechaRiego = formatter.parse(fecha) ?: return Int.MAX_VALUE

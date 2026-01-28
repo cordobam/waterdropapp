@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
@@ -27,6 +28,11 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         adapter = AdapterPlantas { plantaId ->
             db.putRiegos(plantaId, fecha)   // la fecha se maneja en DBHelper
 
+            Toast.makeText(
+                requireContext(),
+                "Planta regada con exito",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvPlantas)
