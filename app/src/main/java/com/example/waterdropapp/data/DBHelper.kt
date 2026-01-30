@@ -154,6 +154,47 @@ class DBHelper(context: Context) :
     }
 
     // metodos grupos
+    fun putGrupos(nombre: String):Long{
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("nombre" , nombre)
+        }
+        return db.insert(TABLE_NAME_GRUPOS,null,values)
+    }
+
+    fun getGrupos(): List<Grupos> {
+        val lista = mutableListOf<Grupos>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT grupo_id, nombre FROM $TABLE_NAME_GRUPOS", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_id"))
+                val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                lista.add(
+                    Grupos(
+                        grupo_id = id,
+                        nombre = nombre
+                    )
+
+                )
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
+    // metodos grupos plantas
+    fun putGruposPlantas(planta_id: Int, grupo_id:Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("planta_id", planta_id)
+            put("grupo_id", grupo_id)
+        }
+        return db.insert(TABLE_NAME_GRUPOS_MANY, null, values)
+    }
 
     // metricas y consultas particulares
     fun getUltimosRiegos(): List<UltimoRiego> {

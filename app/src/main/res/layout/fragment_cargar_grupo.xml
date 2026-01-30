@@ -7,24 +7,13 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/etNombre"
-        android:hint="Nombre planta"
+        android:id="@+id/etNombreGrupo"
+        android:hint="Nombre Grupo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/etDiasMax"
-        android:hint="Dias Maximo Sin Riego"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Spinner
-        android:id="@+id/spinnerGrupos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btnGuardar"
+        android:id="@+id/btnGuardarGrupo"
         android:text="Guardar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
