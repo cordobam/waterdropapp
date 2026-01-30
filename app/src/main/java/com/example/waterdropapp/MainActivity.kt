@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
                 when (it.itemId) {
                     R.id.menu_riego -> cargarFragment(PlantasFragment())
-                    R.id.menu_historial -> cargarFragment(UltimosFragment())
+                    R.id.menu_historial -> cargarFragment(HistorialRiegoFragment())
                     R.id.menu_plantas -> cargarFragment(CargarPlantasFragment())
                     R.id.menu_grupos -> cargarFragment(CargarGrupoFragment())
                 }

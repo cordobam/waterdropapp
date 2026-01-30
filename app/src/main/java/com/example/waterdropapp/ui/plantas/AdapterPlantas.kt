@@ -24,7 +24,7 @@ class AdapterPlantas(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlantaViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.card_view_design, parent, false)
+            .inflate(R.layout.item_plantas, parent, false)
         return PlantaViewHolder(view)
     }
 

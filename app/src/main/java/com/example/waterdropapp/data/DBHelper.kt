@@ -197,6 +197,7 @@ class DBHelper(context: Context) :
     }
 
     // metricas y consultas particulares
+
     fun getUltimosRiegos(): List<UltimoRiego> {
         val lista = mutableListOf<UltimoRiego>()
         val db = readableDatabase
@@ -219,6 +220,56 @@ class DBHelper(context: Context) :
         db.close()
         return lista
     }
+    fun obtenerHistorialRiego(): List<RiegoHistorialDTO> {
+        val lista = mutableListOf<RiegoHistorialDTO>()
+        val db = readableDatabase
+
+        val query = """
+        SELECT 
+            p.planta_id AS planta_id,
+            p.nombre,
+            r.fecha AS fecha_riego
+        FROM plantas p
+        LEFT JOIN riegos r ON r.planta_id = p.planta_id
+        ORDER BY r.fecha
+        """
+
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha_riego"))
+
+
+            val diasdesdeultimo = calcularDiasDesdeUltimo(fecha)
+            //val necesita = diasSinRegar >= maxDias
+
+            lista.add(
+                RiegoHistorialDTO(
+                    nombrePlanta = nombre,
+                    fechaRiego = fecha,
+                    diasDesdeUltimo = diasdesdeultimo
+                )
+            )
+        }
+
+        cursor.close()
+        return lista
+    }
+
+    // modificar para pasar la otra ultima fecha con mismo id planta y sacar el resultado
+    private fun calcularDiasDesdeUltimo(fecha: String?): Int {
+        if (fecha == null) return 0//Int.MAX_VALUE
+
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val fechaRiego = formatter.parse(fecha) ?: return Int.MAX_VALUE
+        val hoy = Date()
+
+        val diff = hoy.time - fechaRiego.time
+        return (diff / (1000 * 60 * 60 * 24)).toInt()
+    }
+
+
     companion object {
         const val DATABASE_NAME = "plantas.db"
         const val DATABASE_VERSION = 1

@@ -14,6 +14,7 @@ import com.example.waterdropapp.data.DBHelper
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        //carga spinner con datos
         val db = DBHelper(requireContext())
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
         val grupos = db.getGrupos()
@@ -27,7 +28,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         spinnerGrupos.adapter = adapter
 
         view.findViewById<Button>(R.id.btnGuardar).setOnClickListener {
-            //spinner
+            // seleccion de spinner
             val posicion = spinnerGrupos.selectedItemPosition
             if (posicion == AdapterView.INVALID_POSITION) {
                 Toast.makeText(requireContext(), "Seleccione un grupo", Toast.LENGTH_SHORT).show()
@@ -40,8 +41,10 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             val nombre = view.findViewById<EditText>(R.id.etNombre).text.toString()
             val diasString = view.findViewById<EditText>(R.id.etDiasMax).text.toString()
             val dias = diasString.toIntOrNull() ?: 0
-
+            //insert plantas
             val values = db.putPlantas(nombre, dias)
+
+            // insert gruposplantas
             val valueInt: Int = values.toInt()
             val grupo_plantas = db.putGruposPlantas(valueInt,codigoGrupo)
 
