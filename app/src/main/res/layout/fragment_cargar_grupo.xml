@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvPromedio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cargar Grupo"
+        android:padding="16dp"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/etNombreGrupo"
         android:hint="Nombre Grupo"

@@ -237,11 +237,52 @@ class DBHelper(context: Context) :
         val cursor = db.rawQuery(query, null)
 
         while (cursor.moveToNext()) {
+            val planta_id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
             val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha_riego"))
 
 
-            val diasdesdeultimo = calcularDiasDesdeUltimo(fecha)
+            val diasdesdeultimo = calcularDiasDesdeUltimo(planta_id,fecha)
+            //val necesita = diasSinRegar >= maxDias
+
+            lista.add(
+                RiegoHistorialDTO(
+                    nombrePlanta = nombre,
+                    fechaRiego = fecha,
+                    diasDesdeUltimo = diasdesdeultimo
+                )
+            )
+        }
+
+        cursor.close()
+        return lista
+    }
+
+    fun obtenerHistorialRiegoxPlanta(planta_id: Int): List<RiegoHistorialDTO> {
+        val lista = mutableListOf<RiegoHistorialDTO>()
+        val db = readableDatabase
+
+        val cursor = db.rawQuery(
+            """
+        SELECT 
+            p.planta_id AS planta_id,
+            p.nombre,
+            r.fecha AS fecha_riego
+        FROM plantas p
+        LEFT JOIN riegos r ON r.planta_id = p.planta_id
+        WHERE p.planta_id = ?
+        ORDER BY r.fecha
+                """,
+        arrayOf(planta_id.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            val planta_id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha_riego"))
+
+
+            val diasdesdeultimo = calcularDiasDesdeUltimo(planta_id,fecha)
             //val necesita = diasSinRegar >= maxDias
 
             lista.add(
@@ -258,15 +299,37 @@ class DBHelper(context: Context) :
     }
 
     // modificar para pasar la otra ultima fecha con mismo id planta y sacar el resultado
-    private fun calcularDiasDesdeUltimo(fecha: String?): Int {
-        if (fecha == null) return 0//Int.MAX_VALUE
+    private fun calcularDiasDesdeUltimo(planta_id: Int, fecha:String): Int {
+        val lista = mutableListOf<RiegoHistorialDTO>()
+        val db = readableDatabase
 
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val fechaRiego = formatter.parse(fecha) ?: return Int.MAX_VALUE
-        val hoy = Date()
+        val cursor = db.rawQuery(
+            """
+        SELECT r.fecha
+        FROM riegos r
+        WHERE r.planta_id = ?
+        AND r.fecha = ?
+        ORDER BY r.fecha DESC
+        LIMIT 2
+        """,
+            arrayOf(planta_id.toString())
+        )
 
-        val diff = hoy.time - fechaRiego.time
-        return (diff / (1000 * 60 * 60 * 24)).toInt()
+        var dias: Int = 0
+
+        if (cursor.count == 2) {
+            cursor.moveToFirst()
+            val fechaActual = Date(cursor.getLong(0))
+
+            cursor.moveToNext()
+            val fechaAnterior = Date(cursor.getLong(0))
+
+            val diff = fechaActual.time - fechaAnterior.time
+            dias = (diff / (1000 * 60 * 60 * 24)).toInt()
+        }
+
+        cursor.close()
+        return dias
     }
 
 
