@@ -46,7 +46,6 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = historialAdapter
 
-        cargarHistorial()
 
         // seleccion spinner
         spinnerPlantas.onItemSelectedListener =
@@ -59,7 +58,8 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
                     id: Long
                 ) {
                     val plantaSeleccionada = plantas[position]
-                   db.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
+                    val lista = db.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
+                    historialAdapter.submitList(lista)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -67,8 +67,4 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
 
     }
 
-    fun cargarHistorial() {
-        val lista = db.obtenerHistorialRiego()
-        historialAdapter.submitList(lista)
-    }
 }

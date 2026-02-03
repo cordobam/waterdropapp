@@ -39,7 +39,10 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
         fun bind(dto: RiegoHistorialDTO) {
             tvTitulo.text = "Riego Completado de: ${dto.nombrePlanta}"
             tvFecha.text = "Fecha: ${dto.fechaRiego}"
-            tvSubTitulo.text = "Días desde último riego: ${dto.diasDesdeUltimo}"
+
+            tvSubTitulo.text = dto.diasDesdeUltimo?.let {
+                "Pasaron $it días desde el último riego"
+            } ?: "Primer riego"
         }
     }
 }
