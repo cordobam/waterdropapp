@@ -246,7 +246,7 @@ class DBHelper(context: Context) :
 
             val fechaActual = parseFecha(fecha)
 
-            val diasDesdeUltimo = fechaAnterior?.let { ((it.time - fechaActual.time) / (1000 * 60 * 60 * 24)).toInt()}
+            val diasDesdeUltimo = fechaAnterior?.let { ((fechaActual.time - it.time ) / (1000 * 60 * 60 * 24)).toInt()}
 
             lista.add(
                 RiegoHistorialDTO(
