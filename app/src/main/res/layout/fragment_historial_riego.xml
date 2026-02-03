@@ -6,12 +6,18 @@
 
     <!-- HEADER -->
     <TextView
-        android:id="@+id/tvPromedio"
+        android:id="@+id/tvHistorialRiego"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Historial De Riego"
         android:padding="16dp"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinnerHistorialRiego"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!-- LISTA -->
     <androidx.recyclerview.widget.RecyclerView
