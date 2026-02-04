@@ -59,7 +59,8 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
                 ) {
                     val plantaSeleccionada = plantas[position]
                     val lista = db.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
-                    historialAdapter.submitList(lista)
+                    val listaOrdenada = lista.sortedByDescending { it.fechaRiego }
+                    historialAdapter.submitList(listaOrdenada)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}

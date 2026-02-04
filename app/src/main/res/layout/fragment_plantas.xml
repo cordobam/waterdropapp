@@ -14,6 +14,19 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.tabs.TabItem
+            android:text="Plantas Individuales" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="Grupos de Plantas" />
+
+    </com.google.android.material.tabs.TabLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/rvPlantas"
