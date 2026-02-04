@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
+import com.example.waterdropapp.ui.plantas.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
+import com.google.android.material.tabs.TabLayout
 import java.util.Date
 import java.util.Locale
 
@@ -19,14 +21,17 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     private lateinit var db: DBHelper
     private lateinit var plantasAdapter: AdapterPlantas
+    private lateinit var gruposAdapter: AdapterGrupos
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         db = DBHelper(requireContext())
 
-        val fecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val fecha: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
         plantasAdapter = AdapterPlantas { plantaId ->
-            db.putRiegos(plantaId, fecha)   // la fecha se maneja en DBHelper
+            db.putRiegos(plantaId, fecha)
 
             Toast.makeText(
                 requireContext(),
@@ -34,6 +39,16 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+        gruposAdapter = AdapterGrupos(
+            onVerGrupo = {grupoId ->
+                cargarPlantasPorGrupo(grupoId)
+            },
+            onRegarGrupo = {grupoId ->
+                db.putRiegoPorGrupo(grupoId, fecha)
+                Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+            }
+        )
 
         // recycler view
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvPlantas)
@@ -44,12 +59,43 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         cargarPlantas()
 
         // tabs
+        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.getTabAt(0)?.select()
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> {
+                        recyclerView.adapter = plantasAdapter
+                        cargarPlantas()
+                    }
+                    1 -> {
+                        recyclerView.adapter = gruposAdapter
+                        cargarGrupos()
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
 
     }
 
     fun cargarPlantas() {
         val lista = db.obtenerEstadoPlantas()
-        val listaOrdenada = lista.sortedByDescending { it.ultimoRiego }
+        val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
         plantasAdapter.submitList(listaOrdenada)
+    }
+
+    private fun cargarGrupos() {
+        val grupos = db.getEstadosGrupos()
+        gruposAdapter.submitList(grupos)
+    }
+
+    private fun cargarPlantasPorGrupo(grupoId: Int) {
+        val plantas = db.obtenerEstadoPlantasPorGrupo(grupoId)
+        plantasAdapter.submitList(plantas)
     }
 }
