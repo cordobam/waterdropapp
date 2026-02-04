@@ -23,6 +23,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -40,8 +41,10 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             ).show()
         }
 
+        // me sirve para tener dos botones y que cada uno haga algo
         gruposAdapter = AdapterGrupos(
             onVerGrupo = {grupoId ->
+
                 cargarPlantasPorGrupo(grupoId)
             },
             onRegarGrupo = {grupoId ->
@@ -94,7 +97,14 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         gruposAdapter.submitList(grupos)
     }
 
+    // me sirve para seleccionar el otro tab y mostrar las plantas ahi
     private fun cargarPlantasPorGrupo(grupoId: Int) {
+        //val plantas = db.obtenerEstadoPlantasPorGrupo(grupoId)
+        //plantasAdapter.submitList(plantas)
+
+        val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout?.getTabAt(0)?.select()   // tab Plantas
+
         val plantas = db.obtenerEstadoPlantasPorGrupo(grupoId)
         plantasAdapter.submitList(plantas)
     }

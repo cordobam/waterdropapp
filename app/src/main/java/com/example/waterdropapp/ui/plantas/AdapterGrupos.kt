@@ -43,12 +43,13 @@ class AdapterGrupos(
         fun bind(grupo: EstadoGruposDTO) {
             tvNombre.text = grupo.nombreGrupo
             tvCantPlantas.text = "Cantidad de plantas ${grupo.cantPlantasGrupo}"
-            btnRegar.setOnClickListener {
-                onRegarGrupo(grupo.grupoId)
-            }
             btnVer.setOnClickListener {
                 onVerGrupo(grupo.grupoId)
             }
+            btnRegar.setOnClickListener {
+                onRegarGrupo(grupo.grupoId)
+            }
+
         }
     }
 }
