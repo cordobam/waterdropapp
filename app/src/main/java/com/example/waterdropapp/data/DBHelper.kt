@@ -60,7 +60,7 @@ class DBHelper(context: Context) :
         onCreate(db)
     }
 
-    // metodos platas
+    // metodos plantas
 
     fun putPlantas(nombre: String , dias: Int): Long {
         val db = writableDatabase
@@ -131,6 +131,49 @@ class DBHelper(context: Context) :
         return lista
     }
 
+    fun obtenerEstadoPlantasPorGrupo(grupoId: Int): List<EstadoPlantasDTO> {
+        val lista = mutableListOf<EstadoPlantasDTO>()
+        val db = readableDatabase
+
+        val cursor = db.rawQuery(
+            """
+                SELECT            
+                    p.planta_id AS planta_id,
+                    p.nombre,
+                    p.dias_max_sin_riego,
+                    MAX(r.fecha) AS ultimo_riego
+                FROM plantas p 
+                LEFT JOIN riegos r ON r.planta_id = p.planta_id
+                LEFT JOIN grupos_plantas gp ON p.planta_id = gp.planta_id
+                WHERE gp.grupo_id = ? 
+        """,
+            arrayOf(grupoId.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
+
+            val diasSinRegar = calcularDias(ultimo)
+            val necesita = diasSinRegar >= maxDias
+
+            lista.add(
+                EstadoPlantasDTO(
+                    plantaId = id,
+                    nombre = nombre,
+                    ultimoRiego = ultimo,
+                    diasSinRegar = diasSinRegar,
+                    necesitaRiego = necesita
+                )
+            )
+        }
+
+        cursor.close()
+        return lista
+    }
+
     private fun calcularDias(fecha: String?): Int {
         if (fecha == null) return 0//Int.MAX_VALUE
 
@@ -153,7 +196,28 @@ class DBHelper(context: Context) :
         return db.insert(TABLE_NAME_RIEGOS, null, values)
     }
 
+    fun putRiegoPorGrupo(grupoId: Int, fecha: String) {
+        val db = writableDatabase
+        val plantasIds = obtenerEstadoPlantasPorGrupo(grupoId)
+
+        db.beginTransaction()
+        try {
+            plantasIds.forEach { planta ->
+                val values = ContentValues().apply {
+                    put("planta_id", planta.plantaId)
+                    put("fecha", fecha)
+                }
+                db.insert(TABLE_NAME_RIEGOS, null, values)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+
     // metodos grupos
+
     fun putGrupos(nombre: String):Long{
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -185,6 +249,32 @@ class DBHelper(context: Context) :
         db.close()
         return lista
     }
+    fun getEstadosGrupos(): List<EstadoGruposDTO> {
+        val lista = mutableListOf<EstadoGruposDTO>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT grupo_id, nombre, count(*) as cantPlantasGrupo  FROM $TABLE_NAME_GRUPOS GROUP BY grupo_id , nombre", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_id"))
+                val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                val cantidad = cursor.getInt(cursor.getColumnIndexOrThrow("cantPlantasGrupo"))
+                lista.add(
+                    EstadoGruposDTO(
+                        grupoId = id,
+                        nombreGrupo = nombre,
+                        cantPlantasGrupo = cantidad
+                    )
+
+                )
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return lista
+    }
+
 
     // metodos grupos plantas
     fun putGruposPlantas(planta_id: Int, grupo_id:Int): Long {

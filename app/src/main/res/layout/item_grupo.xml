@@ -42,7 +42,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Días sin regar: 5"
             app:layout_constraintStart_toEndOf="@id/imgGrupo"
             app:layout_constraintTop_toBottomOf="@id/tvNombreGrupo"
             app:layout_constraintEnd_toStartOf="@id/btnRegarGrupo"/>
