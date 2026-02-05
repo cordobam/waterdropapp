@@ -23,5 +23,9 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+        view.findViewById<Button>(R.id.btnVerGrupo).setOnClickListener {
+
+        }
     }
 }

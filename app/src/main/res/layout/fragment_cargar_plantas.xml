@@ -38,4 +38,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:id="@+id/btnVerPlantas"
+        android:text="Ver Grupos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- LISTA -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEliminarActualizarPlantas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
 </LinearLayout>

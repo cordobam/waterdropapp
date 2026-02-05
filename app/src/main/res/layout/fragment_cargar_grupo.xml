@@ -23,8 +23,21 @@
 
     <Button
         android:id="@+id/btnGuardarGrupo"
-        android:text="Guardar"
+        android:text="Guardar Grupos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnVerGrupo"
+        android:text="Ver Grupos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- LISTA -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEliminarActualizarGrupo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
