@@ -43,6 +43,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         // me sirve para tener dos botones y que cada uno haga algo
         gruposAdapter = AdapterGrupos(
+            modo = AdapterGrupos.Modo.MOSTRAR_GRUPOS,
             onVerGrupo = {grupoId ->
 
                 cargarPlantasPorGrupo(grupoId)
