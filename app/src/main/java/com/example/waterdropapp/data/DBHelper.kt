@@ -32,7 +32,8 @@ class DBHelper(context: Context) :
         val createTableGrupos = """
             CREATE TABLE $TABLE_NAME_GRUPOS (
                 grupo_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL
+                nombre TEXT NOT NULL,
+                activo INTEGER NOT NULL DEFAULT 1
             )
         """.trimIndent()
 

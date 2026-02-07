@@ -31,15 +31,18 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         val fecha: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        plantasAdapter = AdapterPlantas { plantaId ->
-            db.putRiegos(plantaId, fecha)
+        plantasAdapter = AdapterPlantas (
+            modo = AdapterPlantas.Modo.MOSTRAR_PLANTAS,
+            onRegarClick = { plantaId ->
+                db.putRiegos(plantaId, fecha)
 
-            Toast.makeText(
-                requireContext(),
-                "Planta regada con exito",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+                Toast.makeText(
+                    requireContext(),
+                    "Planta regada con exito",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
 
         // me sirve para tener dos botones y que cada uno haga algo
         gruposAdapter = AdapterGrupos(
