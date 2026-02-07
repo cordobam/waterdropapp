@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.ui.plantas.AdapterGrupos
 
@@ -18,6 +20,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         db = DBHelper(requireContext())
+
         view.findViewById<Button>(R.id.btnGuardarGrupo).setOnClickListener{
             val nombre = view.findViewById<EditText>(R.id.etNombreGrupo).text.toString()
             val values = db.putGrupos(nombre)
@@ -34,8 +37,14 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             onEliminarGrupo = { id -> eliminarGrupo(id) }
         )
 
-        view.findViewById<Button>(R.id.btnVerGrupo).setOnClickListener {
+        val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarGrupo)
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = gruposAdapterAct
 
+        view.findViewById<Button>(R.id.btnVerGrupo).setOnClickListener {
+            val db = DBHelper(requireContext())
+            val grupos = db.getEstadosGrupos()
+            gruposAdapterAct.submitList(grupos)
         }
     }
 

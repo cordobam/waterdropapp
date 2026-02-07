@@ -10,10 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.EstadoPlantasDTO
 
-class AdapterPlantas(
-    private val onRegarClick: (Int) -> Unit
-) : RecyclerView.Adapter<AdapterPlantas.PlantaViewHolder>() {
 
+class AdapterPlantas(
+    private val modo: Modo,
+    private val onRegarClick: ((Int) -> Unit)? = null,
+    private val onEditarPlanta: ((Int) -> Unit)? = null,
+    private val onEliminarPlanta: ((Int) -> Unit)? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    enum class Modo {
+        MOSTRAR_PLANTAS,
+        ACTUALIZAR_PLANTAS
+    }
     private val items = mutableListOf<EstadoPlantasDTO>()
 
     fun submitList(lista: List<EstadoPlantasDTO>) {
@@ -22,14 +30,37 @@ class AdapterPlantas(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlantaViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_plantas, parent, false)
-        return PlantaViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+
+        return when(viewType) {
+
+            1 -> {
+                val view = inflater.inflate(R.layout.item_plantas, parent, false)
+                PlantaViewHolder(view)
+            }
+
+            else -> {
+                val view = inflater.inflate(R.layout.item_planta_act, parent, false)
+                PlantaActViewHolder(view)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: PlantaViewHolder, position: Int) {
-        holder.bind(items[position])
+    override fun getItemViewType(position: Int): Int {
+        return when(modo) {
+             Modo.MOSTRAR_PLANTAS-> 1
+            Modo.ACTUALIZAR_PLANTAS -> 2
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val plantas = items[position]
+
+        when(holder) {
+            is  PlantaViewHolder-> holder.bind(plantas)
+            is  PlantaActViewHolder-> holder.bind(plantas)
+        }
     }
 
     override fun getItemCount() = items.size
@@ -50,8 +81,24 @@ class AdapterPlantas(
             }
 
             btnRegar.setOnClickListener {
-                onRegarClick(dto.plantaId)
+                onRegarClick?.invoke(dto.plantaId)
             }
+        }
+    }
+
+    inner class PlantaActViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        private val nombrePlanta = itemView.findViewById<TextView>(R.id.tvNombrePlantaAct)
+        private val botonActualizarPlanta = itemView.findViewById<Button>(R.id.btnActualizarPlantaAct)
+        private val botonEliminarPlanta = itemView.findViewById<Button>(R.id.btnEliminarPlanta)
+        fun bind(dto: EstadoPlantasDTO){
+            nombrePlanta.text = dto.nombre
+            botonActualizarPlanta.setOnClickListener {
+                onEditarPlanta?.invoke(dto.plantaId)
+            }
+            botonEliminarPlanta.setOnClickListener {
+                onEliminarPlanta?.invoke(dto.plantaId)
+            }
+
         }
     }
 }

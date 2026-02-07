@@ -86,12 +86,14 @@ class AdapterGrupos(
     }
 
     inner class GrupoActualizarVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val nombreGrupoAct = itemView.findViewById<TextView>(R.id.tvNombreGrupoAct)
         private val btnEditar = itemView.findViewById<Button?>(R.id.btnActualizarGrupo)
 
         private val btnEliminar = itemView.findViewById<Button?>(R.id.btnEliminarGrupo)
 
         fun bind(grupo: EstadoGruposDTO) {
 
+            nombreGrupoAct.text = grupo.nombreGrupo
             btnEditar.setOnClickListener {
                 onEditarGrupo?.invoke(grupo.grupoId)
             }

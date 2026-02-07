@@ -9,13 +9,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
+import com.example.waterdropapp.ui.plantas.AdapterGrupos
+import com.example.waterdropapp.ui.plantas.AdapterPlantas
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
+
+    private lateinit var db: DBHelper
+    private lateinit var plantasAdapterAct: AdapterPlantas
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         //carga spinner con datos
-        val db = DBHelper(requireContext())
+        db = DBHelper(requireContext())
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
         val grupos = db.getGrupos()
         val nombresGrupos = grupos.map{it.nombre}
@@ -54,5 +62,27 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+        plantasAdapterAct = AdapterPlantas(
+            modo = AdapterPlantas.Modo.ACTUALIZAR_PLANTAS,
+            onEditarPlanta = { id -> editarPlantas(id) },
+            onEliminarPlanta = { id -> eliminarPlantas(id) }
+        )
+
+        val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarPlantas)
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = plantasAdapterAct
+
+        view.findViewById<Button>(R.id.btnVerPlantas).setOnClickListener {
+            val db = DBHelper(requireContext())
+            val plantas = db.obtenerEstadoPlantas()
+            plantasAdapterAct.submitList(plantas)
+        }
+    }
+
+    fun editarPlantas(id:Int) {
+    }
+
+    fun eliminarPlantas(id:Int) {
     }
 }
