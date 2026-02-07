@@ -146,6 +146,7 @@ class DBHelper(context: Context) :
                 LEFT JOIN riegos r ON r.planta_id = p.planta_id
                 LEFT JOIN grupos_plantas gp ON p.planta_id = gp.planta_id
                 WHERE gp.grupo_id = ? 
+                GROUP BY p.planta_id , p.nombre, p.dias_max_sin_riego
         """,
             arrayOf(grupoId.toString())
         )
