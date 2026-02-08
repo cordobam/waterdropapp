@@ -84,5 +84,14 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     }
 
     fun eliminarPlantas(id:Int) {
+        val filas = db.eliminarPlantas(id)
+        if (filas > 0) {
+            Toast.makeText(requireContext(), "Grupo eliminado", Toast.LENGTH_SHORT).show()
+
+            // refrescar lista
+            plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+        } else {
+            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+        }
     }
 }
