@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
@@ -81,12 +82,37 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     }
 
     fun editarPlantas(id:Int) {
+
+        val dialogView = layoutInflater.inflate(
+            R.layout.dialog_editar_planta,
+            null
+        )
+
+        val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
+        val etDias = dialogView.findViewById<EditText>(R.id.etDias)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Editar Planta")
+            .setView(dialogView)
+            .setPositiveButton("Guardar") { _, _ ->
+
+                val nombre = etNombre.text.toString()
+                val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+
+                db.actualizarPlantas(id, nombre, diasInt)
+
+                plantasAdapterAct.submitList(
+                    db.obtenerEstadoPlantas()
+                )
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     fun eliminarPlantas(id:Int) {
         val filas = db.eliminarPlantas(id)
         if (filas > 0) {
-            Toast.makeText(requireContext(), "Grupo eliminado", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Planta eliminada", Toast.LENGTH_SHORT).show()
 
             // refrescar lista
             plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
