@@ -85,13 +85,17 @@ class DBHelper(context: Context) :
             arrayOf(planta_id.toString()) )
     }
 
-    fun actualizarPlantas(nombre: String , dias: Int): Long {
+    fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("nombre", nombre)
             put("dias_max_sin_riego", dias)
         }
-        return db.insert(TABLE_NAME_PLANTAS, null, values)
+        return db.update(
+            TABLE_NAME_PLANTAS,
+            values,
+            "planta_id = ?",                  // WHERE
+            arrayOf(planta_id.toString()))
     }
 
     fun getPlantas(): List<Pair<Int, String>> {
@@ -264,10 +268,10 @@ class DBHelper(context: Context) :
             arrayOf(grupoId.toString()) )
     }
 
-    fun actualizarGrupos(grupoId: Int):Int{
+    fun actualizarGrupos(grupoId: Int, nombre:String):Int{
         val db = writableDatabase
         val values = ContentValues().apply {
-            put("nombre" , "Mariano")
+            put("nombre" , nombre)
         }
         return db.update(
             TABLE_NAME_GRUPOS,

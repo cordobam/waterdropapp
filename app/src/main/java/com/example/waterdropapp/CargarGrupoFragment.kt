@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
@@ -49,7 +50,18 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
     }
 
     fun editarGrupo(id:Int) {
+        val input = EditText(requireContext())
 
+        AlertDialog.Builder(requireContext())
+            .setTitle("Editar grupo")
+            .setView(input)
+            .setPositiveButton("Guardar") { _, _ ->
+                val nombre = input.text.toString()
+                db.actualizarGrupos(id, nombre)
+                gruposAdapterAct.submitList(db.getEstadosGrupos())
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
     fun eliminarGrupo(id:Int) {
