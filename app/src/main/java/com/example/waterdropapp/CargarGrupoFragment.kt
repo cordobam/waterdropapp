@@ -49,8 +49,18 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
     }
 
     fun editarGrupo(id:Int) {
+
     }
 
     fun eliminarGrupo(id:Int) {
+        val filas = db.eliminarGrupos(id)
+        if (filas > 0) {
+            Toast.makeText(requireContext(), "Grupo eliminado", Toast.LENGTH_SHORT).show()
+
+            // refrescar lista
+            gruposAdapterAct.submitList(db.getEstadosGrupos())
+        } else {
+            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+        }
     }
 }

@@ -16,7 +16,8 @@ class DBHelper(context: Context) :
             CREATE TABLE $TABLE_NAME_PLANTAS (
                 planta_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                dias_max_sin_riego INTEGER NOT NULL
+                dias_max_sin_riego INTEGER NOT NULL,
+                activo INTEGER NOT NULL DEFAULT 1
             )
         """.trimIndent()
 
@@ -72,10 +73,31 @@ class DBHelper(context: Context) :
         return db.insert(TABLE_NAME_PLANTAS, null, values)
     }
 
+    fun eliminarPlantas(planta_id:Int): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , 0)
+        }
+        return db.update(
+            TABLE_NAME_PLANTAS,
+            values,
+            "planta_id = ?",                  // WHERE
+            arrayOf(planta_id.toString()) )
+    }
+
+    fun actualizarPlantas(nombre: String , dias: Int): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("nombre", nombre)
+            put("dias_max_sin_riego", dias)
+        }
+        return db.insert(TABLE_NAME_PLANTAS, null, values)
+    }
+
     fun getPlantas(): List<Pair<Int, String>> {
         val lista = mutableListOf<Pair<Int, String>>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT planta_id, nombre FROM $TABLE_NAME_PLANTAS", null)
+        val cursor = db.rawQuery("SELECT planta_id, nombre FROM $TABLE_NAME_PLANTAS WHERE activo = 1", null)
 
         if (cursor.moveToFirst()) {
             do {
@@ -102,6 +124,7 @@ class DBHelper(context: Context) :
             MAX(r.fecha) AS ultimo_riego
         FROM plantas p
         LEFT JOIN riegos r ON r.planta_id = p.planta_id
+        WHERE p.activo = 1
         GROUP BY p.planta_id
         ORDER BY p.nombre
         """
@@ -147,6 +170,7 @@ class DBHelper(context: Context) :
                 LEFT JOIN riegos r ON r.planta_id = p.planta_id
                 LEFT JOIN grupos_plantas gp ON p.planta_id = gp.planta_id
                 WHERE gp.grupo_id = ? 
+                AND p.activo = 1
                 GROUP BY p.planta_id , p.nombre, p.dias_max_sin_riego
         """,
             arrayOf(grupoId.toString())
@@ -228,10 +252,34 @@ class DBHelper(context: Context) :
         return db.insert(TABLE_NAME_GRUPOS,null,values)
     }
 
+    fun eliminarGrupos(grupoId: Int): Int{
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , 0)
+        }
+        return db.update(
+            TABLE_NAME_GRUPOS,
+            values,
+            "grupo_id = ?",                  // WHERE
+            arrayOf(grupoId.toString()) )
+    }
+
+    fun actualizarGrupos(grupoId: Int):Int{
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("nombre" , "Mariano")
+        }
+        return db.update(
+            TABLE_NAME_GRUPOS,
+            values,
+            "grupo_id = ?",                  // WHERE
+            arrayOf(grupoId.toString()))
+    }
+
     fun getGrupos(): List<Grupos> {
         val lista = mutableListOf<Grupos>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT grupo_id, nombre FROM $TABLE_NAME_GRUPOS", null)
+        val cursor = db.rawQuery("SELECT grupo_id, nombre FROM $TABLE_NAME_GRUPOS WHERE activo = 1", null)
 
         if (cursor.moveToFirst()) {
             do {
@@ -254,7 +302,7 @@ class DBHelper(context: Context) :
     fun getEstadosGrupos(): List<EstadoGruposDTO> {
         val lista = mutableListOf<EstadoGruposDTO>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT grupo_id, nombre, count(*) as cantPlantasGrupo  FROM $TABLE_NAME_GRUPOS GROUP BY grupo_id , nombre", null)
+        val cursor = db.rawQuery("SELECT grupo_id, nombre, count(*) as cantPlantasGrupo  FROM $TABLE_NAME_GRUPOS WHERE activo=1 GROUP BY grupo_id , nombre", null)
 
         if (cursor.moveToFirst()) {
             do {
@@ -296,7 +344,7 @@ class DBHelper(context: Context) :
         val cursor = db.rawQuery("SELECT p.nombre, MAX(r.fecha)\n"+
                 "            FROM riegos r\n"+
                 "            LEFT JOIN plantas p ON p.planta_id = r.planta_id\n"+
-                "            GROUP BY p.planta_id", null)
+                "            WHERE p.activo = 1 GROUP BY p.planta_id", null)
 
 
         if (cursor.moveToFirst()) {
@@ -324,6 +372,7 @@ class DBHelper(context: Context) :
         FROM riegos r
         INNER JOIN plantas p ON p.planta_id = r.planta_id
         WHERE r.planta_id = ?
+        AND p.activo = 1
         ORDER BY r.fecha ASC
         """,
             arrayOf(planta_id.toString())
