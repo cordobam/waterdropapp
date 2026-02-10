@@ -75,9 +75,9 @@ class AdapterPlantas(
             tvDias.text = "Días sin regar: ${dto.diasSinRegar}"
 
             if (dto.necesitaRiego) {
-                tvDias.setTextColor(Color.RED)
+                tvDias.setTextColor(Color.parseColor("#C62828"))
             } else {
-                tvDias.setTextColor(Color.GREEN)
+                tvDias.setTextColor(Color.parseColor("#2E7D32"))
             }
 
             btnRegar.setOnClickListener {
