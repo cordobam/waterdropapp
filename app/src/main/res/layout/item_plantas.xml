@@ -5,8 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="6dp"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,10 +18,25 @@
         <!-- Imagen -->
         <ImageView
             android:id="@+id/imgPlanta"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_planta"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/ic_planta"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- Botón Regar -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="Regar "
+            app:icon="@drawable/ic_water_drop"
+            app:iconTint="@null"
+            android:backgroundTint="#4CAF50"
+            app:cornerRadius="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -42,20 +59,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Días sin regar: 5"
+            android:text="Próximo riego: en 5 días"
+            android:textColor="#666"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/imgPlanta"
             app:layout_constraintTop_toBottomOf="@id/tvNombre"
             app:layout_constraintEnd_toStartOf="@id/btnRegar"/>
-
-        <!-- Botón Regar -->
-        <Button
-            android:id="@+id/btnRegar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Regar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

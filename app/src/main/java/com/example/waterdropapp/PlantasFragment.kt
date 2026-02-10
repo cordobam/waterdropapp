@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.graphics.Rect
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -44,6 +45,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             }
         )
 
+
         // me sirve para tener dos botones y que cada uno haga algo
         gruposAdapter = AdapterGrupos(
             modo = AdapterGrupos.Modo.MOSTRAR_GRUPOS,
@@ -61,6 +63,16 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvPlantas)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = plantasAdapter
+
+        // para el espaciado
+        recyclerView.addItemDecoration(
+            object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect, view: View,
+                                            parent: RecyclerView, state: RecyclerView.State) {
+                    outRect.bottom = 16
+                }
+            }
+        )
 
         // carga principal
         cargarPlantas()
