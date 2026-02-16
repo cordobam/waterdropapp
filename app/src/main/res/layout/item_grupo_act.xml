@@ -21,11 +21,11 @@
             android:text="Grupo Jardín"
             android:textSize="18sp"
             android:textStyle="bold"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnActualizarGrupo"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="5dp"/>
 
         <!-- Botón Actualizar -->
         <Button
@@ -33,10 +33,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Actualizar"
-
             app:layout_constraintEnd_toStartOf="@id/btnEliminarGrupo"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="16sp"
+            android:layout_margin="5dp"/>
 
         <!-- Botón Eliminar -->
         <Button
@@ -44,10 +45,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eliminar"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="16sp"
+            android:layout_margin="5dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
