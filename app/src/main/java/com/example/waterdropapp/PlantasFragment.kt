@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
-import com.example.waterdropapp.ui.plantas.AdapterGrupos
+import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.tabs.TabLayout
 import java.util.Date

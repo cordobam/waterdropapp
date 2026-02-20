@@ -1,4 +1,4 @@
-package com.example.waterdropapp.ui.plantas
+package com.example.waterdropapp.ui.grupos
 
 import android.view.LayoutInflater
 import android.view.View
