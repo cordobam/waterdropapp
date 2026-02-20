@@ -12,13 +12,9 @@
         android:icon="@android:drawable/ic_menu_month"/>
 
     <item
-    android:id="@+id/menu_plantas"
-    android:title="Carga Plantas"
+    android:id="@+id/menu_plantas_grupos"
+    android:title="Cargas Varias"
     android:icon="@android:drawable/ic_menu_edit"/>
 
-    <item
-        android:id="@+id/menu_grupos"
-        android:title="Carga Grupos"
-        android:icon="@android:drawable/ic_menu_save"/>
 
 </menu>

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
-import com.example.waterdropapp.ui.plantas.AdapterGrupos
+import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {

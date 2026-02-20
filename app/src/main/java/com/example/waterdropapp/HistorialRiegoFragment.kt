@@ -1,21 +1,15 @@
 package com.example.waterdropapp
 
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
-import com.example.waterdropapp.ui.plantas.AdapterHistorial
-import com.example.waterdropapp.ui.plantas.AdapterPlantas
-import java.util.Date
-import java.util.Locale
+import com.example.waterdropapp.ui.historial.AdapterHistorial
 
 
 class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
