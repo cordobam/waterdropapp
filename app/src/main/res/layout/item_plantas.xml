@@ -66,6 +66,19 @@
             app:layout_constraintTop_toBottomOf="@id/tvNombre"
             app:layout_constraintEnd_toStartOf="@id/btnRegar"/>
 
+        <!-- Días sin regar -->
+        <TextView
+            android:id="@+id/tvGruposNombres"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Grupo:"
+            android:textColor="#666"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/imgPlanta"
+            app:layout_constraintTop_toBottomOf="@id/tvDias"
+            app:layout_constraintEnd_toStartOf="@id/btnRegar"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

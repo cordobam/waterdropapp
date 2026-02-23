@@ -122,14 +122,27 @@ class DBHelper(context: Context) :
 
         val query = """
         SELECT 
-            p.planta_id AS planta_id,
+            p.planta_id,
             p.nombre,
             p.dias_max_sin_riego,
-            MAX(r.fecha) AS ultimo_riego
+        
+            -- Último riego calculado aparte
+            (
+                SELECT MAX(r.fecha)
+                FROM riegos r
+                WHERE r.planta_id = p.planta_id
+            ) AS ultimo_riego,
+        
+            -- Grupos calculados aparte
+            (
+                SELECT GROUP_CONCAT(g.nombre, ', ')
+                FROM grupos_plantas gp
+                JOIN grupos g ON g.grupo_id = gp.grupo_id
+                WHERE gp.planta_id = p.planta_id
+            ) AS nombre_grupos
+        
         FROM plantas p
-        LEFT JOIN riegos r ON r.planta_id = p.planta_id
         WHERE p.activo = 1
-        GROUP BY p.planta_id
         ORDER BY p.nombre
         """
 
@@ -138,6 +151,7 @@ class DBHelper(context: Context) :
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
 
@@ -150,7 +164,8 @@ class DBHelper(context: Context) :
                     nombre = nombre,
                     ultimoRiego = ultimo,
                     diasSinRegar = diasSinRegar,
-                    necesitaRiego = necesita
+                    necesitaRiego = necesita,
+                    nombreGrupos = nombreGrupos
                 )
             )
         }
@@ -165,17 +180,37 @@ class DBHelper(context: Context) :
 
         val cursor = db.rawQuery(
             """
-                SELECT            
-                    p.planta_id AS planta_id,
-                    p.nombre,
-                    p.dias_max_sin_riego,
-                    MAX(r.fecha) AS ultimo_riego
-                FROM plantas p 
-                LEFT JOIN riegos r ON r.planta_id = p.planta_id
-                LEFT JOIN grupos_plantas gp ON p.planta_id = gp.planta_id
-                WHERE gp.grupo_id = ? 
-                AND p.activo = 1
-                GROUP BY p.planta_id , p.nombre, p.dias_max_sin_riego
+            SELECT            
+                p.planta_id,
+                p.nombre,
+                p.dias_max_sin_riego,
+            
+                -- Último riego
+                (
+                    SELECT MAX(r.fecha)
+                    FROM riegos r
+                    WHERE r.planta_id = p.planta_id
+                ) AS ultimo_riego,
+            
+                -- Todos los grupos de la planta
+                (
+                    SELECT GROUP_CONCAT(g.nombre, ', ')
+                    FROM grupos_plantas gp2
+                    JOIN grupos g ON g.grupo_id = gp2.grupo_id
+                    WHERE gp2.planta_id = p.planta_id
+                ) AS nombre_grupos
+            
+            FROM plantas p
+            
+            WHERE p.activo = 1
+            AND EXISTS (
+                SELECT 1
+                FROM grupos_plantas gp
+                WHERE gp.planta_id = p.planta_id
+                AND gp.grupo_id = ?
+            )
+            
+            ORDER BY p.nombre
         """,
             arrayOf(grupoId.toString())
         )
@@ -183,6 +218,7 @@ class DBHelper(context: Context) :
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
 
@@ -195,7 +231,8 @@ class DBHelper(context: Context) :
                     nombre = nombre,
                     ultimoRiego = ultimo,
                     diasSinRegar = diasSinRegar,
-                    necesitaRiego = necesita
+                    necesitaRiego = necesita,
+                    nombreGrupos = nombreGrupos
                 )
             )
         }

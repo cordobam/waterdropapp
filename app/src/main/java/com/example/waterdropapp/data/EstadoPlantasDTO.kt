@@ -5,5 +5,6 @@ data class EstadoPlantasDTO(
     val nombre: String,
     val ultimoRiego: String?,
     val diasSinRegar: Int,
-    val necesitaRiego: Boolean
+    val necesitaRiego: Boolean,
+    val nombreGrupos: String?
 )
