@@ -68,6 +68,7 @@ class AdapterPlantas(
     inner class PlantaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvNombre = itemView.findViewById<TextView>(R.id.tvNombre)
         private val tvDias = itemView.findViewById<TextView>(R.id.tvDias)
+        private val tvGruposNombres  = itemView.findViewById<TextView>(R.id.tvGruposNombres)
         private val btnRegar = itemView.findViewById<Button>(R.id.btnRegar)
 
         fun bind(dto: EstadoPlantasDTO) {
@@ -79,6 +80,8 @@ class AdapterPlantas(
             } else {
                 tvDias.setTextColor(Color.parseColor("#2E7D32"))
             }
+
+            tvGruposNombres.text = "Grupos: ${dto.nombreGrupos}"
 
             btnRegar.setOnClickListener {
                 onRegarClick?.invoke(dto.plantaId)
