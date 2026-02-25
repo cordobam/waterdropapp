@@ -64,11 +64,12 @@ class DBHelper(context: Context) :
 
     // metodos plantas
 
-    fun putPlantas(nombre: String , dias: Int): Long {
+    fun putPlantas(nombre: String , dias: Int , imagenPath: String?): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("nombre", nombre)
             put("dias_max_sin_riego", dias)
+            put("imagen_path", imagenPath)
         }
         return db.insert(TABLE_NAME_PLANTAS, null, values)
     }
@@ -415,6 +416,7 @@ class DBHelper(context: Context) :
         WHERE r.planta_id = ?
         AND p.activo = 1
         ORDER BY r.fecha ASC
+        LIMIT 4
         """,
             arrayOf(planta_id.toString())
         )
