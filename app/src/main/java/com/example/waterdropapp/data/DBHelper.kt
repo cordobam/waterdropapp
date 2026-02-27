@@ -17,7 +17,8 @@ class DBHelper(context: Context) :
                 planta_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
                 dias_max_sin_riego INTEGER NOT NULL,
-                activo INTEGER NOT NULL DEFAULT 1
+                activo INTEGER NOT NULL DEFAULT 1,
+                imagen_path TEXT
             )
         """.trimIndent()
 
@@ -126,7 +127,7 @@ class DBHelper(context: Context) :
             p.planta_id,
             p.nombre,
             p.dias_max_sin_riego,
-        
+            imagen_path,
             -- Último riego calculado aparte
             (
                 SELECT MAX(r.fecha)
@@ -155,6 +156,7 @@ class DBHelper(context: Context) :
             val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
+            val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
 
             val diasSinRegar = calcularDias(ultimo)
             val necesita = diasSinRegar >= maxDias
@@ -166,7 +168,8 @@ class DBHelper(context: Context) :
                     ultimoRiego = ultimo,
                     diasSinRegar = diasSinRegar,
                     necesitaRiego = necesita,
-                    nombreGrupos = nombreGrupos
+                    nombreGrupos = nombreGrupos,
+                    imagen_path = imagenPath
                 )
             )
         }
@@ -185,7 +188,7 @@ class DBHelper(context: Context) :
                 p.planta_id,
                 p.nombre,
                 p.dias_max_sin_riego,
-            
+                imagen_path,
                 -- Último riego
                 (
                     SELECT MAX(r.fecha)
@@ -222,7 +225,7 @@ class DBHelper(context: Context) :
             val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
-
+            val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
             val diasSinRegar = calcularDias(ultimo)
             val necesita = diasSinRegar >= maxDias
 
@@ -233,7 +236,8 @@ class DBHelper(context: Context) :
                     ultimoRiego = ultimo,
                     diasSinRegar = diasSinRegar,
                     necesitaRiego = necesita,
-                    nombreGrupos = nombreGrupos
+                    nombreGrupos = nombreGrupos,
+                    imagen_path = imagenPath
                 )
             )
         }
