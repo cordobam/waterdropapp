@@ -1,14 +1,18 @@
 package com.example.waterdropapp.ui.plantas
 
 import android.graphics.Color
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.EstadoPlantasDTO
+import java.io.File
+import com.bumptech.glide.Glide
 
 
 class AdapterPlantas(
@@ -69,6 +73,8 @@ class AdapterPlantas(
         private val tvNombre = itemView.findViewById<TextView>(R.id.tvNombre)
         private val tvDias = itemView.findViewById<TextView>(R.id.tvDias)
         private val tvGruposNombres  = itemView.findViewById<TextView>(R.id.tvGruposNombres)
+
+        private val imgPlanta = itemView.findViewById<ImageView>(R.id.imgPlanta)
         private val btnRegar = itemView.findViewById<Button>(R.id.btnRegar)
 
         fun bind(dto: EstadoPlantasDTO) {
@@ -82,6 +88,16 @@ class AdapterPlantas(
             }
 
             tvGruposNombres.text = "Grupos: ${dto.nombreGrupos}"
+
+            if (!dto.imagen_path.isNullOrEmpty()) {
+                Glide.with(itemView.context)
+                    .load(File(dto.imagen_path))
+                    .placeholder(R.drawable.ic_planta)
+                    .centerCrop()
+                    .into(imgPlanta)
+            } else {
+                imgPlanta.setImageResource(R.drawable.ic_planta)
+            }
 
             btnRegar.setOnClickListener {
                 onRegarClick?.invoke(dto.plantaId)
