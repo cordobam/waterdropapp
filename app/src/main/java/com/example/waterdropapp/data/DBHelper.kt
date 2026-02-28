@@ -87,7 +87,7 @@ class DBHelper(context: Context) :
             arrayOf(planta_id.toString()) )
     }
 
-    fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int): Int {
+    fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int, imagen_path: String?): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("nombre", nombre)
@@ -116,6 +116,34 @@ class DBHelper(context: Context) :
         cursor.close()
         db.close()
         return lista
+    }
+
+    fun getPlantasPorId(plantaId: Int): Plantas? {
+        val lista = mutableListOf<Plantas>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT planta_id, nombre , dias_max_sin_riego, imagen_path FROM $TABLE_NAME_PLANTAS WHERE activo = 1 and planta_id = ?", arrayOf(plantaId.toString()))
+
+        var planta: Plantas? = null
+
+        if (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val dias_max_sin_riego = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val imagen_path = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
+
+            planta =
+                Plantas(
+                    planta_id = id,
+                    nombre = nombre,
+                    dias_max_sin_riego = dias_max_sin_riego,
+                    activo = null,
+                    imagen_path = imagen_path
+                )
+        }
+
+        cursor.close()
+        db.close()
+        return planta
     }
 
     fun obtenerEstadoPlantas(): List<EstadoPlantasDTO> {
