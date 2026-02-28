@@ -16,11 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.card.MaterialCardView
 import java.io.File
+import com.example.waterdropapp.data.Plantas
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
@@ -30,14 +32,22 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     private lateinit var imgPreview: ImageView
     private lateinit var layoutPlaceholder: LinearLayout
     private lateinit var cardFoto: MaterialCardView
+    private var imagenNuevaPath: String? = null
+
+    private var imageViewActual: ImageView? = null
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                imagenPathGuardado = guardarImagenInterna(it)
-                imgPreview.setImageURI(it)
-                imgPreview.visibility = View.VISIBLE
-                layoutPlaceholder.visibility = View.GONE
+                val path = guardarImagenInterna(it)
+                imagenNuevaPath = path
+
+                imageViewActual?.let { img ->
+                    Glide.with(this)
+                        .load(File(path))
+                        .centerCrop()
+                        .into(img)
+                }
             }
         }
 
@@ -120,6 +130,38 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
         val etDias = dialogView.findViewById<EditText>(R.id.etDias)
+        val spGrupos = dialogView.findViewById<Spinner>(R.id.spGrupos)
+        val imgPlanta = dialogView.findViewById<ImageView>(R.id.imgPlantaEditar)
+        val btnCambiarFoto = dialogView.findViewById<Button>(R.id.btnCambiarFoto)
+
+        val plantaActual = db.getPlantasPorId(id)
+
+        etNombre.setText(plantaActual?.nombre)
+        etDias.setText(plantaActual?.dias_max_sin_riego.toString())
+
+        imagenNuevaPath = plantaActual?.imagen_path
+
+        // Mostrar imagen si tiene
+        plantaActual?.imagen_path?.let { path ->
+            Glide.with(requireContext())
+                .load(File(path))
+                .into(imgPlanta)
+        }
+        // Botón cambiar foto
+        btnCambiarFoto.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
+        val grupos = db.getGrupos()
+        val nombresGrupos = grupos.map{it.nombre}
+        val adapterSpinner = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            nombresGrupos
+        )
+
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spGrupos.adapter = adapterSpinner
 
         AlertDialog.Builder(requireContext())
             .setTitle("Editar Planta")
@@ -128,8 +170,9 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
                 val nombre = etNombre.text.toString()
                 val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+                val grupoSeleccionado = spGrupos.selectedItem.toString()
 
-                db.actualizarPlantas(id, nombre, diasInt)
+                db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath  )
 
                 plantasAdapterAct.submitList(
                     db.obtenerEstadoPlantas()
