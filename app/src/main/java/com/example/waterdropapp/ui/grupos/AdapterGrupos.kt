@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.EstadoGruposDTO
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AdapterGrupos(
     private val modo: Modo,
@@ -77,7 +78,15 @@ class AdapterGrupos(
                 onVerGrupo?.invoke(grupo.grupoId)
             }
             btnRegar.setOnClickListener {
-                onRegarGrupo?.invoke(grupo.grupoId)
+                MaterialAlertDialogBuilder(itemView.context)
+                    .setTitle("Confirmar Riego")
+                    .setMessage("¿Estás seguro de que querés regar todo el grupo?")
+                    .setPositiveButton("Sí") { _, _ ->
+                        onRegarGrupo?.invoke(grupo.grupoId)
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+
             }
 
         }

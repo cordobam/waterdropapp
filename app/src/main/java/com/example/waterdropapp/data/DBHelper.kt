@@ -92,6 +92,7 @@ class DBHelper(context: Context) :
         val values = ContentValues().apply {
             put("nombre", nombre)
             put("dias_max_sin_riego", dias)
+            put("imagen_path", imagen_path)
         }
         return db.update(
             TABLE_NAME_PLANTAS,
