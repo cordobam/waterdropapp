@@ -25,8 +25,15 @@
         app:tabTextColor="#666"
         app:tabSelectedTextColor="#2E7D32"
         app:tabIndicatorFullWidth="false"
-        app:tabMode="fixed"
-        android:background="#C8E6C9" />
+        app:tabMode="fixed" >
+
+        <com.google.android.material.tabs.TabItem
+            android:text="Cargar Plantas" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="Cargar Grupos" />
+
+    </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerCarga"
