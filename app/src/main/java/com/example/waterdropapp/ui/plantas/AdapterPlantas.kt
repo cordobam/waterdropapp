@@ -13,6 +13,7 @@ import com.example.waterdropapp.R
 import com.example.waterdropapp.data.EstadoPlantasDTO
 import java.io.File
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class AdapterPlantas(
@@ -100,7 +101,14 @@ class AdapterPlantas(
             }
 
             btnRegar.setOnClickListener {
-                onRegarClick?.invoke(dto.plantaId)
+                MaterialAlertDialogBuilder(itemView.context)
+                    .setTitle("Confirmar riego")
+                    .setMessage("¿Estás seguro de que querés regar esta planta?")
+                    .setPositiveButton("Sí") { _, _ ->
+                        onRegarClick?.invoke(dto.plantaId)
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
             }
         }
     }

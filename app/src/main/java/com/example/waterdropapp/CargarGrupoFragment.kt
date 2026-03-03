@@ -56,8 +56,11 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             .setTitle("Editar grupo")
             .setView(input)
             .setPositiveButton("Guardar") { _, _ ->
+
+
                 val nombre = input.text.toString()
                 db.actualizarGrupos(id, nombre)
+                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
                 gruposAdapterAct.submitList(db.getEstadosGrupos())
             }
             .setNegativeButton("Cancelar", null)

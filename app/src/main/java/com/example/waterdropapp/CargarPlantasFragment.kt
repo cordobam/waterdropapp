@@ -2,6 +2,7 @@ package com.example.waterdropapp
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AdapterView
@@ -24,6 +25,7 @@ import com.google.android.material.card.MaterialCardView
 import java.io.File
 import com.example.waterdropapp.data.Plantas
 
+
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
     private lateinit var db: DBHelper
@@ -33,7 +35,6 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     private lateinit var layoutPlaceholder: LinearLayout
     private lateinit var cardFoto: MaterialCardView
     private var imagenNuevaPath: String? = null
-
     private var imageViewActual: ImageView? = null
 
     private val pickImage =
@@ -173,7 +174,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 val grupoSeleccionado = spGrupos.selectedItem.toString()
 
                 db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath  )
-
+                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
                 plantasAdapterAct.submitList(
                     db.obtenerEstadoPlantas()
                 )
