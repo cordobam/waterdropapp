@@ -16,12 +16,13 @@
         android:padding="12dp">
 
         <!-- Imagen -->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgPlanta"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/ic_planta"
+            android:src="@drawable/ic_planta"
+            app:shapeAppearanceOverlay="@style/CircleImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

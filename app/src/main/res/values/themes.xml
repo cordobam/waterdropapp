@@ -4,4 +4,8 @@
         <item name="colorPrimaryContainer">#C8E6C9</item>
         <item name="android:statusBarColor">#4CAF50</item>
     </style>
+    <style name="CircleImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
