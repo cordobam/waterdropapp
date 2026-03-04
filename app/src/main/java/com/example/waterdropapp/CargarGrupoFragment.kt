@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
+import com.google.android.material.snackbar.Snackbar
 
 
 class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
@@ -67,13 +68,23 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             .show()
     }
 
-    fun eliminarGrupo(id:Int) {
-        val filas = db.eliminarGrupos(id)
-        if (filas > 0) {
-            Toast.makeText(requireContext(), "Grupo eliminado", Toast.LENGTH_SHORT).show()
+    private fun eliminarGrupo(id: Int) {
 
-            // refrescar lista
+        val filas = db.eliminarGrupos(id)
+
+        if (filas > 0) {
+
+            // Refrescamos la lista primero
             gruposAdapterAct.submitList(db.getEstadosGrupos())
+
+            Snackbar.make(requireView(), "Grupo eliminado", Snackbar.LENGTH_LONG)
+                .setAction("Deshacer") {
+
+                    db.reactivarGrupo(id)
+                    gruposAdapterAct.submitList(db.getEstadosGrupos())
+                }
+                .show()
+
         } else {
             Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
         }

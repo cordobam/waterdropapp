@@ -13,6 +13,7 @@ import com.example.waterdropapp.R
 import com.example.waterdropapp.data.EstadoPlantasDTO
 import java.io.File
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -76,7 +77,7 @@ class AdapterPlantas(
         private val tvGruposNombres  = itemView.findViewById<TextView>(R.id.tvGruposNombres)
 
         private val imgPlanta = itemView.findViewById<ImageView>(R.id.imgPlanta)
-        private val btnRegar = itemView.findViewById<Button>(R.id.btnRegar)
+        private val btnRegar = itemView.findViewById<MaterialCardView>(R.id.btnRegar)
 
         fun bind(dto: EstadoPlantasDTO) {
             tvNombre.text = dto.nombre

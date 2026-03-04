@@ -24,6 +24,7 @@ import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.card.MaterialCardView
 import java.io.File
 import com.example.waterdropapp.data.Plantas
+import com.google.android.material.snackbar.Snackbar
 
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
@@ -183,13 +184,23 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             .show()
     }
 
-    fun eliminarPlantas(id:Int) {
-        val filas = db.eliminarPlantas(id)
-        if (filas > 0) {
-            Toast.makeText(requireContext(), "Planta eliminada", Toast.LENGTH_SHORT).show()
+    private fun eliminarPlantas(id: Int) {
 
-            // refrescar lista
+        val filas = db.eliminarPlantas(id)
+
+        if (filas > 0) {
+
+            // Refrescamos primero la lista
             plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+
+            Snackbar.make(requireView(), "Planta eliminada", Snackbar.LENGTH_LONG)
+                .setAction("Deshacer") {
+
+                    db.reactivarPlanta(id)
+                    plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+                }
+                .show()
+
         } else {
             Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
         }
