@@ -87,6 +87,20 @@ class DBHelper(context: Context) :
             arrayOf(planta_id.toString()) )
     }
 
+    fun reactivarPlanta(planta_id:Int): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , 1)
+        }
+        return db.update(
+            TABLE_NAME_PLANTAS,
+            values,
+            "planta_id = ?",                  // WHERE
+            arrayOf(planta_id.toString()) )
+    }
+
+
+
     fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int, imagen_path: String?): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -331,6 +345,18 @@ class DBHelper(context: Context) :
         val db = writableDatabase
         val values = ContentValues().apply {
             put("activo" , 0)
+        }
+        return db.update(
+            TABLE_NAME_GRUPOS,
+            values,
+            "grupo_id = ?",                  // WHERE
+            arrayOf(grupoId.toString()) )
+    }
+
+    fun reactivarGrupo(grupoId: Int): Int{
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , 1)
         }
         return db.update(
             TABLE_NAME_GRUPOS,
