@@ -5,6 +5,6 @@ data class Plantas(
     val nombre: String,
     val dias_max_sin_riego: Int?,
     val activo: Int?,
-    val imagen_path: String?
-
+    val imagen_path: String?,
+    val grupo_id: Int?
 )

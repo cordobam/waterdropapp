@@ -136,7 +136,10 @@ class DBHelper(context: Context) :
     fun getPlantasPorId(plantaId: Int): Plantas? {
         val lista = mutableListOf<Plantas>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT planta_id, nombre , dias_max_sin_riego, imagen_path FROM $TABLE_NAME_PLANTAS WHERE activo = 1 and planta_id = ?", arrayOf(plantaId.toString()))
+        val cursor = db.rawQuery("        SELECT p.planta_id, p.nombre, p.dias_max_sin_riego, p.imagen_path, gp.grupo_id\n" +
+                "        FROM $TABLE_NAME_PLANTAS p\n" +
+                "        LEFT JOIN $TABLE_NAME_GRUPOS_MANY gp ON p.planta_id = gp.planta_id\n" +
+                "        WHERE p.activo = 1 AND p.planta_id = ?", arrayOf(plantaId.toString()))
 
         var planta: Plantas? = null
 
@@ -145,6 +148,7 @@ class DBHelper(context: Context) :
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
             val dias_max_sin_riego = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val imagen_path = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
+            val grupoId = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_id"))
 
             planta =
                 Plantas(
@@ -152,7 +156,8 @@ class DBHelper(context: Context) :
                     nombre = nombre,
                     dias_max_sin_riego = dias_max_sin_riego,
                     activo = null,
-                    imagen_path = imagen_path
+                    imagen_path = imagen_path,
+                    grupo_id = grupoId
                 )
         }
 
@@ -289,6 +294,22 @@ class DBHelper(context: Context) :
         return lista
     }
 
+    fun actualizarGrupoPlanta(plantaId: Int, grupoId: Int) {
+
+        val db = writableDatabase
+
+        val values = ContentValues().apply {
+            put("grupo_id", grupoId)
+        }
+
+        db.update(
+            "grupos_plantas",
+            values,
+            "planta_id = ?",
+            arrayOf(plantaId.toString())
+        )
+    }
+
     private fun calcularDias(fecha: String?): Int {
         if (fecha == null) return 0//Int.MAX_VALUE
 
@@ -403,7 +424,10 @@ class DBHelper(context: Context) :
     fun getEstadosGrupos(): List<EstadoGruposDTO> {
         val lista = mutableListOf<EstadoGruposDTO>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT grupo_id, nombre, count(*) as cantPlantasGrupo  FROM $TABLE_NAME_GRUPOS WHERE activo=1 GROUP BY grupo_id , nombre", null)
+        val cursor = db.rawQuery("SELECT G.grupo_id, nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
+                "FROM $TABLE_NAME_GRUPOS G LEFT JOIN $TABLE_NAME_GRUPOS_MANY GP ON G.grupo_id = GP.grupo_id \n" +
+                "WHERE activo=1 \n" +
+                "GROUP BY G.grupo_id , nombre", null)
 
         if (cursor.moveToFirst()) {
             do {
