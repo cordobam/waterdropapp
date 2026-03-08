@@ -156,6 +156,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         val grupos = db.getGrupos()
         val nombresGrupos = grupos.map{it.nombre}
+
         val adapterSpinner = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -165,14 +166,31 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spGrupos.adapter = adapterSpinner
 
+        // posicion del grupo actual
+        val posicionGrupoActual = grupos.indexOfFirst {
+            it.grupo_id == plantaActual?.grupo_id
+        }
+
+        if (posicionGrupoActual >= 0) {
+            spGrupos.setSelection(posicionGrupoActual)
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Editar Planta")
             .setView(dialogView)
             .setPositiveButton("Guardar") { _, _ ->
 
+                // seleccion de spinner
+                val posicion = spGrupos.selectedItemPosition
+
+                val grupoSeleccionado = grupos[posicion]
+                val codigoGrupo = grupoSeleccionado.grupo_id
+
                 val nombre = etNombre.text.toString()
                 val diasInt = etDias.text.toString().toIntOrNull() ?: 0
-                val grupoSeleccionado = spGrupos.selectedItem.toString()
+
+                // insert gruposplantas
+                val grupo_plantas = db.actualizarGrupoPlanta(id,codigoGrupo)
 
                 db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath  )
                 Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
