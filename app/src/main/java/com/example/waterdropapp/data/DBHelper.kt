@@ -493,7 +493,8 @@ class DBHelper(context: Context) :
         val cursor = db.rawQuery(
             """
         SELECT p.nombre AS nombre_planta,
-               r.fecha   AS fecha_riego
+               r.fecha   AS fecha_riego,
+               p.dias_max_sin_riego
         FROM riegos r
         INNER JOIN plantas p ON p.planta_id = r.planta_id
         WHERE r.planta_id = ?
@@ -510,16 +511,24 @@ class DBHelper(context: Context) :
         while (cursor.moveToNext()) {
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre_planta"))
             val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha_riego"))
-
+            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val fechaActual = parseFecha(fecha)
 
             val diasDesdeUltimo = fechaAnterior?.let { ((fechaActual.time - it.time ) / (1000 * 60 * 60 * 24)).toInt()}
+            //val fueraDeRango = diasDesdeUltimo != null && diasDesdeUltimo > maxDias
+            val nivelAlerta = when {
+                diasDesdeUltimo == null -> 0
+                diasDesdeUltimo <= maxDias -> 0
+                diasDesdeUltimo <= maxDias + 2 -> 1
+                else -> 2
+            }
 
             lista.add(
                 RiegoHistorialDTO(
                     nombrePlanta = nombre,
                     fechaRiego = fecha,
-                    diasDesdeUltimo = diasDesdeUltimo
+                    diasDesdeUltimo = diasDesdeUltimo,
+                    alerta = nivelAlerta
                 )
             )
             fechaAnterior = fechaActual
