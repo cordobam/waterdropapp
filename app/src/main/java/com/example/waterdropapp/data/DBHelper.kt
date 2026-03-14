@@ -217,7 +217,8 @@ class DBHelper(context: Context) :
                     diasSinRegar = diasSinRegar,
                     necesitaRiego = necesita,
                     nombreGrupos = nombreGrupos,
-                    imagen_path = imagenPath
+                    imagen_path = imagenPath,
+                    max_dias = maxDias
                 )
             )
         }
@@ -285,7 +286,8 @@ class DBHelper(context: Context) :
                     diasSinRegar = diasSinRegar,
                     necesitaRiego = necesita,
                     nombreGrupos = nombreGrupos,
-                    imagen_path = imagenPath
+                    imagen_path = imagenPath,
+                    max_dias = maxDias
                 )
             )
         }
@@ -308,6 +310,28 @@ class DBHelper(context: Context) :
             "planta_id = ?",
             arrayOf(plantaId.toString())
         )
+    }
+
+
+    fun obtenerEstadoPlantasXRiego(
+        filtro: FiltroRiego = FiltroRiego.TODAS,
+        diasUmbral: Int = 2
+    ): List<EstadoPlantasDTO> {
+
+        val lista = obtenerEstadoPlantas()
+
+        return when (filtro){
+            FiltroRiego.TODAS -> lista
+
+            FiltroRiego.VENCIDAS ->
+                lista.filter { it.necesitaRiego }
+
+            FiltroRiego.PROXIMAS ->
+                lista.filter {
+                    !it.necesitaRiego &&
+                            it.diasSinRegar >= (it.max_dias?.minus(diasUmbral) ?: 0)
+                }
+        }
     }
 
     private fun calcularDias(fecha: String?): Int {

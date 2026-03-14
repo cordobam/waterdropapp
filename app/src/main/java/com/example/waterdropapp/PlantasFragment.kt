@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
+import com.example.waterdropapp.data.FiltroRiego
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.tabs.TabLayout
 import java.util.Date
 import java.util.Locale
@@ -23,7 +25,6 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var db: DBHelper
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,6 +65,26 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = plantasAdapter
 
+        // para hacer el filtro de la plantas
+
+        val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroupFiltro)
+
+        chipGroup.setOnCheckedStateChangeListener  { group, checkedIds  ->
+            val chipId = checkedIds.firstOrNull()
+
+            val FiltroRiego = when (chipId) {
+                R.id.chipTodas -> FiltroRiego.TODAS
+                R.id.chipProximas -> FiltroRiego.PROXIMAS
+                R.id.chipVencidas -> FiltroRiego.VENCIDAS
+                else -> FiltroRiego.TODAS
+            }
+
+            val lista = db.obtenerEstadoPlantasXRiego(FiltroRiego)
+            val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
+
+            plantasAdapter.submitList(listaOrdenada)
+        }
+
         // para el espaciado
         recyclerView.addItemDecoration(
             object : RecyclerView.ItemDecoration() {
@@ -76,6 +97,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         // carga principal
         cargarPlantas()
+        chipGroup.visibility = View.VISIBLE
 
         // tabs
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
@@ -86,10 +108,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 when (tab.position) {
                     0 -> {
                         recyclerView.adapter = plantasAdapter
+                        chipGroup.visibility = View.VISIBLE
                         cargarPlantas()
                     }
                     1 -> {
                         recyclerView.adapter = gruposAdapter
+                        chipGroup.visibility = View.GONE
                         cargarGrupos()
                     }
                 }
