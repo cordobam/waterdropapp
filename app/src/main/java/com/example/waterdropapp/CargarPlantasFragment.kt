@@ -116,12 +116,18 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = plantasAdapterAct
 
-        view.findViewById<Button>(R.id.btnVerPlantas).setOnClickListener {
+        val botonverplantas = view.findViewById<Button>(R.id.btnVerPlantas)
+        val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
+
+        botonverplantas.setOnClickListener {
+            cardLista.visibility = View.VISIBLE
             val db = DBHelper(requireContext())
             val plantas = db.obtenerEstadoPlantas()
             plantasAdapterAct.submitList(plantas)
         }
     }
+
+    private fun findViewById(cardContenedorLista: Int) {}
 
     fun editarPlantas(id:Int) {
 
