@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -43,7 +44,11 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = gruposAdapterAct
 
-        view.findViewById<Button>(R.id.btnVerGrupo).setOnClickListener {
+        val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
+        val botonvergrupos = view.findViewById<Button>(R.id.btnVerGrupo)
+
+        botonvergrupos.setOnClickListener {
+            cardLista.visibility = View.VISIBLE
             val db = DBHelper(requireContext())
             val grupos = db.getEstadosGrupos()
             gruposAdapterAct.submitList(grupos)

@@ -80,10 +80,12 @@
 
         <!-- CARD LISTA -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardContenedorLista"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardElevation="2dp"
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvEliminarActualizarGrupo"
