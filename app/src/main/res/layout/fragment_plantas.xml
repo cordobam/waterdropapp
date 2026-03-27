@@ -39,11 +39,11 @@
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroupFiltro"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:padding="12dp"
         android:visibility="visible"
-        android:gravity="center"
         app:singleSelection="true"
         app:selectionRequired="true"
         app:chipSpacing="8dp">

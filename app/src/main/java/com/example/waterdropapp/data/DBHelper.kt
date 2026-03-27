@@ -523,7 +523,7 @@ class DBHelper(context: Context) :
         INNER JOIN plantas p ON p.planta_id = r.planta_id
         WHERE r.planta_id = ?
         AND p.activo = 1
-        ORDER BY r.fecha ASC
+        ORDER BY r.fecha DESC
         LIMIT 4
         """,
             arrayOf(planta_id.toString())
@@ -538,7 +538,7 @@ class DBHelper(context: Context) :
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val fechaActual = parseFecha(fecha)
 
-            val diasDesdeUltimo = fechaAnterior?.let { ((fechaActual.time - it.time ) / (1000 * 60 * 60 * 24)).toInt()}
+            val diasDesdeUltimo = fechaAnterior?.let { ((it.time - fechaActual.time) / (1000 * 60 * 60 * 24)).toInt() }
             //val fueraDeRango = diasDesdeUltimo != null && diasDesdeUltimo > maxDias
             val nivelAlerta = when {
                 diasDesdeUltimo == null -> 0
