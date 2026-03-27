@@ -52,8 +52,8 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
             imgDot.setColorFilter(color)
 
             tvSubTitulo.text = dto.diasDesdeUltimo?.let {
-                "Pasaron $it días desde el último riego"
-            } ?: "Primer riego"
+                "Pasaron $it días desde el riego anterior"
+            } ?: "Último riego registrado"
         }
     }
 }
