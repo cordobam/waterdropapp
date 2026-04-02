@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
@@ -15,6 +17,7 @@ import com.example.waterdropapp.data.FiltroRiego
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import java.util.Date
 import java.util.Locale
@@ -30,6 +33,30 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         super.onViewCreated(view, savedInstanceState)
 
         db = DBHelper(requireContext())
+
+        // Dentro de tu Fragment, por ejemplo en onViewCreated:
+        val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
+
+        fab.setOnClickListener {
+            val popup = PopupMenu(requireContext(), fab)
+            popup.menu.add("Cargar Plantas")
+            popup.menu.add("Cargar Grupos")
+
+            popup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.title) {
+                    "Cargar Plantas" -> {
+                        findNavController().navigate(R.id.action_plantasFragment_to_cargarPlantasFragment)
+                        true
+                    }
+                    "Cargar Grupos" -> {
+                        findNavController().navigate(R.id.action_plantasFragment_to_cargarGrupoFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
 
         val fecha: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 

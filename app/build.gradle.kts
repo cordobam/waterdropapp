@@ -38,6 +38,18 @@ android {
 }
 
 dependencies {
+    val nav_version = "2.7.7"
+    // Java language implementation
+    implementation("androidx.navigation:navigation-fragment:${nav_version}")
+    implementation("androidx.navigation:navigation-ui:${nav_version}")
+    // Kotlin (esto es lo que habilita findNavController() y las extensiones KTX)
+    implementation("androidx.navigation:navigation-fragment-ktx:${nav_version}")
+    implementation("androidx.navigation:navigation-ui-ktx:${nav_version}")
+    // Feature module Support
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:${nav_version}")
+    // Testing Navigation
+    testImplementation("androidx.navigation:navigation-testing:${nav_version}")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
