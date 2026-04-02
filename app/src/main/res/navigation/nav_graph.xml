@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/plantasFragment">
+
+    <fragment
+        android:id="@+id/plantasFragment"
+        android:name="com.example.waterdropapp.PlantasFragment"
+        android:label="PlantasFragment" >
+        <action
+            android:id="@+id/action_plantasFragment_to_cargarPlantasFragment"
+            app:destination="@id/cargarPlantasFragment" />
+        <action
+            android:id="@+id/action_plantasFragment_to_cargarGrupoFragment"
+            app:destination="@id/cargarGrupoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cargarPlantasFragment"
+        android:name="com.example.waterdropapp.CargarPlantasFragment"
+        android:label="CargarPlantasFragment" />
+    <fragment
+        android:id="@+id/cargarGrupoFragment"
+        android:name="com.example.waterdropapp.CargarGrupoFragment"
+        android:label="CargarGrupoFragment" />
+</navigation>
