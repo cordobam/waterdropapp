@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:title="Home"
+        android:icon="@android:drawable/ic_menu_edit"/>
 
     <item
         android:id="@+id/menu_riego"
@@ -10,11 +14,5 @@
         android:id="@+id/menu_historial"
         android:title="Historial"
         android:icon="@android:drawable/ic_menu_month"/>
-
-    <item
-    android:id="@+id/menu_plantas_grupos"
-    android:title="Cargas Varias"
-    android:icon="@android:drawable/ic_menu_edit"/>
-
 
 </menu>

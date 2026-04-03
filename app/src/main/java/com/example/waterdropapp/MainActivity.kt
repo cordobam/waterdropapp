@@ -20,15 +20,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        cargarFragment(PlantasFragment())
+        cargarFragment(HomeFragment())
 
         findViewById<BottomNavigationView>(R.id.bottomNav)
             .setOnItemSelectedListener {
 
                 when (it.itemId) {
+                    R.id.menu_home -> cargarFragment(HomeFragment())
                     R.id.menu_riego -> cargarFragment(PlantasFragment())
                     R.id.menu_historial -> cargarFragment(HistorialRiegoFragment())
-                    R.id.menu_plantas_grupos -> cargarFragment(CargasVariasFragment())
 
                 }
                 true
