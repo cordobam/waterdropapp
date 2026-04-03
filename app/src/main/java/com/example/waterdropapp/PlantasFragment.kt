@@ -38,24 +38,10 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
 
         fab.setOnClickListener {
-            val popup = PopupMenu(requireContext(), fab)
-            popup.menu.add("Cargar Plantas")
-            popup.menu.add("Cargar Grupos")
-
-            popup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.title) {
-                    "Cargar Plantas" -> {
-                        findNavController().navigate(R.id.action_plantasFragment_to_cargarPlantasFragment)
-                        true
-                    }
-                    "Cargar Grupos" -> {
-                        findNavController().navigate(R.id.action_plantasFragment_to_cargarGrupoFragment)
-                        true
-                    }
-                    else -> false
-                }
-            }
-            popup.show()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.container, CargasVariasFragment())
+                .addToBackStack(null)  // permite volver con el botón atrás
+                .commit()
         }
 
         val fecha: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())

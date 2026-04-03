@@ -52,6 +52,7 @@
                 android:id="@+id/rvHistorialRiego"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="55dp"
                 android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
