@@ -9,44 +9,71 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#F1F8E9"
+        android:background="#F0F4ED"
         android:paddingBottom="80dp">
 
-        <TextView
-            android:id="@+id/tvPromedio"
+        <!-- HEADER -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Regar Plantas"
+            android:orientation="vertical"
+            android:background="#3A7D44"
             android:padding="20dp"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:background="#C8E6C9"
-            android:textColor="#1B5E20"/>
+            android:paddingBottom="16dp">
 
+            <TextView
+                android:id="@+id/tvPromedio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Regar Plantas"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Revisá el estado de tus plantas"
+                android:textSize="13sp"
+                android:textColor="#B8D4BC"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <!-- TABS -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="#4CAF50"
-            app:tabTextColor="#666"
-            app:tabSelectedTextColor="#2E7D32"
-            app:tabIndicatorFullWidth="false">
+            android:background="#FFFFFF"
+            app:tabIndicatorColor="#3A7D44"
+            app:tabTextColor="#888888"
+            app:tabSelectedTextColor="#3A7D44"
+            app:tabIndicatorFullWidth="false"
+            app:tabRippleColor="@null">
 
-            <com.google.android.material.tabs.TabItem
-                android:text="Plantas Individuales" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Plantas Individuales"/>
 
-            <com.google.android.material.tabs.TabItem
-                android:text="Grupos de Plantas" />
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grupos de Plantas"/>
 
-        </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
+        <!-- CHIPS -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupFiltro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="5dp"
-            android:visibility="visible"
+            android:layout_gravity="start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             app:singleSelection="true"
             app:selectionRequired="true"
             app:chipSpacing="8dp">
@@ -60,6 +87,8 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
                 android:textColor="@color/chip_text_selector"
+                app:chipStrokeColor="@color/chip_stroke_selector"
+                app:chipStrokeWidth="1dp"
                 app:checkedIconVisible="false"/>
 
             <com.google.android.material.chip.Chip
@@ -70,6 +99,8 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
                 android:textColor="@color/chip_text_selector"
+                app:chipStrokeColor="@color/chip_stroke_selector"
+                app:chipStrokeWidth="1dp"
                 app:checkedIconVisible="false"/>
 
             <com.google.android.material.chip.Chip
@@ -80,19 +111,30 @@
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
                 android:textColor="@color/chip_text_selector"
+                app:chipStrokeColor="@color/chip_stroke_selector"
+                app:chipStrokeWidth="1dp"
                 app:checkedIconVisible="false"/>
 
         </com.google.android.material.chip.ChipGroup>
 
+        <!-- DIVISOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#E0EAD8"/>
+
+        <!-- LISTA -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPlantas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="8dp"
             android:paddingBottom="55dp"
             android:clipToPadding="false"/>
 
     </LinearLayout>
 
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabPrincipal"
         android:layout_width="wrap_content"
@@ -102,9 +144,10 @@
         android:layout_marginBottom="90dp"
         android:contentDescription="Opciones de carga"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#00611A"
+        app:backgroundTint="#3A7D44"
         app:tint="@android:color/white"
         app:fabSize="normal"
-        app:elevation="8dp" />
+        app:elevation="4dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.FAB.Rounded"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
