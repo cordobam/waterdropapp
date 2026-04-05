@@ -524,7 +524,7 @@ class DBHelper(context: Context) :
         WHERE r.planta_id = ?
         AND p.activo = 1
         ORDER BY r.fecha DESC
-        LIMIT 4
+        LIMIT 5
         """,
             arrayOf(planta_id.toString())
         )
