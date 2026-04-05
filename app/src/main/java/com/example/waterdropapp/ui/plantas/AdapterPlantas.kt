@@ -81,15 +81,17 @@ class AdapterPlantas(
 
         fun bind(dto: EstadoPlantasDTO) {
             tvNombre.text = dto.nombre
-            tvDias.text = "Días sin regar: ${dto.diasSinRegar}"
+
 
             if (dto.necesitaRiego) {
                 tvDias.setTextColor(Color.parseColor("#C62828"))
+                tvDias.text = "⚠\uFE0F ${dto.diasSinRegar} dias sin regar"
             } else {
                 tvDias.setTextColor(Color.parseColor("#2E7D32"))
+                tvDias.text = "\uD83D\uDCA7 Hace ${dto.diasSinRegar} dias"
             }
 
-            tvGruposNombres.text = "Grupos: ${dto.nombreGrupos}"
+            tvGruposNombres.text = "${dto.nombreGrupos}"
 
             if (!dto.imagen_path.isNullOrEmpty()) {
                 Glide.with(itemView.context)
