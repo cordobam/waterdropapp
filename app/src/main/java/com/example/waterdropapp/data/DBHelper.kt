@@ -4,6 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import com.example.waterdropapp.data.dto.EstadoGruposDTO
+import com.example.waterdropapp.data.dto.EstadoPlantasDTO
+import com.example.waterdropapp.data.dto.RiegoHistorialDTO
+import com.example.waterdropapp.data.dto.RiegosPlantaDTO
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -296,6 +301,43 @@ class DBHelper(context: Context) :
         return lista
     }
 
+    fun obtenerRiegosPorPlanta(): List<RiegosPlantaDTO> {
+        val db = readableDatabase
+        val map = mutableMapOf<Int, Pair<Int, MutableList<String>>>()
+
+        val query = """
+        SELECT r.planta_id, r.fecha, p.dias_max_sin_riego
+        FROM riegos r
+        JOIN plantas p ON p.planta_id = r.planta_id
+        WHERE p.activo = 1
+        ORDER BY r.planta_id, r.fecha ASC
+    """
+
+        val cursor = db.rawQuery(query, null)
+
+        while (cursor.moveToNext()) {
+            val plantaId = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+
+            if (!map.containsKey(plantaId)) {
+                map[plantaId] = Pair(maxDias, mutableListOf())
+            }
+
+            map[plantaId]?.second?.add(fecha)
+        }
+
+        cursor.close()
+
+        return map.map {
+            RiegosPlantaDTO(
+                plantaId = it.key,
+                diasMax = it.value.first,
+                fechas = it.value.second
+            )
+        }
+    }
+
     fun actualizarGrupoPlanta(plantaId: Int, grupoId: Int) {
 
         val db = writableDatabase
@@ -567,6 +609,9 @@ class DBHelper(context: Context) :
         sdf.isLenient = false
         return sdf.parse(fecha)!!
     }
+
+
+
 
 
     companion object {

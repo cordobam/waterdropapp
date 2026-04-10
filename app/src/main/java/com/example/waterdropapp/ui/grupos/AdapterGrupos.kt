@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.EstadoGruposDTO
+import com.example.waterdropapp.data.dto.EstadoGruposDTO
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AdapterGrupos(

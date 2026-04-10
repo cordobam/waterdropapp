@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.EstadoPlantasDTO
+import com.example.waterdropapp.data.dto.EstadoPlantasDTO
 import java.io.File
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
