@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.data.dto
 
 data class EstadoPlantasDTO(
     val plantaId: Int,

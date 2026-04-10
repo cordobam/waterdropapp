@@ -61,4 +61,6 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.glide)
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
 }
