@@ -243,11 +243,11 @@
                 android:id="@+id/cardContenedorLista"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeColor="#C8DFC0"
-                app:strokeWidth="1dp"
-                android:visibility="gone">
+                app:strokeWidth="1dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvEliminarActualizarPlantas"

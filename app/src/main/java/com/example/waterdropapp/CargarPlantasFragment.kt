@@ -24,6 +24,7 @@ import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.card.MaterialCardView
 import java.io.File
 import com.example.waterdropapp.data.Plantas
+import com.example.waterdropapp.data.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -112,18 +113,24 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             onEliminarPlanta = { id -> eliminarPlantas(id) }
         )
 
-        val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarPlantas)
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        rv.adapter = plantasAdapterAct
+        //val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarPlantas)
+        //rv.layoutManager = LinearLayoutManager(requireContext())
+        //rv.adapter = plantasAdapterAct
 
         val botonverplantas = view.findViewById<Button>(R.id.btnVerPlantas)
         val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
 
         botonverplantas.setOnClickListener {
-            cardLista.visibility = View.VISIBLE
-            val db = DBHelper(requireContext())
-            val plantas = db.obtenerEstadoPlantas()
-            plantasAdapterAct.submitList(plantas)
+            // 1. Obtenemos los DTOs de la base de datos
+            val plantasDTO = db.obtenerEstadoPlantas()
+
+            // 2. Mostramos el Bottom Sheet
+            val sheet = PlantasBottomSheet(
+                listaPlantas = plantasDTO,
+                onEditar = { id -> editarPlantas(id) },
+                onEliminar = { id -> eliminarPlantas(id) }
+            )
+            sheet.show(parentFragmentManager, "PlantasSheet")
         }
     }
 
