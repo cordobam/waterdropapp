@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
+import com.example.waterdropapp.ui.grupos.GruposBottomSheet
+import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 
@@ -40,18 +42,22 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             onEliminarGrupo = { id -> eliminarGrupo(id) }
         )
 
-        val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarGrupo)
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        rv.adapter = gruposAdapterAct
+        //val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarGrupo)
+        //rv.layoutManager = LinearLayoutManager(requireContext())
+        //rv.adapter = gruposAdapterAct
 
-        val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
+        //val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
         val botonvergrupos = view.findViewById<Button>(R.id.btnVerGrupo)
 
         botonvergrupos.setOnClickListener {
-            cardLista.visibility = View.VISIBLE
-            val db = DBHelper(requireContext())
-            val grupos = db.getEstadosGrupos()
-            gruposAdapterAct.submitList(grupos)
+            val gruposDTO = db.getEstadosGrupos()
+
+            val sheet = GruposBottomSheet(
+                listaGrupos = gruposDTO,
+                onEditar = { id -> editarGrupo(id) },
+                onEliminar = { id -> eliminarGrupo(id) }
+            )
+            sheet.show(parentFragmentManager, "GruposSheet")
         }
     }
 

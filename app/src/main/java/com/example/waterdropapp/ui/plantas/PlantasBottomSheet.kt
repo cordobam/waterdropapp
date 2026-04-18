@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.ui.plantas
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.dto.EstadoPlantasDTO
-import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class PlantasBottomSheet(
