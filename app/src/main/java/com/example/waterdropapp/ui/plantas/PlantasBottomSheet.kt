@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class PlantasBottomSheet(
     private val listaPlantas: List<EstadoPlantasDTO>, // Tipo correcto
     private val onEditar: (Int) -> Unit,
-    private val onEliminar: (Int) -> Unit
+    private val onEliminar: (Int, View) -> Unit
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class PlantasBottomSheet(
                 onEditar(id)
                 dismiss() // Cerramos al editar para ver el diálogo
             },
-            onEliminarPlanta = { id -> onEliminar(id) }
+            onEliminarPlanta = { id -> onEliminar(id, view ) }
         )
 
         rv.layoutManager = LinearLayoutManager(context)

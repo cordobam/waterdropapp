@@ -45,12 +45,20 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 val path = guardarImagenInterna(it)
                 imagenNuevaPath = path
 
-                imageViewActual?.let { img ->
-                    Glide.with(this)
-                        .load(File(path))
-                        .centerCrop()
-                        .into(img)
+                // Cambiamos visibilidad solo para la carga inicial (cuando no hay imageViewActual)
+                if (imageViewActual == null) {
+                    imgPreview.visibility = View.VISIBLE
+                    layoutPlaceholder.visibility = View.GONE
                 }
+
+                // Determinamos cuál es el destino
+                val targetImageView = imageViewActual ?: imgPreview
+
+                // CARGA LA IMAGEN SIEMPRE (Quitamos el imageViewActual?.let)
+                Glide.with(this)
+                    .load(File(path))
+                    .centerCrop()
+                    .into(targetImageView)
             }
         }
 
@@ -72,10 +80,11 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         // carga de foto
         layoutPlaceholder = view.findViewById<LinearLayout>(R.id.layoutPlaceholder)
-        cardFoto = view.findViewById<MaterialCardView>(R.id.cardSeleccionarFoto)
         imgPreview = view.findViewById(R.id.imgPreview)
+        cardFoto = view.findViewById<MaterialCardView>(R.id.cardSeleccionarFoto)
 
         cardFoto.setOnClickListener {
+            imageViewActual = null
             pickImage.launch("image/*")
         }
 
@@ -94,7 +103,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             val diasString = view.findViewById<EditText>(R.id.etDiasMax).text.toString()
             val dias = diasString.toIntOrNull() ?: 0
             //insert plantas
-            val values = db.putPlantas(nombre, dias, imagenPathGuardado)
+            val values = db.putPlantas(nombre, dias, imagenNuevaPath)
 
             // insert gruposplantas
             val valueInt: Int = values.toInt()
@@ -123,7 +132,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             val sheet = PlantasBottomSheet(
                 listaPlantas = plantasDTO,
                 onEditar = { id -> editarPlantas(id) },
-                onEliminar = { id -> eliminarPlantas(id) }
+                onEliminar = { id, vistaSheet -> eliminarPlantas(id,vistaSheet) }
             )
             sheet.show(parentFragmentManager, "PlantasSheet")
         }
@@ -159,6 +168,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         }
         // Botón cambiar foto
         btnCambiarFoto.setOnClickListener {
+            imageViewActual = imgPlanta
             pickImage.launch("image/*")
         }
 
@@ -210,20 +220,26 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             .show()
     }
 
-    private fun eliminarPlantas(id: Int) {
+    private fun eliminarPlantas(id: Int , view: View? = null) {
 
         val filas = db.eliminarPlantas(id)
 
         if (filas > 0) {
 
             // Refrescamos primero la lista
-            plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+            //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+            val snackbarView = view ?: requireView()
+            val listaActualizada = db.obtenerEstadoPlantas()
 
-            Snackbar.make(requireView(), "Planta eliminada", Snackbar.LENGTH_LONG)
+            plantasAdapterAct.submitList(listaActualizada)
+
+            Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
                 .setAction("Deshacer") {
 
                     db.reactivarPlanta(id)
-                    plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+                    //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+                    val listaReactivada = db.obtenerEstadoPlantas()
+                    plantasAdapterAct.submitList(listaReactivada)
                 }
                 .show()
 

@@ -118,10 +118,12 @@ class AdapterPlantas(
 
     inner class PlantaActViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         private val nombrePlanta = itemView.findViewById<TextView>(R.id.tvNombrePlantaAct)
+        private val nombreGrupo = itemView.findViewById<TextView>(R.id.tvGrupoAct)
         private val botonActualizarPlanta = itemView.findViewById<Button>(R.id.btnActualizarPlantaAct)
         private val botonEliminarPlanta = itemView.findViewById<Button>(R.id.btnEliminarPlanta)
         fun bind(dto: EstadoPlantasDTO){
             nombrePlanta.text = dto.nombre
+            nombreGrupo.text = dto.nombreGrupos
             botonActualizarPlanta.setOnClickListener {
                 onEditarPlanta?.invoke(dto.plantaId)
             }

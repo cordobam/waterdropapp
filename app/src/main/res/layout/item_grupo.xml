@@ -21,7 +21,7 @@
             android:id="@+id/imgGrupo"
             android:layout_width="52dp"
             android:layout_height="52dp"
-            android:src="@drawable/ic_planta"
+            android:src="@drawable/ic_grupo"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_circle_green_light"
             app:layout_constraintStart_toStartOf="parent"

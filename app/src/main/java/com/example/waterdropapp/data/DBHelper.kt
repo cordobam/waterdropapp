@@ -490,10 +490,10 @@ class DBHelper(context: Context) :
     fun getEstadosGrupos(): List<EstadoGruposDTO> {
         val lista = mutableListOf<EstadoGruposDTO>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT G.grupo_id, nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
+        val cursor = db.rawQuery("SELECT G.grupo_id, P.nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
                 "FROM $TABLE_NAME_GRUPOS G LEFT JOIN $TABLE_NAME_GRUPOS_MANY GP ON G.grupo_id = GP.grupo_id \n" +
-                "WHERE activo=1 \n" +
-                "GROUP BY G.grupo_id , nombre", null)
+                "INNER JOIN $TABLE_NAME_PLANTAS P ON GP.planta_id = P.planta_id WHERE P.activo= 1 \n" +
+                "GROUP BY G.grupo_id , g.nombre", null)
 
         if (cursor.moveToFirst()) {
             do {

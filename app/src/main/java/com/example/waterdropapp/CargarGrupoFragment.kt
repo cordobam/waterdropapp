@@ -42,11 +42,6 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             onEliminarGrupo = { id -> eliminarGrupo(id) }
         )
 
-        //val rv = view.findViewById<RecyclerView>(R.id.rvEliminarActualizarGrupo)
-        //rv.layoutManager = LinearLayoutManager(requireContext())
-        //rv.adapter = gruposAdapterAct
-
-        //val cardLista =  view.findViewById<MaterialCardView>(R.id.cardContenedorLista)
         val botonvergrupos = view.findViewById<Button>(R.id.btnVerGrupo)
 
         botonvergrupos.setOnClickListener {
