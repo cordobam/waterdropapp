@@ -30,7 +30,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_agenda"
+                android:src="@drawable/ic_grupo"
                 app:tint="#3A7D44"/>
 
         </FrameLayout>
