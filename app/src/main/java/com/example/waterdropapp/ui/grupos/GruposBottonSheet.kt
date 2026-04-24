@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class GruposBottomSheet(
     private val listaGrupos: List<EstadoGruposDTO>, // Tipo correcto
     private val onEditar: (Int) -> Unit,
-    private val onEliminar: (Int) -> Unit
+    private val onEliminar: (Int, View) -> Unit
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -33,7 +33,7 @@ class GruposBottomSheet(
                 onEditar(id)
                 dismiss() // Cerramos al editar para ver el diálogo
             },
-            onEliminarGrupo = { id -> onEliminar(id) }
+            onEliminarGrupo = { id -> onEliminar(id, view )  }
         )
 
         rv.layoutManager = LinearLayoutManager(context)
