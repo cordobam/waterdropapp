@@ -50,7 +50,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             val sheet = GruposBottomSheet(
                 listaGrupos = gruposDTO,
                 onEditar = { id -> editarGrupo(id) },
-                onEliminar = { id -> eliminarGrupo(id) }
+                onEliminar = { id, vistasheet -> eliminarGrupo(id ,vistasheet) }
             )
             sheet.show(parentFragmentManager, "GruposSheet")
         }
@@ -74,20 +74,25 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             .show()
     }
 
-    private fun eliminarGrupo(id: Int) {
+    private fun eliminarGrupo(id: Int , view: View? = null) {
 
         val filas = db.eliminarGrupos(id)
 
         if (filas > 0) {
 
             // Refrescamos la lista primero
-            gruposAdapterAct.submitList(db.getEstadosGrupos())
+            //gruposAdapterAct.submitList(db.getEstadosGrupos())
+            val snackbarView = view ?: requireView()
+            val listaActualizada = db.getEstadosGrupos()
 
-            Snackbar.make(requireView(), "Grupo eliminado", Snackbar.LENGTH_LONG)
+            gruposAdapterAct.submitList(listaActualizada)
+
+            Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
                 .setAction("Deshacer") {
 
                     db.reactivarGrupo(id)
-                    gruposAdapterAct.submitList(db.getEstadosGrupos())
+                    val listaReactivada = db.getEstadosGrupos()
+                    gruposAdapterAct.submitList(listaReactivada)
                 }
                 .show()
 
