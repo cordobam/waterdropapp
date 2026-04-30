@@ -23,7 +23,8 @@ class DBHelper(context: Context) :
                 nombre TEXT NOT NULL,
                 dias_max_sin_riego INTEGER NOT NULL,
                 activo INTEGER NOT NULL DEFAULT 1,
-                imagen_path TEXT
+                imagen_path TEXT,
+                fecha_creacion TEXT
             )
         """.trimIndent()
 
@@ -72,10 +73,14 @@ class DBHelper(context: Context) :
 
     fun putPlantas(nombre: String , dias: Int , imagenPath: String?): Long {
         val db = writableDatabase
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val fechaHoy = formatter.format(Date())
+        Log.d("DB_TEST", "Fecha generada: '$fechaHoy'")
         val values = ContentValues().apply {
             put("nombre", nombre)
             put("dias_max_sin_riego", dias)
             put("imagen_path", imagenPath)
+            put("fecha_creacion", fechaHoy)
         }
         return db.insert(TABLE_NAME_PLANTAS, null, values)
     }
@@ -180,6 +185,7 @@ class DBHelper(context: Context) :
             p.planta_id,
             p.nombre,
             p.dias_max_sin_riego,
+            p.fecha_creacion,
             imagen_path,
             -- Último riego calculado aparte
             (
@@ -210,8 +216,11 @@ class DBHelper(context: Context) :
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
             val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
+            val fecha_creacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"))
 
-            val diasSinRegar = calcularDias(ultimo)
+            val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
+
+            val diasSinRegar = calcularDias(fechaBase)
             val necesita = diasSinRegar >= maxDias
 
             lista.add(
@@ -376,14 +385,20 @@ class DBHelper(context: Context) :
         }
     }
 
+    private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     private fun calcularDias(fecha: String?): Int {
-        if (fecha == null) return 0//Int.MAX_VALUE
+        if (fecha.isNullOrEmpty()) return 0
 
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val fechaRiego = formatter.parse(fecha) ?: return Int.MAX_VALUE
+        val fechaRiego = try {
+            formatter.parse(fecha)
+        } catch (e: Exception) {
+            return 0
+        }
+
         val hoy = Date()
+        val diff = hoy.time - (fechaRiego?.time ?: return 0)
 
-        val diff = hoy.time - fechaRiego.time
         return (diff / (1000 * 60 * 60 * 24)).toInt()
     }
 
@@ -490,10 +505,10 @@ class DBHelper(context: Context) :
     fun getEstadosGrupos(): List<EstadoGruposDTO> {
         val lista = mutableListOf<EstadoGruposDTO>()
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT G.grupo_id, P.nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
+        val cursor = db.rawQuery("SELECT G.grupo_id, G.nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
                 "FROM $TABLE_NAME_GRUPOS G LEFT JOIN $TABLE_NAME_GRUPOS_MANY GP ON G.grupo_id = GP.grupo_id \n" +
                 "INNER JOIN $TABLE_NAME_PLANTAS P ON GP.planta_id = P.planta_id WHERE P.activo= 1 \n" +
-                "GROUP BY G.grupo_id , g.nombre", null)
+                "GROUP BY G.grupo_id , G.nombre", null)
 
         if (cursor.moveToFirst()) {
             do {
