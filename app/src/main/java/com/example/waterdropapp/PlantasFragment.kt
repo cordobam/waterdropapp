@@ -51,6 +51,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             onRegarClick = { plantaId ->
                 db.putRiegos(plantaId, fecha)
 
+                cargarPlantas()
+
                 Toast.makeText(
                     requireContext(),
                     "Planta regada con exito",
