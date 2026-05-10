@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#C8DFC0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="10dp"
+        android:gravity="center_vertical">
+
+        <!-- IMAGEN -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/imgMiPublicacion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_planta"
+                android:scaleType="centerCrop"
+                android:background="#EAF3DE"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- INFO -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombreMiPublicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre planta"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/tvPrecioMiPublicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$1.500"
+                android:textSize="13sp"
+                android:textColor="#3A7D44"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:id="@+id/tvFechaPublicacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Publicado hace 2 días"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <!-- ACCIONES -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/btnEditarPublicacion"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#3A7D44"
+                android:padding="4dp"
+                android:layout_marginBottom="4dp"/>
+
+            <ImageView
+                android:id="@+id/btnEliminarPublicacion"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#E53935"
+                android:padding="4dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
