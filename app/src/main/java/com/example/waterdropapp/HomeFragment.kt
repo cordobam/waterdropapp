@@ -47,7 +47,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val isLoggedIn = prefs.getBoolean("is_logged_in", false)
 
             val intent = if (isLoggedIn) {
-                Intent(requireContext(), MarketplaceFragment::class.java)
+                Intent(requireContext(), MarketplaceActivity::class.java)
             } else {
                 Intent(requireContext(), LoginActivity::class.java)
             }
