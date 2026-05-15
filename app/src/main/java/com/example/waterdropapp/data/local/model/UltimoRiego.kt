@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.data.local.model
 
 class UltimoRiego {
     var name: String = "null"

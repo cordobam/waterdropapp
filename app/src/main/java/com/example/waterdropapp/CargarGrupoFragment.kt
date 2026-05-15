@@ -2,20 +2,14 @@ package com.example.waterdropapp
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.waterdropapp.data.DBHelper
+import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.grupos.GruposBottomSheet
-import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 
 

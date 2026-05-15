@@ -1,19 +1,10 @@
 package com.example.waterdropapp
 
-import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.waterdropapp.data.DBHelper
 import com.example.waterdropapp.databinding.FragmentCargasVariasBinding
-import com.example.waterdropapp.ui.grupos.AdapterGrupos
-import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.example.waterdropapp.ui.plantas.CargaVariasAdapter
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 

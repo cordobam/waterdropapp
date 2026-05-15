@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.data.local.model
 
 data class Plantas(
     val planta_id: Int,

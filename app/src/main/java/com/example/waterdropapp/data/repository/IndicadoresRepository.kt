@@ -1,10 +1,9 @@
 package com.example.waterdropapp.data.repository
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.waterdropapp.data.DBHelper
-import com.example.waterdropapp.data.dto.IndicadoresDTO
+import com.example.waterdropapp.data.local.model.DBHelper
+import com.example.waterdropapp.data.local.dto.IndicadoresDTO
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit

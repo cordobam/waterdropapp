@@ -8,9 +8,8 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.DBHelper
+import com.example.waterdropapp.data.local.model.DBHelper
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Locale
 import android.util.Log
 
