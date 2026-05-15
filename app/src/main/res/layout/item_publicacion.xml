@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/bg_chip_green"
+
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:paddingTop="3dp"

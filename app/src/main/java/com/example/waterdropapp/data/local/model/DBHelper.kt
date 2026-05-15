@@ -1,14 +1,14 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.data.local.model
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.waterdropapp.data.dto.EstadoGruposDTO
-import com.example.waterdropapp.data.dto.EstadoPlantasDTO
-import com.example.waterdropapp.data.dto.RiegoHistorialDTO
-import com.example.waterdropapp.data.dto.RiegosPlantaDTO
+import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
+import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
+import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
+import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

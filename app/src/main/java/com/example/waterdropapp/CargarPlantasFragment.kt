@@ -2,7 +2,6 @@ package com.example.waterdropapp
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AdapterView
@@ -15,15 +14,11 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.waterdropapp.data.DBHelper
-import com.example.waterdropapp.ui.grupos.AdapterGrupos
+import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.card.MaterialCardView
 import java.io.File
-import com.example.waterdropapp.data.Plantas
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 

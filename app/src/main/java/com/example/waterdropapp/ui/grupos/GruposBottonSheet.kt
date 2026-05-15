@@ -9,7 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.dto.EstadoGruposDTO
+import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class GruposBottomSheet(

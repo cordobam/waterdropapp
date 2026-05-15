@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data
+package com.example.waterdropapp.data.local.model
 
 enum class FiltroRiego {
     TODAS,

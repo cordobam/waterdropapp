@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.dto.RiegoHistorialDTO
+import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
 
 class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHolder>() {
 

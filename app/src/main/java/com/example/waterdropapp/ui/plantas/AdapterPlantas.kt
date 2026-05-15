@@ -1,7 +1,6 @@
 package com.example.waterdropapp.ui.plantas
 
 import android.graphics.Color
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.dto.EstadoPlantasDTO
+import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import java.io.File
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView

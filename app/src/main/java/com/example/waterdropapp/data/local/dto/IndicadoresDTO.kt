@@ -1,4 +1,4 @@
-package com.example.waterdropapp.data.dto
+package com.example.waterdropapp.data.local.dto
 
 data class IndicadoresDTO(
     val total: Int,
