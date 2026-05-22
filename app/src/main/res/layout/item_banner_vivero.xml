@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#3A7D44"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#EAF3DE"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/imgBannerVivero"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_planta"
+                android:scaleType="centerCrop"
+                android:background="#FFFFFF"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vivero destacado 🌿"
+                android:textSize="10sp"
+                android:textColor="#3A7D44"
+                android:textStyle="bold"
+                android:layout_marginBottom="2dp"/>
+
+            <TextView
+                android:id="@+id/tvNombreBannerVivero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre vivero"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/tvDistanciaBanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Barrio"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:layout_marginTop="1dp"/>
+
+            <TextView
+                android:id="@+id/tvEspecialidadBanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interior · Suculentas"
+                android:textSize="11sp"
+                android:textColor="#3A7D44"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerBannerVivero"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="Ver"
+            android:textSize="11sp"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#3A7D44"
+            app:cornerRadius="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
