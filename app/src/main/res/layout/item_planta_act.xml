@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- FOTO -->
         <ImageView
             android:id="@+id/imgPlantaAct"
             android:layout_width="52dp"
@@ -28,41 +27,42 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!-- NOMBRE -->
-        <TextView
-            android:id="@+id/tvNombrePlantaAct"
+        <LinearLayout
+            android:id="@+id/containerTextosAct"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="San Severina"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#1A3A1F"
+            android:orientation="vertical"
             android:layout_marginStart="12dp"
-            app:layout_constraintTop_toTopOf="@id/imgPlantaAct"
-            app:layout_constraintStart_toEndOf="@id/imgPlantaAct"
-            app:layout_constraintEnd_toStartOf="@id/btnActualizarPlantaAct"/>
-
-        <!-- GRUPO / INFO -->
-        <TextView
-            android:id="@+id/tvGrupoAct"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Balcón"
-            android:textSize="11sp"
-            android:textColor="#888888"
-            android:background="@drawable/bg_badge_grupo"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tvNombrePlantaAct"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/imgPlantaAct"
             app:layout_constraintEnd_toStartOf="@id/btnActualizarPlantaAct"
-            app:layout_constraintWidth_default="wrap"/>
+            app:layout_constraintTop_toTopOf="@id/imgPlantaAct"
+            app:layout_constraintBottom_toBottomOf="@id/imgPlantaAct">
 
-        <!-- BTN ACTUALIZAR -->
+            <TextView
+                android:id="@+id/tvNombrePlantaAct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="San Severina"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"/>
+
+            <TextView
+                android:id="@+id/tvGrupoAct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Balcón"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:background="@drawable/bg_badge_grupo"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"/>
+
+        </LinearLayout>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnActualizarPlantaAct"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -79,7 +79,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnEliminarPlanta"/>
 
-        <!-- BTN ELIMINAR -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEliminarPlanta"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -94,6 +93,9 @@
             app:iconPadding="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            app:iconGravity="textStart"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
