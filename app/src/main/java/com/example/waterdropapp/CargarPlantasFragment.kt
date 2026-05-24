@@ -1,6 +1,7 @@
 package com.example.waterdropapp
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.local.model.DBHelper
@@ -57,6 +59,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             }
         }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         //carga spinner con datos
@@ -97,8 +100,10 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             val nombre = view.findViewById<EditText>(R.id.etNombre).text.toString()
             val diasString = view.findViewById<EditText>(R.id.etDiasMax).text.toString()
             val dias = diasString.toIntOrNull() ?: 0
+            val diasString_inv = view.findViewById<EditText>(R.id.etDiasMaxInvierno).text.toString()
+            val dias_inv = diasString_inv.toIntOrNull() ?: 0
             //insert plantas
-            val values = db.putPlantas(nombre, dias, imagenNuevaPath)
+            val values = db.putPlantas(nombre, dias, imagenNuevaPath, dias_inv)
 
             // insert gruposplantas
             val valueInt: Int = values.toInt()
@@ -135,6 +140,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
     private fun findViewById(cardContenedorLista: Int) {}
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun editarPlantas(id:Int) {
 
         val dialogView = layoutInflater.inflate(
@@ -144,6 +150,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
         val etDias = dialogView.findViewById<EditText>(R.id.etDias)
+        val etDiasInv = dialogView.findViewById<EditText>(R.id.etDiasInv)
         val spGrupos = dialogView.findViewById<Spinner>(R.id.spGrupos)
         val imgPlanta = dialogView.findViewById<ImageView>(R.id.imgPlantaEditar)
         val btnCambiarFoto = dialogView.findViewById<Button>(R.id.btnCambiarFoto)
@@ -152,6 +159,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         etNombre.setText(plantaActual?.nombre)
         etDias.setText(plantaActual?.dias_max_sin_riego.toString())
+        etDiasInv.setText(plantaActual?.dias_max_sin_riego_invierno.toString())
 
         imagenNuevaPath = plantaActual?.imagen_path
 
@@ -201,11 +209,12 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
                 val nombre = etNombre.text.toString()
                 val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+                val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
 
                 // insert gruposplantas
                 val grupo_plantas = db.actualizarGrupoPlanta(id,codigoGrupo)
 
-                db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath  )
+                db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
                 Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
                 plantasAdapterAct.submitList(
                     db.obtenerEstadoPlantas()
@@ -215,7 +224,8 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             .show()
     }
 
-    private fun eliminarPlantas(id: Int , view: View? = null) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun eliminarPlantas(id: Int, view: View? = null) {
 
         val filas = db.eliminarPlantas(id)
 
