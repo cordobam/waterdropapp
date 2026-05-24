@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- Imagen -->
         <ImageView
             android:id="@+id/imgGrupo"
             android:layout_width="52dp"
@@ -28,39 +27,43 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!-- Nombre + cant plantas -->
-        <TextView
-            android:id="@+id/tvNombreGrupo"
+        <LinearLayout
+            android:id="@+id/containerTextos"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginStart="12dp"
-            android:text="Grupo"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#1A3A1F"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/imgGrupo"
-            app:layout_constraintTop_toTopOf="@id/imgGrupo"
-            app:layout_constraintEnd_toStartOf="@id/btnRegarGrupo"/>
-
-        <TextView
-            android:id="@+id/tvCantPlantas"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:textSize="11sp"
-            android:textColor="#888888"
-            android:background="@drawable/bg_badge_grupo"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            app:layout_constraintStart_toEndOf="@id/imgGrupo"
-            app:layout_constraintTop_toBottomOf="@id/tvNombreGrupo"
             app:layout_constraintEnd_toStartOf="@id/btnRegarGrupo"
-            app:layout_constraintWidth_default="wrap"/>
+            app:layout_constraintTop_toTopOf="@id/imgGrupo"
+            app:layout_constraintBottom_toBottomOf="@id/imgGrupo">
 
-        <!-- BTN REGAR — acción primaria -->
+            <TextView
+                android:id="@+id/tvNombreGrupo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grupo"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"/>
+
+            <TextView
+                android:id="@+id/tvCantPlantas"
+                android:text="Cant de plantas: 0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:background="@drawable/bg_badge_grupo"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"/>
+
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegarGrupo"
             android:layout_width="wrap_content"
@@ -75,7 +78,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!-- BTN VER — acción secundaria -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnVerGrupo"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -90,6 +92,9 @@
             app:iconPadding="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            app:iconGravity="textStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
