@@ -4,12 +4,16 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
 import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Month
 import java.util.Date
 import java.util.Locale
 
@@ -24,7 +28,8 @@ class DBHelper(context: Context) :
                 dias_max_sin_riego INTEGER NOT NULL,
                 activo INTEGER NOT NULL DEFAULT 1,
                 imagen_path TEXT,
-                fecha_creacion TEXT
+                fecha_creacion TEXT,
+                dias_max_sin_riego_invierno INTEGER NOT NULL
             )
         """.trimIndent()
 
@@ -71,7 +76,7 @@ class DBHelper(context: Context) :
 
     // metodos plantas
 
-    fun putPlantas(nombre: String , dias: Int , imagenPath: String?): Long {
+    fun putPlantas(nombre: String , dias: Int , imagenPath: String?, dias_inv: Int): Long {
         val db = writableDatabase
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val fechaHoy = formatter.format(Date())
@@ -81,6 +86,7 @@ class DBHelper(context: Context) :
             put("dias_max_sin_riego", dias)
             put("imagen_path", imagenPath)
             put("fecha_creacion", fechaHoy)
+            put("dias_max_sin_riego_invierno", dias_inv)
         }
         return db.insert(TABLE_NAME_PLANTAS, null, values)
     }
@@ -111,12 +117,13 @@ class DBHelper(context: Context) :
 
 
 
-    fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int, imagen_path: String?): Int {
+    fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int, imagen_path: String?, dias_inv: Int): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("nombre", nombre)
             put("dias_max_sin_riego", dias)
             put("imagen_path", imagen_path)
+            put("dias_max_sin_riego_invierno", dias_inv)
         }
         return db.update(
             TABLE_NAME_PLANTAS,
@@ -146,7 +153,7 @@ class DBHelper(context: Context) :
     fun getPlantasPorId(plantaId: Int): Plantas? {
         val lista = mutableListOf<Plantas>()
         val db = readableDatabase
-        val cursor = db.rawQuery("        SELECT p.planta_id, p.nombre, p.dias_max_sin_riego, p.imagen_path, gp.grupo_id\n" +
+        val cursor = db.rawQuery("        SELECT p.planta_id, p.nombre, p.dias_max_sin_riego, p.imagen_path, gp.grupo_id, p.dias_max_sin_riego_invierno\n" +
                 "        FROM $TABLE_NAME_PLANTAS p\n" +
                 "        LEFT JOIN $TABLE_NAME_GRUPOS_MANY gp ON p.planta_id = gp.planta_id\n" +
                 "        WHERE p.activo = 1 AND p.planta_id = ?", arrayOf(plantaId.toString()))
@@ -159,6 +166,7 @@ class DBHelper(context: Context) :
             val dias_max_sin_riego = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
             val imagen_path = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
             val grupoId = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_id"))
+            val dias_max_sin_riego_invierno = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
 
             planta =
                 Plantas(
@@ -167,7 +175,8 @@ class DBHelper(context: Context) :
                     dias_max_sin_riego = dias_max_sin_riego,
                     activo = null,
                     imagen_path = imagen_path,
-                    grupo_id = grupoId
+                    grupo_id = grupoId,
+                    dias_max_sin_riego_invierno= dias_max_sin_riego_invierno
                 )
         }
 
@@ -176,6 +185,7 @@ class DBHelper(context: Context) :
         return planta
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun obtenerEstadoPlantas(): List<EstadoPlantasDTO> {
         val lista = mutableListOf<EstadoPlantasDTO>()
         val db = readableDatabase
@@ -185,6 +195,7 @@ class DBHelper(context: Context) :
             p.planta_id,
             p.nombre,
             p.dias_max_sin_riego,
+            p.dias_max_sin_riego_invierno,
             p.fecha_creacion,
             imagen_path,
             -- Último riego calculado aparte
@@ -217,11 +228,24 @@ class DBHelper(context: Context) :
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
             val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
             val fecha_creacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"))
+            val maxDias_invierno = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
 
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
-
             val diasSinRegar = calcularDias(fechaBase)
-            val necesita = diasSinRegar >= maxDias
+
+            val estacionActual = calcularEstacion(LocalDate.now())
+            var necesita = false
+            when (estacionActual) {
+                Estacion.VERANO -> {
+                     necesita = diasSinRegar >= maxDias
+                }
+                Estacion.INVIERNO , Estacion.OTONO -> {
+                     necesita = diasSinRegar >= maxDias_invierno
+                }
+                Estacion.PRIMAVERA -> {
+                     necesita = diasSinRegar >= maxDias
+                }
+            }
 
             lista.add(
                 EstadoPlantasDTO(
@@ -364,6 +388,7 @@ class DBHelper(context: Context) :
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun obtenerEstadoPlantasXRiego(
         filtro: FiltroRiego = FiltroRiego.TODAS,
         diasUmbral: Int = 2
@@ -400,6 +425,28 @@ class DBHelper(context: Context) :
         val diff = hoy.time - (fechaRiego?.time ?: return 0)
 
         return (diff / (1000 * 60 * 60 * 24)).toInt()
+    }
+
+    enum class Estacion {
+        PRIMAVERA, VERANO, OTONO, INVIERNO
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun calcularEstacion(fechaHoy: LocalDate): Estacion {
+        val dia = fechaHoy.dayOfMonth
+        val mes = fechaHoy.month
+
+        // Usamos las fechas aproximadas de los cambios de estación (día 21)
+        return when (mes) {
+            Month.JANUARY, Month.FEBRUARY -> Estacion.VERANO
+            Month.MARCH -> if (dia < 21) Estacion.VERANO else Estacion.OTONO
+            Month.APRIL, Month.MAY -> Estacion.OTONO
+            Month.JUNE -> if (dia < 21) Estacion.OTONO else Estacion.INVIERNO
+            Month.JULY, Month.AUGUST -> Estacion.INVIERNO
+            Month.SEPTEMBER -> if (dia < 21) Estacion.INVIERNO else Estacion.PRIMAVERA
+            Month.OCTOBER, Month.NOVEMBER -> Estacion.PRIMAVERA
+            Month.DECEMBER -> if (dia < 21) Estacion.PRIMAVERA else Estacion.VERANO
+        }
     }
 
     // metodos riegos

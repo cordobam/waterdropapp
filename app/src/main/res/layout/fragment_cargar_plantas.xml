@@ -162,7 +162,7 @@
                     <!-- Dias max -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Días máximo sin riego"
+                        android:hint="Días máximo sin riego Verano"
                         android:layout_marginTop="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -180,6 +180,32 @@
                             android:inputType="number"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Dias max -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:hint="Días máximo sin riego Invierno"
+                        android:layout_marginTop="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxCornerRadiusTopStart="10dp"
+                        app:boxCornerRadiusTopEnd="10dp"
+                        app:boxCornerRadiusBottomStart="10dp"
+                        app:boxCornerRadiusBottomEnd="10dp"
+                        app:boxStrokeColor="#C8DFC0"
+                        app:hintTextColor="#3A7D44"
+                        app:startIconDrawable="@android:drawable/ic_menu_recent_history"
+                        app:startIconTint="#3A7D44">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDiasMaxInvierno"
+                            android:inputType="number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
 
                     </com.google.android.material.textfield.TextInputLayout>
 
