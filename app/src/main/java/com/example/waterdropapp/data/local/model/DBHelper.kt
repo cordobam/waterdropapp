@@ -60,10 +60,21 @@ class DBHelper(context: Context) :
             )
         """.trimIndent()
 
+        val createTableWeatherCache = """
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME_WEATHER_CACHE (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha TEXT NOT NULL,
+                min_temp REAL,
+                max_temp REAL,
+                ciudad TEXT NOT NULL
+            )
+        """.trimIndent()
+
         db.execSQL(createTableGrupos)
         db.execSQL(createTablePlantas)
         db.execSQL(createTableRiegos)
         db.execSQL(createTableGruposMany)
+        db.execSQL(createTableWeatherCache)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -71,6 +82,7 @@ class DBHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_RIEGOS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_PLANTAS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_GRUPOS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_WEATHER_CACHE")
         onCreate(db)
     }
 
@@ -683,5 +695,6 @@ class DBHelper(context: Context) :
         const val TABLE_NAME_RIEGOS = "riegos"
         const val TABLE_NAME_GRUPOS = "grupos"
         const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
+        const val TABLE_NAME_WEATHER_CACHE = "weather_cache"
     }
 }

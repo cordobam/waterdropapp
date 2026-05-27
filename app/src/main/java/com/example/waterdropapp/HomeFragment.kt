@@ -10,7 +10,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.repository.IndicadoresRepository
+import com.example.waterdropapp.data.repository.WeatherRepository
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -33,6 +38,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val tvPromedioTardanza = view.findViewById<TextView>(R.id.tvPromedioTardanza)
         val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
 
+        // Clima
+        val tvTempMin = view.findViewById<TextView>(R.id.tvTempMin)
+        val tvTempMax = view.findViewById<TextView>(R.id.tvTempMax)
+
         tvTotal.text = indicadores.total.toString()
         tvTotalxRegar.text = indicadores.necesitanRiego.toString()
         tvTotalxNoRegar.text = indicadores.noNecesitanRiego.toString()
@@ -49,6 +58,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 Intent(requireContext(), LoginActivity::class.java)
             }
             startActivity(intent)
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val weatherRepo = WeatherRepository()
+                val weather = weatherRepo.getWeeklyTemperatures("Cordoba")
+
+                val minSemana = weather.temperaturas
+                    .mapNotNull { it.min }
+                    .minOrNull()
+                val maxSemana = weather.temperaturas
+                    .mapNotNull { it.max }
+                    .maxOrNull()
+
+                withContext(Dispatchers.Main) {
+                    //tvCiudad.text = weather.ciudad
+                    tvTempMin.text = "${minSemana?.toInt() ?: ""}°"
+                    tvTempMax.text = "${maxSemana?.toInt() ?: ""}°"
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    //tvCiudad.text = "Error al cargar clima"
+                }
+            }
         }
     }
 

@@ -2,10 +2,12 @@ package com.example.waterdropapp
 
 import android.graphics.Rect
 import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.local.model.DBHelper
@@ -25,6 +27,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -137,6 +140,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun cargarPlantas() {
         val lista = db.obtenerEstadoPlantas()
         val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
