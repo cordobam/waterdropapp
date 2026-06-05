@@ -23,11 +23,15 @@ import com.google.android.material.card.MaterialCardView
 import java.io.File
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.GrupoRepository
 
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
     private lateinit var db: DBHelper
+    private lateinit var plantaRepo: PlantaRepository
+    private lateinit var grupoRepo: GrupoRepository
     private lateinit var plantasAdapterAct: AdapterPlantas
     private var imagenPathGuardado: String? = null
     private lateinit var imgPreview: ImageView
@@ -63,9 +67,12 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         //carga spinner con datos
-        db = DBHelper(requireContext())
+        val helper = DBHelper(requireContext())
+        plantaRepo = PlantaRepository(helper)
+        grupoRepo = GrupoRepository(helper)
+
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
-        val grupos = db.getGrupos()
+        val grupos = grupoRepo.getGrupos()
         val nombresGrupos = grupos.map{it.nombre}
         val adapter = ArrayAdapter(
             requireContext(),
@@ -103,11 +110,11 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             val diasString_inv = view.findViewById<EditText>(R.id.etDiasMaxInvierno).text.toString()
             val dias_inv = diasString_inv.toIntOrNull() ?: 0
             //insert plantas
-            val values = db.putPlantas(nombre, dias, imagenNuevaPath, dias_inv)
+            val values = plantaRepo.putPlantas(nombre, dias, imagenNuevaPath, dias_inv)
 
             // insert gruposplantas
             val valueInt: Int = values.toInt()
-            val grupo_plantas = db.putGruposPlantas(valueInt,codigoGrupo)
+            val grupo_plantas = grupoRepo.putGruposPlantas(valueInt,codigoGrupo)
 
             Toast.makeText(
                 requireContext(),
@@ -126,7 +133,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         botonverplantas.setOnClickListener {
             // 1. Obtenemos los DTOs de la base de datos
-            val plantasDTO = db.obtenerEstadoPlantas()
+            val plantasDTO = plantaRepo.obtenerEstadoPlantas()
 
             // 2. Mostramos el Bottom Sheet
             val sheet = PlantasBottomSheet(
@@ -155,7 +162,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         val imgPlanta = dialogView.findViewById<ImageView>(R.id.imgPlantaEditar)
         val btnCambiarFoto = dialogView.findViewById<Button>(R.id.btnCambiarFoto)
 
-        val plantaActual = db.getPlantasPorId(id)
+        val plantaActual = plantaRepo.getPlantasPorId(id)
 
         etNombre.setText(plantaActual?.nombre)
         etDias.setText(plantaActual?.dias_max_sin_riego.toString())
@@ -175,7 +182,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             pickImage.launch("image/*")
         }
 
-        val grupos = db.getGrupos()
+        val grupos = grupoRepo.getGrupos()
         val nombresGrupos = grupos.map{it.nombre}
 
         val adapterSpinner = ArrayAdapter(
@@ -212,12 +219,12 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
 
                 // insert gruposplantas
-                val grupo_plantas = db.actualizarGrupoPlanta(id,codigoGrupo)
+                val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
 
-                db.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
+                plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
                 Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
                 plantasAdapterAct.submitList(
-                    db.obtenerEstadoPlantas()
+                    plantaRepo.obtenerEstadoPlantas()
                 )
             }
             .setNegativeButton("Cancelar", null)
@@ -227,23 +234,23 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun eliminarPlantas(id: Int, view: View? = null) {
 
-        val filas = db.eliminarPlantas(id)
+        val filas = plantaRepo.eliminarPlantas(id)
 
         if (filas > 0) {
 
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            val listaActualizada = db.obtenerEstadoPlantas()
+            val listaActualizada = plantaRepo.obtenerEstadoPlantas()
 
             plantasAdapterAct.submitList(listaActualizada)
 
             Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
                 .setAction("Deshacer") {
 
-                    db.reactivarPlanta(id)
+                    plantaRepo.reactivarPlanta(id)
                     //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
-                    val listaReactivada = db.obtenerEstadoPlantas()
+                    val listaReactivada = plantaRepo.obtenerEstadoPlantas()
                     plantasAdapterAct.submitList(listaReactivada)
                 }
                 .show()

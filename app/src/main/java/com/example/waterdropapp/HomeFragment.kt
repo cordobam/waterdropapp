@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.model.DBHelper
+import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.IndicadoresRepository
 import com.example.waterdropapp.data.repository.WeatherRepository
 import com.google.android.material.button.MaterialButton
@@ -16,17 +17,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.RiegoRepository
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-
+    private lateinit var plantaRepo: PlantaRepository
+    private lateinit var riegoRepo: RiegoRepository
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dbHelper = DBHelper(requireContext())
-        val repository = IndicadoresRepository(dbHelper)
+        val helper = DBHelper(requireContext())
+        plantaRepo = PlantaRepository(helper)
+        riegoRepo = RiegoRepository(helper)
+
+        val repository = IndicadoresRepository(plantaRepo,riegoRepo)
 
         val indicadores = repository.getIndicadores()
 

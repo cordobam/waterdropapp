@@ -7,12 +7,14 @@ import com.example.waterdropapp.data.local.dto.IndicadoresDTO
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.RiegoRepository
 
-class IndicadoresRepository(private val db: DBHelper) {
+class IndicadoresRepository(private val plantaRepo: PlantaRepository, private val riegoRepo:RiegoRepository) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getIndicadores(): IndicadoresDTO {
-        val lista = db.obtenerEstadoPlantas()
+        val lista = plantaRepo.obtenerEstadoPlantas()
 
         val total = lista.size
         val necesitanRiego = lista.count { it.necesitaRiego }
@@ -31,7 +33,7 @@ class IndicadoresRepository(private val db: DBHelper) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun calcularPromedioDiasEntreRiegos(): Double {
-        val plantas = db.obtenerRiegosPorPlanta()
+        val plantas = riegoRepo.obtenerRiegosPorPlanta()
 
         val promedios = plantas.mapNotNull { planta ->
 
@@ -54,7 +56,7 @@ class IndicadoresRepository(private val db: DBHelper) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun calcularPromedioTardanza(): Double {
-        val plantas = db.obtenerRiegosPorPlanta()
+        val plantas = riegoRepo.obtenerRiegosPorPlanta()
 
         val tardanzas = plantas.mapNotNull { planta ->
 
