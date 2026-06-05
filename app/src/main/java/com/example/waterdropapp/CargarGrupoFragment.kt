@@ -11,14 +11,14 @@ import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.grupos.GruposBottomSheet
 import com.google.android.material.snackbar.Snackbar
-
+import com.example.waterdropapp.data.repository.GrupoRepository
 
 class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
-    private lateinit var db: DBHelper
+    private lateinit var db: GrupoRepository
     private lateinit var gruposAdapterAct: AdapterGrupos
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        db = DBHelper(requireContext())
+        db = GrupoRepository(DBHelper(requireContext()))
 
         view.findViewById<Button>(R.id.btnGuardarGrupo).setOnClickListener{
             val nombre = view.findViewById<EditText>(R.id.etNombreGrupo).text.toString()

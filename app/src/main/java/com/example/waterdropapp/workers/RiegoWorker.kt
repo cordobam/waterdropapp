@@ -12,17 +12,20 @@ import com.example.waterdropapp.data.local.model.DBHelper
 import java.text.SimpleDateFormat
 import java.util.Locale
 import android.util.Log
+import androidx.annotation.RequiresApi
+import com.example.waterdropapp.data.repository.PlantaRepository
 
 class RiegoWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun doWork(): Result {
         Log.d("RiegoWorker", "Worker ejecutado")
 
-        val db = DBHelper(applicationContext)
-        val plantas = db.obtenerEstadoPlantas() // con fechaUltimoRiego
+        val plantasRepo = PlantaRepository( DBHelper(applicationContext))
+        val plantas = plantasRepo.obtenerEstadoPlantas() // con fechaUltimoRiego
 
 
         val hoy = System.currentTimeMillis()

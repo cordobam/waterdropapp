@@ -10,22 +10,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.historial.AdapterHistorial
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.RiegoRepository
 
 
 class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
 
-    private lateinit var db: DBHelper
+
     private lateinit var historialAdapter: AdapterHistorial
+    private lateinit var plantaRepo: PlantaRepository
+    private lateinit var riegoRepo: RiegoRepository
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = DBHelper(requireContext())
+        val helper = DBHelper(requireContext())
+        plantaRepo = PlantaRepository(helper)
+        riegoRepo = RiegoRepository(helper)
         historialAdapter = AdapterHistorial()
 
         // carga spinner
         val spinnerPlantas = view.findViewById<Spinner>(R.id.spinnerHistorialRiego)
-        val plantas = db.getPlantas()
+        val plantas = plantaRepo.getPlantas()
         val nombresPlantas = plantas.map{it.second}
         val spinnerAdapter = ArrayAdapter(
             requireContext(),
@@ -52,7 +58,7 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
                     id: Long
                 ) {
                     val plantaSeleccionada = plantas[position]
-                    val lista = db.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
+                    val lista = riegoRepo.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
                     val listaOrdenada = lista.sortedByDescending { it.fechaRiego }
                     historialAdapter.submitList(listaOrdenada)
                 }

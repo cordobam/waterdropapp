@@ -19,6 +19,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import java.util.Date
 import java.util.Locale
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.GrupoRepository
+import com.example.waterdropapp.data.repository.RiegoRepository
 
 
 class PlantasFragment : Fragment(R.layout.fragment_plantas) {
@@ -26,12 +29,19 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var db: DBHelper
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
+    private lateinit var plantaRepo: PlantaRepository
+    private lateinit var grupoRepo: GrupoRepository
+    private lateinit var riegoRepo: RiegoRepository
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = DBHelper(requireContext())
+        //db = DBHelper(requireContext())
+        val helper = DBHelper(requireContext())
+        plantaRepo = PlantaRepository(helper)
+        riegoRepo = RiegoRepository(helper)
+        grupoRepo = GrupoRepository(helper)
 
         // Dentro de tu Fragment, por ejemplo en onViewCreated:
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
@@ -48,7 +58,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         plantasAdapter = AdapterPlantas (
             modo = AdapterPlantas.Modo.MOSTRAR_PLANTAS,
             onRegarClick = { plantaId ->
-                db.putRiegos(plantaId, fecha)
+                riegoRepo.putRiegos(plantaId, fecha)
 
                 cargarPlantas()
 
@@ -69,7 +79,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 cargarPlantasPorGrupo(grupoId)
             },
             onRegarGrupo = {grupoId ->
-                db.putRiegoPorGrupo(grupoId, fecha)
+                riegoRepo.putRiegoPorGrupo(grupoId, fecha)
                 Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
             }
         )
@@ -93,7 +103,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 else -> FiltroRiego.TODAS
             }
 
-            val lista = db.obtenerEstadoPlantasXRiego(FiltroRiego)
+            val lista = plantaRepo.obtenerEstadoPlantasXRiego(FiltroRiego)
             val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
 
             plantasAdapter.submitList(listaOrdenada)
@@ -142,13 +152,13 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun cargarPlantas() {
-        val lista = db.obtenerEstadoPlantas()
+        val lista = plantaRepo.obtenerEstadoPlantas()
         val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
         plantasAdapter.submitList(listaOrdenada)
     }
 
     private fun cargarGrupos() {
-        val grupos = db.getEstadosGrupos()
+        val grupos = grupoRepo.getEstadosGrupos()
         gruposAdapter.submitList(grupos)
     }
 
@@ -160,7 +170,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout?.getTabAt(0)?.select()   // tab Plantas
 
-        val plantas = db.obtenerEstadoPlantasPorGrupo(grupoId)
+        val plantas = plantaRepo.obtenerEstadoPlantasPorGrupo(grupoId)
         plantasAdapter.submitList(plantas)
     }
 }

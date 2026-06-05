@@ -87,7 +87,7 @@ class DBHelper(context: Context) :
     }
 
     // metodos plantas
-
+    /*
     fun putPlantas(nombre: String , dias: Int , imagenPath: String?, dias_inv: Int): Long {
         val db = writableDatabase
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -682,7 +682,7 @@ class DBHelper(context: Context) :
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         sdf.isLenient = false
         return sdf.parse(fecha)!!
-    }
+    }*/
 
 
 
