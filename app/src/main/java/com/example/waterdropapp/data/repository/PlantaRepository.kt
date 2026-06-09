@@ -8,7 +8,8 @@ import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_GRUPOS_MANY
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_PLANTAS
-import com.example.waterdropapp.data.local.model.FiltroRiego
+import com.example.waterdropapp.domain.model.FiltroRiego
+import com.example.waterdropapp.domain.model.Estacion
 import com.example.waterdropapp.data.local.model.Plantas
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -57,6 +58,19 @@ class PlantaRepository(private val db: DBHelper) {
             arrayOf(planta_id.toString()) )
     }
 
+    fun softDeletePlanta(id: Int, activo: Boolean): Int
+    {
+        val db = db.writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , if(activo) 1 else 0)
+        }
+        return db.update(
+            TABLE_NAME_PLANTAS,
+            values,
+            "planta_id = ?",                  // WHERE
+            arrayOf(id.toString()) )
+    }
+
 
 
     fun actualizarPlantas(planta_id : Int,nombre: String , dias: Int, imagen_path: String?, dias_inv: Int): Int {
@@ -88,7 +102,6 @@ class PlantaRepository(private val db: DBHelper) {
         }
 
         cursor.close()
-        db.close()
         return lista
     }
 
@@ -123,7 +136,6 @@ class PlantaRepository(private val db: DBHelper) {
         }
 
         cursor.close()
-        db.close()
         return planta
     }
 
@@ -313,10 +325,6 @@ class PlantaRepository(private val db: DBHelper) {
         val diff = hoy.time - (fechaRiego?.time ?: return 0)
 
         return (diff / (1000 * 60 * 60 * 24)).toInt()
-    }
-
-    enum class Estacion {
-        PRIMAVERA, VERANO, OTONO, INVIERNO
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

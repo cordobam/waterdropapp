@@ -234,7 +234,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun eliminarPlantas(id: Int, view: View? = null) {
 
-        val filas = plantaRepo.eliminarPlantas(id)
+        val filas = plantaRepo.softDeletePlanta(id, activo = false)
 
         if (filas > 0) {
 
@@ -248,7 +248,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
                 .setAction("Deshacer") {
 
-                    plantaRepo.reactivarPlanta(id)
+                    plantaRepo.softDeletePlanta(id, true)
                     //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
                     val listaReactivada = plantaRepo.obtenerEstadoPlantas()
                     plantasAdapterAct.submitList(listaReactivada)

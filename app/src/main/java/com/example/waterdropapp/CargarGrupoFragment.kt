@@ -70,7 +70,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
 
     private fun eliminarGrupo(id: Int , view: View? = null) {
 
-        val filas = db.eliminarGrupos(id)
+        val filas = db.softDeleteGrupo(id,false)
 
         if (filas > 0) {
 
@@ -84,7 +84,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
                 .setAction("Deshacer") {
 
-                    db.reactivarGrupo(id)
+                    db.softDeleteGrupo(id , true)
                     val listaReactivada = db.getEstadosGrupos()
                     gruposAdapterAct.submitList(listaReactivada)
                 }

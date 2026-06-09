@@ -43,6 +43,19 @@ class GrupoRepository(private val db: DBHelper) {
             arrayOf(grupoId.toString()) )
     }
 
+    fun softDeleteGrupo(id: Int, activo: Boolean): Int
+    {
+        val db = db.writableDatabase
+        val values = ContentValues().apply {
+            put("activo" , if(activo) 1 else 0)
+        }
+        return db.update(
+            TABLE_NAME_GRUPOS,
+            values,
+            "grupo_id = ?",                  // WHERE
+            arrayOf(id.toString()) )
+    }
+
     fun actualizarGrupos(grupoId: Int, nombre:String):Int{
         val db = db.writableDatabase
         val values = ContentValues().apply {
@@ -91,7 +104,6 @@ class GrupoRepository(private val db: DBHelper) {
         }
 
         cursor.close()
-        db.close()
         return lista
     }
     fun getEstadosGrupos(): List<EstadoGruposDTO> {
@@ -119,7 +131,6 @@ class GrupoRepository(private val db: DBHelper) {
         }
 
         cursor.close()
-        db.close()
         return lista
     }
 

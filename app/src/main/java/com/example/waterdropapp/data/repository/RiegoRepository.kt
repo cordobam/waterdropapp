@@ -160,7 +160,6 @@ class RiegoRepository(private val db: DBHelper) {
         }
 
         cursor.close()
-        db.close()
         return lista
     }
 
