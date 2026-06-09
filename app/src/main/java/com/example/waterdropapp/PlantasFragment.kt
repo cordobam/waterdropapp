@@ -11,7 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.local.model.DBHelper
-import com.example.waterdropapp.data.local.model.FiltroRiego
+import com.example.waterdropapp.domain.model.FiltroRiego
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.chip.ChipGroup
