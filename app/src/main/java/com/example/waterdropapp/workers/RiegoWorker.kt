@@ -27,18 +27,8 @@ class RiegoWorker(
         val plantasRepo = PlantaRepository( DBHelper(applicationContext))
         val plantas = plantasRepo.obtenerEstadoPlantas() // con fechaUltimoRiego
 
-
-        val hoy = System.currentTimeMillis()
-        val sieteDias = 7 * 24 * 60 * 60 * 1000L
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
         plantas.forEach { planta ->
-            val fecha = sdf.parse(planta.ultimoRiego)
-            val ahora = System.currentTimeMillis()
-
-            val dias = (ahora - fecha.time) / (1000 * 60 * 60 * 24)
-
-            if (dias >= 7) {
+            if (planta.necesitaRiego) {
                 mostrarNotificacion(planta.nombre)
             }
         }
