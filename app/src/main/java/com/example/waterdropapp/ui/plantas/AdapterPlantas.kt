@@ -20,7 +20,8 @@ class AdapterPlantas(
     private val modo: Modo,
     private val onRegarClick: ((Int) -> Unit)? = null,
     private val onEditarPlanta: ((Int) -> Unit)? = null,
-    private val onEliminarPlanta: ((Int) -> Unit)? = null
+    private val onEliminarPlanta: ((Int) -> Unit)? = null,
+    private val onEditarClick: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     enum class Modo {
@@ -78,6 +79,8 @@ class AdapterPlantas(
         private val imgPlanta = itemView.findViewById<ImageView>(R.id.imgPlanta)
         private val btnRegar = itemView.findViewById<MaterialCardView>(R.id.btnRegar)
 
+        private val btnEditar = itemView.findViewById<MaterialCardView>(R.id.btnEditar)
+
         fun bind(dto: EstadoPlantasDTO) {
             tvNombre.text = dto.nombre
 
@@ -112,6 +115,8 @@ class AdapterPlantas(
                     .setNegativeButton("Cancelar", null)
                     .show()
             }
+
+            btnEditar.setOnClickListener { onEditarClick?.invoke(dto.plantaId) }
         }
     }
 

@@ -2,14 +2,24 @@ package com.example.waterdropapp
 
 import android.graphics.Rect
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.domain.model.FiltroRiego
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
@@ -22,6 +32,9 @@ import java.util.Locale
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.RiegoRepository
+import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
+import com.google.android.material.snackbar.Snackbar
+import java.io.File
 
 
 class PlantasFragment : Fragment(R.layout.fragment_plantas) {
@@ -32,6 +45,33 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
     private lateinit var riegoRepo: RiegoRepository
+    private var imagenNuevaPath: String? = null
+    private var imageViewActual: ImageView? = null
+    private lateinit var imgPreview: ImageView
+    private lateinit var layoutPlaceholder: LinearLayout
+
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                val path = guardarImagenInterna(it)
+                imagenNuevaPath = path
+
+                // Cambiamos visibilidad solo para la carga inicial (cuando no hay imageViewActual)
+                if (imageViewActual == null) {
+                    imgPreview.visibility = View.VISIBLE
+                    layoutPlaceholder.visibility = View.GONE
+                }
+
+                // Determinamos cuál es el destino
+                val targetImageView = imageViewActual ?: imgPreview
+
+                // CARGA LA IMAGEN SIEMPRE (Quitamos el imageViewActual?.let)
+                Glide.with(this)
+                    .load(File(path))
+                    .centerCrop()
+                    .into(targetImageView)
+            }
+        }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +107,15 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                     "Planta regada con exito",
                     Toast.LENGTH_SHORT
                 ).show()
+            },
+            onEditarClick = {plantaId ->
+                val estado = plantaRepo.obtenerEstadoPlantasxId(plantaId)
+                val sheet = PlantasBottomSheet(
+                    listaPlantas = if(estado != null) listOf(estado) else emptyList(),
+                    onEditar = {id -> editarPlantas(id)},
+                    onEliminar = {id , view -> eliminarPlantas(id, view) }
+                )
+                sheet.show(parentFragmentManager, "EditarPlantaSheet")
             }
         )
 
@@ -147,7 +196,6 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -172,5 +220,132 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         val plantas = plantaRepo.obtenerEstadoPlantasPorGrupo(grupoId)
         plantasAdapter.submitList(plantas)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun editarPlantas(id:Int) {
+
+        val dialogView = layoutInflater.inflate(
+            R.layout.dialog_editar_planta,
+            null
+        )
+
+        val etNombre = dialogView.findViewById<EditText>(R.id.etNombre)
+        val etDias = dialogView.findViewById<EditText>(R.id.etDias)
+        val etDiasInv = dialogView.findViewById<EditText>(R.id.etDiasInv)
+        val spGrupos = dialogView.findViewById<Spinner>(R.id.spGrupos)
+        val imgPlanta = dialogView.findViewById<ImageView>(R.id.imgPlantaEditar)
+        val btnCambiarFoto = dialogView.findViewById<Button>(R.id.btnCambiarFoto)
+
+        val plantaActual = plantaRepo.getPlantasPorId(id)
+
+        etNombre.setText(plantaActual?.nombre)
+        etDias.setText(plantaActual?.dias_max_sin_riego.toString())
+        etDiasInv.setText(plantaActual?.dias_max_sin_riego_invierno.toString())
+
+        imagenNuevaPath = plantaActual?.imagen_path
+
+        // Mostrar imagen si tiene
+        plantaActual?.imagen_path?.let { path ->
+            Glide.with(requireContext())
+                .load(File(path))
+                .into(imgPlanta)
+        }
+        // Botón cambiar foto
+        btnCambiarFoto.setOnClickListener {
+            imageViewActual = imgPlanta
+            pickImage.launch("image/*")
+        }
+
+        val grupos = grupoRepo.getGrupos()
+        val nombresGrupos = grupos.map{it.nombre}
+
+        val adapterSpinner = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            nombresGrupos
+        )
+
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spGrupos.adapter = adapterSpinner
+
+        // posicion del grupo actual
+        val posicionGrupoActual = grupos.indexOfFirst {
+            it.grupo_id == plantaActual?.grupo_id
+        }
+
+        if (posicionGrupoActual >= 0) {
+            spGrupos.setSelection(posicionGrupoActual)
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Editar Planta")
+            .setView(dialogView)
+            .setPositiveButton("Guardar") { _, _ ->
+
+                // seleccion de spinner
+                val posicion = spGrupos.selectedItemPosition
+
+                val grupoSeleccionado = grupos[posicion]
+                val codigoGrupo = grupoSeleccionado.grupo_id
+
+                val nombre = etNombre.text.toString()
+                val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+                val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
+
+                // insert gruposplantas
+                val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
+
+                plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
+                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                plantasAdapter.submitList(
+                    plantaRepo.obtenerEstadoPlantas()
+                )
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun eliminarPlantas(id: Int, view: View? = null) {
+
+        val filas = plantaRepo.softDeletePlanta(id, activo = false)
+
+        if (filas > 0) {
+
+            // Refrescamos primero la lista
+            //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+            val snackbarView = view ?: requireView()
+            val listaActualizada = plantaRepo.obtenerEstadoPlantas()
+
+            plantasAdapter.submitList(listaActualizada)
+
+            Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
+                .setAction("Deshacer") {
+
+                    plantaRepo.softDeletePlanta(id, true)
+                    //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
+                    val listaReactivada = plantaRepo.obtenerEstadoPlantas()
+                    plantasAdapter.submitList(listaReactivada)
+                }
+                .show()
+
+        } else {
+            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun guardarImagenInterna(uri: Uri): String {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val fileName = "planta_${System.currentTimeMillis()}.jpg"
+        val file = File(requireContext().filesDir, fileName)
+
+        inputStream?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        return file.absolutePath
     }
 }

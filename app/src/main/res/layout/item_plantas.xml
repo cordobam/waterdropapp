@@ -52,7 +52,7 @@
             android:textColor="#1A3A1F"
             app:layout_constraintStart_toEndOf="@id/imgPlanta"
             app:layout_constraintTop_toTopOf="@id/imgPlanta"
-            app:layout_constraintEnd_toStartOf="@id/btnRegar"/>
+            app:layout_constraintEnd_toStartOf="@id/btnEditar"/>
 
         <!-- Días sin regar -->
         <TextView
@@ -66,7 +66,7 @@
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@id/imgPlanta"
             app:layout_constraintTop_toBottomOf="@id/tvNombre"
-            app:layout_constraintEnd_toStartOf="@id/btnRegar"/>
+            app:layout_constraintEnd_toStartOf="@id/btnEditar"/>
 
         <!-- Badge grupo -->
         <TextView
@@ -84,7 +84,7 @@
             android:background="@drawable/bg_badge_grupo"
             app:layout_constraintStart_toEndOf="@id/imgPlanta"
             app:layout_constraintTop_toBottomOf="@id/tvDias"
-            app:layout_constraintEnd_toStartOf="@id/btnRegar"
+            app:layout_constraintEnd_toStartOf="@id/btnEditar"
             app:layout_constraintHorizontal_bias="0"/>
 
         <!-- Botón Regar -->
@@ -107,6 +107,31 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_water_drop"
+                android:scaleType="centerInside"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Botón Editar -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnEditar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="#3A7D44"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnRegar"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="@android:color/white"
                 android:scaleType="centerInside"/>
 
         </com.google.android.material.card.MaterialCardView>

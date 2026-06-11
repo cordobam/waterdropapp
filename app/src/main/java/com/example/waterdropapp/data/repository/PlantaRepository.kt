@@ -310,6 +310,86 @@ class PlantaRepository(private val db: DBHelper) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun obtenerEstadoPlantasxId(plantaId: Int): EstadoPlantasDTO? {
+        val lista = mutableListOf<EstadoPlantasDTO>()
+        val db = db.readableDatabase
+
+        val query = """
+        SELECT 
+            p.planta_id,
+            p.nombre,
+            p.dias_max_sin_riego,
+            p.dias_max_sin_riego_invierno,
+            p.fecha_creacion,
+            imagen_path,
+            -- Último riego calculado aparte
+            (
+                SELECT MAX(r.fecha)
+                FROM riegos r
+                WHERE r.planta_id = p.planta_id
+            ) AS ultimo_riego,
+        
+            -- Grupos calculados aparte
+            (
+                SELECT GROUP_CONCAT(g.nombre, ', ')
+                FROM grupos_plantas gp
+                JOIN grupos g ON g.grupo_id = gp.grupo_id
+                WHERE gp.planta_id = p.planta_id
+            ) AS nombre_grupos
+        
+        FROM plantas p
+        WHERE p.activo = 1 and p.planta_id = ?
+        ORDER BY p.nombre
+        """
+
+        val cursor = db.rawQuery(query, arrayOf(plantaId.toString()))
+
+        var resultado: EstadoPlantasDTO? = null
+
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
+            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+            val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
+            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
+            val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
+            val fecha_creacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"))
+            val maxDias_invierno = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
+
+            val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
+            val diasSinRegar = calcularDias(fechaBase)
+
+            val estacionActual = calcularEstacion(LocalDate.now())
+            var necesita = false
+            when (estacionActual) {
+                Estacion.VERANO -> {
+                    necesita = diasSinRegar >= maxDias
+                }
+                Estacion.INVIERNO , Estacion.OTONO -> {
+                    necesita = diasSinRegar >= maxDias_invierno
+                }
+                Estacion.PRIMAVERA -> {
+                    necesita = diasSinRegar >= maxDias
+                }
+            }
+
+            resultado = EstadoPlantasDTO(
+                    plantaId = id,
+                    nombre = nombre,
+                    ultimoRiego = ultimo,
+                    diasSinRegar = diasSinRegar,
+                    necesitaRiego = necesita,
+                    nombreGrupos = nombreGrupos,
+                    imagen_path = imagenPath,
+                    max_dias = maxDias
+            )
+        }
+
+        cursor.close()
+        return resultado
+    }
+
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     private fun calcularDias(fecha: String?): Int {

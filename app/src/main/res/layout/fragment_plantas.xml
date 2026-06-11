@@ -69,7 +69,7 @@
             android:id="@+id/chipGroupFiltro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
+            android:layout_gravity="center_horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="10dp"
