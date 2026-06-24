@@ -1,6 +1,5 @@
 package com.example.waterdropapp.data.repository
 
-import android.util.Log
 import com.example.waterdropapp.data.firebase.model.Publicacion
 import com.example.waterdropapp.data.firebase.model.UsuarioMarket
 import com.example.waterdropapp.data.firebase.model.Vivero
@@ -103,6 +102,22 @@ class FirestoreRepository {
             .addOnFailureListener { onError(it) }
     }
 
+    fun getAllPublicaciones(
+        onSuccess: (List<Publicacion>) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("publicaciones")
+            .orderBy("fechaPublicacion", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val lista = result.documents.map { doc ->
+                    doc.toObject(Publicacion::class.java)!!.copy(id = doc.id)
+                }
+                onSuccess(lista)
+            }
+            .addOnFailureListener { onError(it) }
+    }
+
     // ========================================================================
     // VIVEROS
     // ========================================================================
@@ -175,6 +190,39 @@ class FirestoreRepository {
             .addOnFailureListener { onError(it) }
     }
 
+    fun getAllViveros(
+        onSuccess: (List<Vivero>) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("viveros")
+            .orderBy("nombre")
+            .get()
+            .addOnSuccessListener { result ->
+                val lista = result.documents.map { doc ->
+                    doc.toObject(Vivero::class.java)!!.copy(id = doc.id)
+                }
+                onSuccess(lista)
+            }
+            .addOnFailureListener { onError(it) }
+    }
+
+    fun getViverosByUsuario(
+        usuarioId: String,
+        onSuccess: (List<Vivero>) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("viveros")
+            .whereEqualTo("usuarioId", usuarioId)
+            .get()
+            .addOnSuccessListener { result ->
+                val lista = result.documents.map { doc ->
+                    doc.toObject(Vivero::class.java)!!.copy(id = doc.id)
+                }
+                onSuccess(lista)
+            }
+            .addOnFailureListener { onError(it) }
+    }
+
     // ========================================================================
     // USUARIO MARKET
     // ========================================================================
@@ -210,13 +258,40 @@ class FirestoreRepository {
 
     fun updateUsuarioMarket(
         id: String,
-        data: MutableMap<String, Any?>,
+        data: Map<String, Any>,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit
     ) {
         db.collection("usuarios_market").document(id)
             .update(data)
             .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+    fun deleteUsuarioMarket(
+        id: String,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("usuarios_market").document(id)
+            .update("activo", false)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it) }
+    }
+
+    fun getAllUsuariosMarket(
+        onSuccess: (List<UsuarioMarket>) -> Unit,
+        onError: (Exception) -> Unit
+    ) {
+        db.collection("usuarios_market")
+            .orderBy("nombre")
+            .get()
+            .addOnSuccessListener { result ->
+                val lista = result.documents.map { doc ->
+                    doc.toObject(UsuarioMarket::class.java)!!.copy(id = doc.id)
+                }
+                onSuccess(lista)
+            }
             .addOnFailureListener { onError(it) }
     }
 }

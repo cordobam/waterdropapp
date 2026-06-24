@@ -39,6 +39,15 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
         val chips = listOf(chipTodos, chipPlantas, chipSemillas, chipEsquejes, chipTrueque)
 
+        adapter = AdapterPublicaciones { publicacion ->
+            // click en publicacion
+        }
+
+        view.findViewById<RecyclerView>(R.id.rvPublicaciones).apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@MarketplaceFragment.adapter
+        }
+
         for (chip in chips) {
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -75,14 +84,6 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
             } else false
         }
 
-        adapter = AdapterPublicaciones { publicacion ->
-            // click en publicacion
-        }
-
-        view.findViewById<RecyclerView>(R.id.rvPublicaciones).apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = this@MarketplaceFragment.adapter
-        }
 
         view.findViewById<MaterialButton>(R.id.btnPublicar).setOnClickListener {
             Toast.makeText(requireContext(), "Crear publicación - próximamente", Toast.LENGTH_SHORT).show()
