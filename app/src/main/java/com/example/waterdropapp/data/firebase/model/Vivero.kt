@@ -15,5 +15,7 @@ data class Vivero(
     val imagenUrl: String = "",
     val rating: Double = 0.0,
     val activo: Boolean = true,
-    val suscripcionActiva: Boolean = false
+    val suscripcionActiva: Boolean = false,
+    val usuarioId: String = "",         // uid del creador/propietario
+    val usuarioNombre: String = ""      // nombre del creador/propietario
 )
