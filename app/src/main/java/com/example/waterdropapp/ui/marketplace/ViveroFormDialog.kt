@@ -1,60 +1,59 @@
 package com.example.waterdropapp.ui.marketplace
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import com.example.waterdropapp.R
+import com.example.waterdropapp.data.firebase.model.Vivero
+import com.example.waterdropapp.data.repository.FirestoreRepository
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class ViveroForrmDialog(
+    private val itemAEditar: Vivero? = null,
+    private val onSuccess: () -> Unit
+) : BottomSheetDialogFragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ViveroFormDialog.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ViveroFormDialog : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_vivero_form_dialog, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ViveroFormDialog.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ViveroFormDialog().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (itemAEditar != null) cargarDatosExistente(itemAEditar)
+        view.findViewById<Button>(R.id.btnGuardar).setOnClickListener { guardar() }
+        view.findViewById<Button>(R.id.btnCancelar).setOnClickListener { dismiss() }
+    }
+
+    private fun cargarDatosExistente(usuario: Vivero) {
+        view?.findViewById<EditText>(R.id.etNombre)?.setText(usuario.nombre)
+        view?.findViewById<EditText>(R.id.etDescripcion)?.setText(usuario.descripcion)
+        view?.findViewById<EditText>(R.id.etDireccion)?.setText(usuario.direccion)
+        view?.findViewById<EditText>(R.id.etCiudad)?.setText(usuario.ciudad)
+        view?.findViewById<EditText>(R.id.etBarrio)?.setText(usuario.barrio)
+        view?.findViewById<EditText>(R.id.etTelefono)?.setText(usuario.telefono)
+        view?.findViewById<EditText>(R.id.etHorario)?.setText(usuario.horario)
+        view?.findViewById<EditText>(R.id.etEspecialidades)?.setText(usuario.especialidades.toString())
+        view?.findViewById<EditText>(R.id.etImagenUrl)?.setText(usuario.imagenUrl)
+    }
+
+    private fun guardar() {
+        val repo = FirestoreRepository()
+        val datos = mutableMapOf(
+            "nombre" to (view?.findViewById<EditText>(R.id.etNombre)?.text?.toString()?.trim() ?: ""),
+            "descripcion" to (view?.findViewById<EditText>(R.id.etDescripcion)?.text?.toString()?.trim() ?: ""),
+            "direccion" to (view?.findViewById<EditText>(R.id.etDireccion)?.text?.toString()?.trim() ?: ""),
+            "ciudad" to (view?.findViewById<EditText>(R.id.etBarrio)?.text?.toString()?.trim() ?: ""),
+            "barrio" to (view?.findViewById<EditText>(R.id.etFotoUrl)?.text?.toString()?.trim() ?: ""),
+            "telefono" to (view?.findViewById<EditText>(R.id.etTelefono)?.text?.toString()?.trim() ?: ""),
+            "horario" to (view?.findViewById<EditText>(R.id.etHorario)?.text?.toString()?.trim() ?: ""),
+            "especialidades" to (view?.findViewById<EditText>(R.id.etEspecialidades)?.text?.toString()?.trim() ?: ""),
+            "imagenUrl" to (view?.findViewById<EditText>(R.id.etImagenUrl)?.text?.toString()?.trim() ?: ""),
+        )
+        if (itemAEditar != null) {
+            repo.updateVivero(itemAEditar.id, datos, { dismiss(); onSuccess() }, {})
+        }
     }
 }

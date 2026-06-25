@@ -185,6 +185,18 @@
                 app:cornerRadius="12dp"
                 app:backgroundTint="#FFF0F0"/>
 
+            <!-- BOTON PUBLICAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditarPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="5dp"
+                android:text="Editar"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#3A7D44"
+                app:cornerRadius="12dp"/>
+
         </LinearLayout>
 
     </LinearLayout>

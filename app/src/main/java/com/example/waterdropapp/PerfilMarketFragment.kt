@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.waterdropapp.data.firebase.model.UsuarioMarket
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterMisPublicaciones
+import com.example.waterdropapp.ui.marketplace.EditarPerfilDialog
+import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 
@@ -20,6 +23,7 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
     private val repository = FirestoreRepository()
     private lateinit var adapter: AdapterMisPublicaciones
     private val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+    private var usuarioActual: UsuarioMarket? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,12 +73,20 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             activity?.finish()
         }
+
+        view.findViewById<MaterialButton>(R.id.btnEditarPerfil).setOnClickListener {
+            EditarPerfilDialog(
+                itemAEditar = usuarioActual,
+                onSuccess = {cargarPerfilUsuario(view)}
+            ).show(parentFragmentManager,"EditarPerfil")
+        }
     }
 
     private fun cargarPerfilUsuario(view: View) {
         repository.getUsuarioMarket(
             id = userId,
             onSuccess = { usuario ->
+                usuarioActual = usuario
                 view.findViewById<TextView>(R.id.tvNombreUsuario).text = usuario.nombre
 
                 val calificacion = usuario.calificacion

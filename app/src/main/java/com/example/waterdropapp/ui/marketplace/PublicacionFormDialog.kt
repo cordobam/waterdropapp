@@ -1,60 +1,57 @@
 package com.example.waterdropapp.ui.marketplace
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
 import com.example.waterdropapp.R
+import com.example.waterdropapp.data.firebase.model.Publicacion
+import com.example.waterdropapp.data.repository.FirestoreRepository
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class PublicacionFormlDialog(
+    private val itemAEditar: Publicacion? = null,
+    private val onSuccess: () -> Unit
+) : BottomSheetDialogFragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PublicacionFormDialog.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PublicacionFormDialog : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_publicacion_form_dialog, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PublicacionFormDialog.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PublicacionFormDialog().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (itemAEditar != null) cargarDatosExistente(itemAEditar)
+        view.findViewById<Button>(R.id.btnGuardar).setOnClickListener { guardar() }
+        view.findViewById<Button>(R.id.btnCancelar).setOnClickListener { dismiss() }
+    }
+
+    private fun cargarDatosExistente(usuario: Publicacion) {
+        view?.findViewById<EditText>(R.id.etTitulo)?.setText(usuario.titulo)
+        view?.findViewById<EditText>(R.id.etDescripcion)?.setText(usuario.descripcion)
+        view?.findViewById<EditText>(R.id.chipGroupCategoria)?.setText(usuario.categoria)
+        view?.findViewById<SwitchCompat>(R.id.swAceptaTrueque)?.isChecked = usuario.aceptaTrueque
+        view?.findViewById<EditText>(R.id.etPrecio)?.setText(usuario.precio.toString())
+        view?.findViewById<EditText>(R.id.etImagenUrl)?.setText(usuario.imagenUrl)
+        view?.findViewById<EditText>(R.id.etCiudad)?.setText(usuario.ciudad)
+        view?.findViewById<EditText>(R.id.etBarrio)?.setText(usuario.barrio)
+    }
+
+    private fun guardar() {
+        val repo = FirestoreRepository()
+        val datos = mutableMapOf(
+            "titulo" to (view?.findViewById<EditText>(R.id.etTitulo)?.text?.toString()?.trim() ?: ""),
+            "descripcion" to (view?.findViewById<EditText>(R.id.etDescripcion)?.text?.toString()?.trim() ?: ""),
+            "categoria" to (view?.findViewById<EditText>(R.id.chipGroupCategoria)?.text?.toString()?.trim() ?: ""),
+            "precio" to (view?.findViewById<EditText>(R.id.etPrecio)?.text?.toString()?.trim() ?: ""),
+            "imagenUrl" to (view?.findViewById<EditText>(R.id.etImagenUrl)?.text?.toString()?.trim() ?: ""),
+            "ciudad" to (view?.findViewById<EditText>(R.id.etCiudad)?.text?.toString()?.trim() ?: ""),
+            "barrio" to (view?.findViewById<EditText>(R.id.etBarrio)?.text?.toString()?.trim() ?: "")
+        )
+        if (itemAEditar != null) {
+            repo.updatePublicacion(itemAEditar.id, datos, { dismiss(); onSuccess() }, {})
+        }
     }
 }

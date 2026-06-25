@@ -14,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.firebase.model.Vivero
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterViveros
+import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
+import com.example.waterdropapp.ui.marketplace.ViveroForrmDialog
+import com.google.android.material.button.MaterialButton
 
 class ViverosFragment : Fragment(R.layout.fragment_viveros) {
 
@@ -51,6 +54,12 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
                 aplicarFiltros(tvCantidad)
                 true
             } else false
+        }
+
+        view.findViewById<MaterialButton>(R.id.btnPublicar).setOnClickListener {
+            ViveroForrmDialog(
+                onSuccess = {cargarDatos(tvCantidad)}
+            ).show(parentFragmentManager,"NuevoVivero")
         }
 
         cargarDatos(tvCantidad)

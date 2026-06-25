@@ -1,14 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.marketplace.PublicacionFormDialog">
+    android:layout_height="wrap_content">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tvTituloDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nueva publicación"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Título"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nombre de la planta"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Describí tu publicación..."
+            android:textSize="14sp"
+            android:minLines="3"
+            android:gravity="top"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categoría"
+            android:textSize="13sp"
+            android:textColor="#4E6E50"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategoriaPlanta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planta"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:checked="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategoriaSemilla"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semilla"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategoriaEsqueje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Esqueje"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precio"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="0 = Gratis"
+            android:textSize="14sp"
+            android:inputType="numberDecimal"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Acepta trueque"
+                android:textSize="13sp"
+                android:textColor="#4E6E50" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/swAceptaTrueque"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="#3A7D44"
+                app:trackTint="#C8DFC0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL de imagen"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etImagenUrl"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="https://..."
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ciudad"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Córdoba"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Barrio"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etBarrio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nueva Córdoba"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Publicar"
+            android:backgroundTint="#3A7D44"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Cancelar"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:textColor="#3A7D44"
+            app:strokeColor="#C8DFC0"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
