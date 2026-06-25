@@ -1,14 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.marketplace.ViveroFormDialog">
+    android:layout_height="wrap_content">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tvTituloDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nuevo vivero"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nombre del vivero"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Describí el vivero..."
+            android:textSize="14sp"
+            android:minLines="3"
+            android:gravity="top"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dirección"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etDireccion"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Av. siempre viva 123"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ciudad"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Córdoba"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Barrio"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etBarrio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nueva Córdoba"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Teléfono"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="351 123 4567"
+            android:textSize="14sp"
+            android:inputType="phone"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Horario"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etHorario"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Lun-Vie 9:00-18:00"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Especialidades (separadas por coma)"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etEspecialidades"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Suculentas, Interior, Exterior"
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL de imagen"
+            android:textSize="13sp"
+            android:textColor="#4E6E50" />
+
+        <EditText
+            android:id="@+id/etImagenUrl"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="https://..."
+            android:textSize="14sp"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:layout_marginBottom="12dp" />
+
+
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Guardar vivero"
+            android:backgroundTint="#3A7D44"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Cancelar"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:textColor="#3A7D44"
+            app:strokeColor="#C8DFC0"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>

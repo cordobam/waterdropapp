@@ -81,7 +81,7 @@ class FirestoreRepository {
 
     fun updatePublicacion(
         id: String,
-        data: MutableMap<String, Any?>,
+        data: Map<String, Any>,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit
     ) {
@@ -169,7 +169,7 @@ class FirestoreRepository {
 
     fun updateVivero(
         id: String,
-        data: MutableMap<String, Any?>,
+        data: Map<String, Any>,
         onSuccess: () -> Unit,
         onError: (Exception) -> Unit
     ) {

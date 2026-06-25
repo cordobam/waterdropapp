@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.firebase.model.Publicacion
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterPublicaciones
+import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 
@@ -86,7 +87,9 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
 
         view.findViewById<MaterialButton>(R.id.btnPublicar).setOnClickListener {
-            Toast.makeText(requireContext(), "Crear publicación - próximamente", Toast.LENGTH_SHORT).show()
+            PublicacionFormlDialog(
+                onSuccess = {cargarDatos(tvCercaTuyo)}
+            ).show(parentFragmentManager,"PublicarPublicacion")
         }
 
         cargarDatos(tvCercaTuyo)
