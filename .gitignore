@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/google-services.json
+/dialog_editar_perfil_market.xml.txt
+/plan_cambios.txt
+/fragment_vivero_form_dialog.xml.txt
+/fragment_publicacion_form_dialog.xml.txt

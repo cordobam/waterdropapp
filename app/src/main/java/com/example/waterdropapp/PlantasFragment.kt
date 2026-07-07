@@ -50,6 +50,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var imgPreview: ImageView
     private lateinit var layoutPlaceholder: LinearLayout
 
+    private var filtroActual = FiltroRiego.TODAS
+
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -100,7 +102,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             onRegarClick = { plantaId ->
                 riegoRepo.putRiegos(plantaId, fecha)
 
-                cargarPlantas()
+                recargarConFiltro()
 
                 Toast.makeText(
                     requireContext(),
@@ -145,14 +147,14 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         chipGroup.setOnCheckedStateChangeListener  { group, checkedIds  ->
             val chipId = checkedIds.firstOrNull()
 
-            val FiltroRiego = when (chipId) {
+            filtroActual  = when (chipId) {
                 R.id.chipTodas -> FiltroRiego.TODAS
                 R.id.chipProximas -> FiltroRiego.PROXIMAS
                 R.id.chipVencidas -> FiltroRiego.VENCIDAS
                 else -> FiltroRiego.TODAS
             }
 
-            val lista = plantaRepo.obtenerEstadoPlantasXRiego(FiltroRiego)
+            val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
             val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
 
             plantasAdapter.submitList(listaOrdenada)
@@ -298,9 +300,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
                 Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
-                plantasAdapter.submitList(
-                    plantaRepo.obtenerEstadoPlantas()
-                )
+                recargarConFiltro()
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -316,7 +316,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            val listaActualizada = plantaRepo.obtenerEstadoPlantas()
+            val listaActualizada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
 
             plantasAdapter.submitList(listaActualizada)
 
@@ -325,7 +325,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
                     plantaRepo.softDeletePlanta(id, true)
                     //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
-                    val listaReactivada = plantaRepo.obtenerEstadoPlantas()
+                    val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
                     plantasAdapter.submitList(listaReactivada)
                 }
                 .show()
@@ -347,5 +347,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         }
 
         return file.absolutePath
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun recargarConFiltro() {
+        val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+        val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
+        plantasAdapter.submitList(listaOrdenada)
     }
 }
