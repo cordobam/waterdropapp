@@ -10,6 +10,7 @@ import com.example.waterdropapp.R
 import com.example.waterdropapp.data.firebase.model.UsuarioMarket
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.auth.FirebaseAuth
 
 class EditarPerfilDialog(
     private val itemAEditar: UsuarioMarket? = null,
@@ -35,13 +36,28 @@ class EditarPerfilDialog(
 
     private fun guardar() {
         val repo = FirestoreRepository()
-        val datos = mutableMapOf(
-            "nombre" to (view?.findViewById<EditText>(R.id.etNombre)?.text?.toString()?.trim() ?: ""),
-            "fotoUrl" to (view?.findViewById<EditText>(R.id.etFotoUrl)?.text?.toString()?.trim() ?: ""),
-            "ciudad" to (view?.findViewById<EditText>(R.id.etCiudad)?.text?.toString()?.trim() ?: "")
-        )
+        val nombre = view?.findViewById<EditText>(R.id.etNombre)?.text?.toString()?.trim() ?: ""
+        val fotoUrl = view?.findViewById<EditText>(R.id.etFotoUrl)?.text?.toString()?.trim() ?: ""
+        val ciudad = view?.findViewById<EditText>(R.id.etCiudad)?.text?.toString()?.trim() ?: ""
+
         if (itemAEditar != null) {
+            val datos = mutableMapOf(
+                "nombre" to nombre,
+                "fotoUrl" to fotoUrl,
+                "ciudad" to ciudad
+            )
             repo.updateUsuarioMarket(itemAEditar.id, datos, { dismiss(); onSuccess() }, {})
+        } else {
+            val auth = FirebaseAuth.getInstance().currentUser
+            val nuevo = UsuarioMarket(
+                id = auth?.uid ?: "",
+                nombre = nombre,
+                email = auth?.email ?: "",
+                fotoUrl = fotoUrl,
+                ciudad = ciudad,
+                fechaRegistro = System.currentTimeMillis()
+            )
+            repo.crearUsuarioMarket(nuevo, { dismiss(); onSuccess() }, {})
         }
     }
 }
