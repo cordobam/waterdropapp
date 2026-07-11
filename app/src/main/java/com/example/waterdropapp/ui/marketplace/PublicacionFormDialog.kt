@@ -11,6 +11,9 @@ import com.example.waterdropapp.R
 import com.example.waterdropapp.data.firebase.model.Publicacion
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.firebase.auth.FirebaseAuth
 
 class PublicacionFormlDialog(
     private val itemAEditar: Publicacion? = null,
@@ -31,7 +34,13 @@ class PublicacionFormlDialog(
     private fun cargarDatosExistente(usuario: Publicacion) {
         view?.findViewById<EditText>(R.id.etTitulo)?.setText(usuario.titulo)
         view?.findViewById<EditText>(R.id.etDescripcion)?.setText(usuario.descripcion)
-        view?.findViewById<EditText>(R.id.chipGroupCategoria)?.setText(usuario.categoria)
+        val chipId = when (usuario.categoria.lowercase()) {
+            "planta" -> R.id.chipCategoriaPlanta
+            "semilla" -> R.id.chipCategoriaSemilla
+            "esqueje" -> R.id.chipCategoriaEsqueje
+            else -> null
+        }
+        chipId?.let { view?.findViewById<Chip>(it)?.isChecked = true }
         view?.findViewById<SwitchCompat>(R.id.swAceptaTrueque)?.isChecked = usuario.aceptaTrueque
         view?.findViewById<EditText>(R.id.etPrecio)?.setText(usuario.precio.toString())
         view?.findViewById<EditText>(R.id.etImagenUrl)?.setText(usuario.imagenUrl)
@@ -41,17 +50,50 @@ class PublicacionFormlDialog(
 
     private fun guardar() {
         val repo = FirestoreRepository()
-        val datos = mutableMapOf(
-            "titulo" to (view?.findViewById<EditText>(R.id.etTitulo)?.text?.toString()?.trim() ?: ""),
-            "descripcion" to (view?.findViewById<EditText>(R.id.etDescripcion)?.text?.toString()?.trim() ?: ""),
-            "categoria" to (view?.findViewById<EditText>(R.id.chipGroupCategoria)?.text?.toString()?.trim() ?: ""),
-            "precio" to (view?.findViewById<EditText>(R.id.etPrecio)?.text?.toString()?.trim() ?: ""),
-            "imagenUrl" to (view?.findViewById<EditText>(R.id.etImagenUrl)?.text?.toString()?.trim() ?: ""),
-            "ciudad" to (view?.findViewById<EditText>(R.id.etCiudad)?.text?.toString()?.trim() ?: ""),
-            "barrio" to (view?.findViewById<EditText>(R.id.etBarrio)?.text?.toString()?.trim() ?: "")
-        )
+        val titulo = view?.findViewById<EditText>(R.id.etTitulo)?.text?.toString()?.trim() ?: ""
+        val descripcion = view?.findViewById<EditText>(R.id.etDescripcion)?.text?.toString()?.trim() ?: ""
+        val categoria = getSelectedCategoria()
+        val precio = view?.findViewById<EditText>(R.id.etPrecio)?.text?.toString()?.trim()?.toDoubleOrNull() ?: 0.0
+        val aceptaTrueque = view?.findViewById<SwitchCompat>(R.id.swAceptaTrueque)?.isChecked ?: false
+        val imagenUrl = view?.findViewById<EditText>(R.id.etImagenUrl)?.text?.toString()?.trim() ?: ""
+        val ciudad = view?.findViewById<EditText>(R.id.etCiudad)?.text?.toString()?.trim() ?: ""
+        val barrio = view?.findViewById<EditText>(R.id.etBarrio)?.text?.toString()?.trim() ?: ""
+
         if (itemAEditar != null) {
+            val datos = mutableMapOf(
+                "titulo" to titulo,
+                "descripcion" to descripcion,
+                "categoria" to categoria,
+                "precio" to precio,
+                "aceptaTrueque" to aceptaTrueque,
+                "imagenUrl" to imagenUrl,
+                "ciudad" to ciudad,
+                "barrio" to barrio
+            )
             repo.updatePublicacion(itemAEditar.id, datos, { dismiss(); onSuccess() }, {})
+        } else {
+            val nueva = Publicacion(
+                usuarioId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                nombreUsuario = FirebaseAuth.getInstance().currentUser?.displayName ?: "",
+                titulo = titulo,
+                descripcion = descripcion,
+                categoria = categoria,
+                precio = precio,
+                aceptaTrueque = aceptaTrueque,
+                imagenUrl = imagenUrl,
+                ciudad = ciudad,
+                barrio = barrio,
+                fechaPublicacion = System.currentTimeMillis()
+            )
+            repo.agregarPublicacion(nueva, { dismiss(); onSuccess() }, {})
         }
+    }
+
+    private fun getSelectedCategoria(): String {
+        val chipGroup = view?.findViewById<ChipGroup>(R.id.chipGroupCategoria) ?: return ""
+        val checkedId = chipGroup.checkedChipId
+        return if (checkedId != -1) {
+            view?.findViewById<Chip>(checkedId)?.text?.toString()?.lowercase() ?: ""
+        } else ""
     }
 }
