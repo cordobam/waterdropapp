@@ -35,7 +35,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/imgGrupo"
-            app:layout_constraintEnd_toStartOf="@id/btnRegarGrupo"
+            app:layout_constraintEnd_toStartOf="@id/btnEditarGroup"
             app:layout_constraintTop_toTopOf="@id/imgGrupo"
             app:layout_constraintBottom_toBottomOf="@id/imgGrupo">
 
@@ -64,40 +64,81 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <!-- Botón Regar -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnRegarGrupo"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="Regar"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#3A7D44"
-            app:cornerRadius="10dp"
-            android:layout_marginEnd="6dp"
-            app:layout_constraintEnd_toStartOf="@id/btnVerGrupo"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnVerGrupo"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            app:icon="@android:drawable/ic_menu_view"
-            app:iconSize="18dp"
-            app:iconTint="#3A7D44"
-            app:strokeColor="#C8DFC0"
-            app:strokeWidth="1.5dp"
-            app:cornerRadius="10dp"
-            app:iconPadding="0dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:insetLeft="0dp"
-            android:insetRight="0dp"
-            app:iconGravity="textStart"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="#3A7D44"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_water_drop"
+                android:scaleType="centerInside"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Botón Ver -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnVerGrupo"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="6dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="#3A7D44"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnRegarGrupo"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_view"
+                app:tint="@android:color/white"
+                android:scaleType="centerInside"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Botón Editar -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnEditarGroup"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="6dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="#3A7D44"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnVerGrupo"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_preferences"
+                app:tint="@android:color/white"
+                android:scaleType="centerInside"/>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

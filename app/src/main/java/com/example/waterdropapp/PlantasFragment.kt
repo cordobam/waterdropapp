@@ -32,6 +32,7 @@ import java.util.Locale
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.RiegoRepository
+import com.example.waterdropapp.ui.grupos.GruposBottomSheet
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -132,6 +133,15 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             onRegarGrupo = {grupoId ->
                 riegoRepo.putRiegoPorGrupo(grupoId, fecha)
                 Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+            },
+            onEditarClick = {grupoId ->
+                val estado = grupoRepo.getGruposxId(grupoId)
+                val sheet = GruposBottomSheet(
+                    listaGrupos = if(estado != null) listOf(estado) else emptyList(),
+                    onEditar = {id -> editarGrupo(id)},
+                    onEliminar = {id , view -> eliminarGrupo(id, view) }
+                )
+                sheet.show(parentFragmentManager, "EditarPlantaSheet")
             }
         )
 
@@ -306,6 +316,24 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             .show()
     }
 
+    fun editarGrupo(id:Int) {
+        val input = EditText(requireContext())
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Editar grupo")
+            .setView(input)
+            .setPositiveButton("Guardar") { _, _ ->
+
+
+                val nombre = input.text.toString()
+                grupoRepo.actualizarGrupos(id, nombre)
+                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                gruposAdapter.submitList(grupoRepo.getEstadosGrupos())
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun eliminarPlantas(id: Int, view: View? = null) {
 
@@ -327,6 +355,33 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                     //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
                     val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
                     plantasAdapter.submitList(listaReactivada)
+                }
+                .show()
+
+        } else {
+            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun eliminarGrupo(id: Int , view: View? = null) {
+
+        val filas = grupoRepo.softDeleteGrupo(id,false)
+
+        if (filas > 0) {
+
+            // Refrescamos la lista primero
+            //gruposAdapterAct.submitList(db.getEstadosGrupos())
+            val snackbarView = view ?: requireView()
+            val listaActualizada = grupoRepo.getEstadosGrupos()
+
+            gruposAdapter.submitList(listaActualizada)
+
+            Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
+                .setAction("Deshacer") {
+
+                    grupoRepo.softDeleteGrupo(id , true)
+                    val listaReactivada = grupoRepo.getEstadosGrupos()
+                    gruposAdapter.submitList(listaReactivada)
                 }
                 .show()
 
