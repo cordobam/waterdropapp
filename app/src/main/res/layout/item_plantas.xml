@@ -130,7 +130,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_edit"
+                android:src="@android:drawable/ic_menu_preferences"
                 app:tint="@android:color/white"
                 android:scaleType="centerInside"/>
 

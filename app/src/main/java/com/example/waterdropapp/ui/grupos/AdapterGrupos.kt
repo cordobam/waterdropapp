@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AdapterGrupos(
@@ -15,7 +16,8 @@ class AdapterGrupos(
     private val onVerGrupo: ((Int) -> Unit)? = null,
     private val onRegarGrupo: ((Int) -> Unit)? = null,
     private val onEditarGrupo: ((Int) -> Unit)? = null,
-    private val onEliminarGrupo: ((Int) -> Unit)? = null
+    private val onEliminarGrupo: ((Int) -> Unit)? = null,
+    private val onEditarClick: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     enum class Modo {
         MOSTRAR_GRUPOS,
@@ -67,8 +69,9 @@ class AdapterGrupos(
     inner class GrupoVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvNombre = itemView.findViewById<TextView>(R.id.tvNombreGrupo)
         private val tvCantPlantas = itemView.findViewById<TextView>(R.id.tvCantPlantas)
-        private val btnRegar = itemView.findViewById<Button?>(R.id.btnRegarGrupo)
-        private val btnVer = itemView.findViewById<Button?>(R.id.btnVerGrupo)
+        private val btnRegar = itemView.findViewById<MaterialCardView>(R.id.btnRegarGrupo)
+        private val btnVer = itemView.findViewById<MaterialCardView>(R.id.btnVerGrupo)
+        private val btnEditarGroup = itemView.findViewById<MaterialCardView>(R.id.btnEditarGroup)
 
 
         fun bind(grupo: EstadoGruposDTO) {
@@ -88,6 +91,7 @@ class AdapterGrupos(
                     .show()
 
             }
+            btnEditarGroup.setOnClickListener { onEditarClick?.invoke(grupo.grupoId) }
 
         }
 

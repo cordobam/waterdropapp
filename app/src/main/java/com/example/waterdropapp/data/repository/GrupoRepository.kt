@@ -7,6 +7,7 @@ import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_G
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_GRUPOS_MANY
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_PLANTAS
 import com.example.waterdropapp.data.local.model.Grupos
+import com.example.waterdropapp.data.local.model.Plantas
 import com.example.waterdropapp.data.local.model.UltimoRiego
 
 class GrupoRepository(private val db: DBHelper) {
@@ -132,6 +133,34 @@ class GrupoRepository(private val db: DBHelper) {
 
         cursor.close()
         return lista
+    }
+
+    fun getGruposxId(grupoId:Int): EstadoGruposDTO? {
+        val lista = mutableListOf<Grupos>()
+        val db = db.readableDatabase
+        val cursor = db.rawQuery("SELECT G.grupo_id, G.nombre, count(GP.planta_id) as cantPlantasGrupo  \n" +
+                "FROM $TABLE_NAME_GRUPOS G LEFT JOIN $TABLE_NAME_GRUPOS_MANY GP ON G.grupo_id = GP.grupo_id \n" +
+                "INNER JOIN $TABLE_NAME_PLANTAS P ON GP.planta_id = P.planta_id WHERE P.activo= 1 and G.grupo_id = ? \n" +
+                "GROUP BY G.grupo_id , G.nombre", arrayOf(grupoId.toString()))
+
+
+        var grupo: EstadoGruposDTO? = null
+        if (cursor.moveToNext()) {
+
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("grupo_id"))
+                val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
+                val cant_plantas = cursor.getInt(cursor.getColumnIndexOrThrow("cantPlantasGrupo"))
+                grupo =
+                    EstadoGruposDTO(
+                    grupoId= id,
+                    nombreGrupo = nombre,
+                    cantPlantasGrupo=cant_plantas
+                )
+
+        }
+
+        cursor.close()
+        return grupo
     }
 
 
