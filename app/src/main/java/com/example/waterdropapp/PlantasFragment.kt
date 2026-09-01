@@ -52,6 +52,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var layoutPlaceholder: LinearLayout
 
     private var filtroActual = FiltroRiego.TODAS
+    private var currentTab = 0
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -90,8 +91,10 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
 
         fab.setOnClickListener {
+            val args = Bundle().apply { putInt("targetTab", currentTab) }
+            val fragment = CargasVariasFragment().apply { arguments = args }
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.container, CargasVariasFragment())
+                .replace(R.id.container, fragment)
                 .addToBackStack(null)  // permite volver con el botón atrás
                 .commit()
         }
@@ -190,6 +193,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
+                currentTab = tab.position
                 when (tab.position) {
                     0 -> {
                         recyclerView.adapter = plantasAdapter

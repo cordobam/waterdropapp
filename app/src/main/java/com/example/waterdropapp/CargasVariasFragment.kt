@@ -28,6 +28,10 @@ class CargasVariasFragment : Fragment(R.layout.fragment_cargas_varias) {
                 else -> ""
             }
         }.attach()
+
+        // Establecer pestaña inicial desde argumentos
+        val targetTab = arguments?.getInt("targetTab", 0) ?: 0
+        binding.viewPagerCarga.currentItem = targetTab
     }
 
     override fun onDestroyView() {
