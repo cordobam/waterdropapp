@@ -219,6 +219,7 @@ class PlantaRepository(private val db: DBHelper) {
         return lista
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun obtenerEstadoPlantasPorGrupo(grupoId: Int): List<EstadoPlantasDTO> {
         val lista = mutableListOf<EstadoPlantasDTO>()
         val db = db.readableDatabase
@@ -229,6 +230,8 @@ class PlantaRepository(private val db: DBHelper) {
                 p.planta_id,
                 p.nombre,
                 p.dias_max_sin_riego,
+                p.dias_max_sin_riego_invierno,
+                p.fecha_creacion,
                 imagen_path,
                 -- Último riego
                 (
@@ -265,10 +268,27 @@ class PlantaRepository(private val db: DBHelper) {
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
             val nombreGrupos = cursor.getString(cursor.getColumnIndexOrThrow("nombre_grupos"))
             val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val maxDias_invierno = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
             val ultimo = cursor.getString(cursor.getColumnIndexOrThrow("ultimo_riego"))
+            val fecha_creacion = cursor.getString(cursor.getColumnIndexOrThrow("fecha_creacion"))
             val imagenPath = cursor.getString(cursor.getColumnIndexOrThrow("imagen_path"))
-            val diasSinRegar = calcularDias(ultimo)
-            val necesita = diasSinRegar >= maxDias
+
+            val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
+            val diasSinRegar = calcularDias(fechaBase)
+
+            val estacionActual = calcularEstacion(LocalDate.now())
+            var necesita = false
+            when (estacionActual) {
+                Estacion.VERANO -> {
+                    necesita = diasSinRegar >= maxDias
+                }
+                Estacion.INVIERNO, Estacion.OTONO -> {
+                    necesita = diasSinRegar >= maxDias_invierno
+                }
+                Estacion.PRIMAVERA -> {
+                    necesita = diasSinRegar >= maxDias
+                }
+            }
 
             lista.add(
                 EstadoPlantasDTO(
@@ -291,7 +311,7 @@ class PlantaRepository(private val db: DBHelper) {
     @RequiresApi(Build.VERSION_CODES.O)
     fun obtenerEstadoPlantasXRiego(
         filtro: FiltroRiego = FiltroRiego.TODAS,
-        diasUmbral: Int = 2
+        diasUmbral: Int = 3
     ): List<EstadoPlantasDTO> {
 
         val lista = obtenerEstadoPlantas()
@@ -305,7 +325,8 @@ class PlantaRepository(private val db: DBHelper) {
             FiltroRiego.PROXIMAS ->
                 lista.filter {
                     !it.necesitaRiego &&
-                            it.diasSinRegar >= (it.max_dias?.minus(diasUmbral) ?: 0)
+                    it.diasSinRegar >= (it.max_dias - diasUmbral) &&
+                    it.diasSinRegar < it.max_dias
                 }
         }
     }
