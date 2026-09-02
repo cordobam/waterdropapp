@@ -9,16 +9,21 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.model.DBHelper
+import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
+import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.IndicadoresRepository
+import com.example.waterdropapp.data.repository.PlantaRepository
+import com.example.waterdropapp.data.repository.RiegoRepository
+import com.example.waterdropapp.data.repository.SeasonRepository
+import com.example.waterdropapp.data.repository.SeasonChangeResult
 import com.example.waterdropapp.data.repository.WeatherRepository
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.waterdropapp.data.repository.PlantaRepository
-import com.example.waterdropapp.data.repository.RiegoRepository
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var plantaRepo: PlantaRepository
@@ -29,10 +34,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onCreate(savedInstanceState)
 
         val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper)
+        plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
 
-        val repository = IndicadoresRepository(plantaRepo,riegoRepo)
+        val repository = IndicadoresRepository(plantaRepo, riegoRepo)
 
         val indicadores = repository.getIndicadores()
 
@@ -69,7 +74,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val weatherRepo = WeatherRepository()
-                val weather = weatherRepo.getWeeklyTemperatures("Cordoba")
+                val prefs = SeasonPrefs.create(requireContext())
+                val config = prefs.load()
+                val weather = weatherRepo.getWeeklyTemperatures(config.ciudad)
 
                 val minSemana = weather.temperaturas
                     .mapNotNull { it.min }
@@ -79,17 +86,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     .maxOrNull()
 
                 withContext(Dispatchers.Main) {
-                    //tvCiudad.text = weather.ciudad
                     tvTempMin.text = "${minSemana?.toInt() ?: ""}°"
                     tvTempMax.text = "${maxSemana?.toInt() ?: ""}°"
                 }
+
+                // Check for season change
+                val weatherDb = DatabaseHelperWeather(requireContext())
+                val seasonRepo = SeasonRepository(weatherDb, weatherRepo, prefs, requireContext())
+                val result = seasonRepo.checkSeasonChange()
+
+                if (result is SeasonChangeResult.Changed) {
+                    withContext(Dispatchers.Main) {
+                        Snackbar.make(requireView(),
+                            "Detectado cambio de estación: ${result.from?.name ?: "desconocida"} → ${result.to.name}. ¿Configurar?",
+                            Snackbar.LENGTH_LONG)
+                            .setAction("Ajustes") {
+                                (activity as? MainActivity)?.cargarFragment(com.example.waterdropapp.ui.ajustes.AjustesFragment())
+                            }
+                            .show()
+                    }
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    //tvCiudad.text = "Error al cargar clima"
                 }
             }
         }
     }
-
-
 }

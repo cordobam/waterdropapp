@@ -15,4 +15,8 @@
         android:title="Historial"
         android:icon="@android:drawable/ic_menu_month"/>
 
+    <item
+        android:id="@+id/menu_ajustes"
+        android:title="Ajustes"
+        android:icon="@android:drawable/ic_menu_manage"/>
 </menu>

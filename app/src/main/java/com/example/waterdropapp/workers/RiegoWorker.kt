@@ -24,7 +24,7 @@ class RiegoWorker(
     override fun doWork(): Result {
         Log.d("RiegoWorker", "Worker ejecutado")
 
-        val plantasRepo = PlantaRepository( DBHelper(applicationContext))
+        val plantasRepo = PlantaRepository(DBHelper(applicationContext), applicationContext)
         val plantas = plantasRepo.obtenerEstadoPlantas() // con fechaUltimoRiego
 
         plantas.forEach { planta ->
