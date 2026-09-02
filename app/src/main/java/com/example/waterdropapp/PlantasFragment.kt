@@ -83,7 +83,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
         //db = DBHelper(requireContext())
         val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper)
+        plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
         grupoRepo = GrupoRepository(helper)
 

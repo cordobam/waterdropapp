@@ -1,6 +1,7 @@
 package com.example.waterdropapp.data.repository
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -8,8 +9,10 @@ import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_GRUPOS_MANY
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_PLANTAS
-import com.example.waterdropapp.domain.model.FiltroRiego
+import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
+import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.domain.model.Estacion
+import com.example.waterdropapp.domain.model.FiltroRiego
 import com.example.waterdropapp.data.local.model.Plantas
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -17,7 +20,19 @@ import java.time.Month
 import java.util.Date
 import java.util.Locale
 
-class PlantaRepository(private val db: DBHelper) {
+class PlantaRepository(
+    private val db: DBHelper,
+    private val context: Context? = null
+) {
+
+    private val seasonRepository: SeasonRepository? by lazy {
+        context?.let { ctx ->
+            val weatherDb = DatabaseHelperWeather(ctx)
+            val weatherRepo = WeatherRepository()
+            val prefs = SeasonPrefs.create(ctx)
+            SeasonRepository(weatherDb, weatherRepo, prefs, ctx)
+        }
+    }
 
     fun putPlantas(nombre: String , dias: Int , imagenPath: String?, dias_inv: Int): Long {
         val db = db.writableDatabase
@@ -430,6 +445,16 @@ class PlantaRepository(private val db: DBHelper) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun calcularEstacion(fechaHoy: LocalDate): Estacion {
+        return seasonRepository?.let { repo ->
+            // SeasonRepository.getCurrentSeason() es suspend, necesitamos manejarlo
+            // Como este método no es suspend, usamos la lógica original como fallback
+            // para operaciones síncronas. Para operaciones asíncronas, usar SeasonRepository directamente.
+            calcularEstacionOriginal(fechaHoy)
+        } ?: calcularEstacionOriginal(fechaHoy)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion {
         val dia = fechaHoy.dayOfMonth
         val mes = fechaHoy.month
 

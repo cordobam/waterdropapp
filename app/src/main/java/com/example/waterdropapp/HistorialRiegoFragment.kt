@@ -25,7 +25,7 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
         super.onViewCreated(view, savedInstanceState)
 
         val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper)
+        plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
         historialAdapter = AdapterHistorial()
 

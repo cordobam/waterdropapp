@@ -11,6 +11,10 @@ class DatabaseHelperWeather(context: Context) {
         context.getDatabasePath("weather_cache.db"), null
     )
 
+    init {
+        onCreate()
+    }
+
     fun onCreate() {
         db.execSQL("""
                 CREATE TABLE IF NOT EXISTS weather_cache (
@@ -51,5 +55,24 @@ class DatabaseHelperWeather(context: Context) {
         }
         cursor.close()
         return lista
+    }
+
+    fun getLast15Days(ciudad: String): List<TemperaturaDiaria> {
+        val lista = mutableListOf<TemperaturaDiaria>()
+        val cursor = db.rawQuery(
+            "SELECT fecha, min_temp, max_temp FROM weather_cache WHERE ciudad = ? ORDER BY fecha DESC LIMIT 15",
+            arrayOf(ciudad)
+        )
+        while (cursor.moveToNext()) {
+            val min = cursor.getDouble(1)
+            val max = cursor.getDouble(2)
+            lista.add(TemperaturaDiaria(
+                fecha = cursor.getString(0),
+                min = if (min != 0.0) min else null,
+                max = if (max != 0.0) max else null
+            ))
+        }
+        cursor.close()
+        return lista.reversed()
     }
 }

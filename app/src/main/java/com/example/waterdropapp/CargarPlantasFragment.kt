@@ -68,7 +68,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
         //carga spinner con datos
         val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper)
+        plantaRepo = PlantaRepository(helper, requireContext())
         grupoRepo = GrupoRepository(helper)
 
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
