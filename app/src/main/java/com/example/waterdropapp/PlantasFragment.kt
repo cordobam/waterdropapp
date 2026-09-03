@@ -36,6 +36,10 @@ import com.example.waterdropapp.ui.grupos.GruposBottomSheet
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlantasFragment : Fragment(R.layout.fragment_plantas) {
@@ -167,10 +171,14 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 else -> FiltroRiego.TODAS
             }
 
-            val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
-            val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
+            CoroutineScope(Dispatchers.IO).launch {
+                val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+                val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
 
-            plantasAdapter.submitList(listaOrdenada)
+                withContext(Dispatchers.Main) {
+                    plantasAdapter.submitList(listaOrdenada)
+                }
+            }
         }
 
         // para el espaciado
@@ -190,6 +198,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         // tabs
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout.getTabAt(0)?.select()
+        currentTab = 0
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -348,19 +357,24 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            val listaActualizada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+            CoroutineScope(Dispatchers.IO).launch {
+                val listaActualizada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+                withContext(Dispatchers.Main) {
+                    plantasAdapter.submitList(listaActualizada)
 
-            plantasAdapter.submitList(listaActualizada)
-
-            Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                .setAction("Deshacer") {
-
-                    plantaRepo.softDeletePlanta(id, true)
-                    //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
-                    val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
-                    plantasAdapter.submitList(listaReactivada)
+                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
+                        .setAction("Deshacer") {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                plantaRepo.softDeletePlanta(id, true)
+                                val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+                                withContext(Dispatchers.Main) {
+                                    plantasAdapter.submitList(listaReactivada)
+                                }
+                            }
+                        }
+                        .show()
                 }
-                .show()
+            }
 
         } else {
             Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
@@ -410,8 +424,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun recargarConFiltro() {
-        val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
-        val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
-        plantasAdapter.submitList(listaOrdenada)
+        CoroutineScope(Dispatchers.IO).launch {
+            val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
+            val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
+            withContext(Dispatchers.Main) {
+                plantasAdapter.submitList(listaOrdenada)
+            }
+        }
     }
 }
