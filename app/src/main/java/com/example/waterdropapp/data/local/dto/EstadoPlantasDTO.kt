@@ -8,5 +8,6 @@ data class EstadoPlantasDTO(
     val necesitaRiego: Boolean,
     val nombreGrupos: String?,
     val imagen_path:String?,
-    val max_dias: Int
+    val max_dias: Int,
+    val max_dias_invierno: Int
 )

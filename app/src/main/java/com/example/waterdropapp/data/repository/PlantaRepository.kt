@@ -225,7 +225,8 @@ class PlantaRepository(
                     necesitaRiego = necesita,
                     nombreGrupos = nombreGrupos,
                     imagen_path = imagenPath,
-                    max_dias = maxDias
+                    max_dias = maxDias,
+                    max_dias_invierno = maxDias_invierno
                 )
             )
         }
@@ -314,7 +315,8 @@ class PlantaRepository(
                     necesitaRiego = necesita,
                     nombreGrupos = nombreGrupos,
                     imagen_path = imagenPath,
-                    max_dias = maxDias
+                    max_dias = maxDias,
+                    max_dias_invierno = maxDias_invierno
                 )
             )
         }
@@ -324,25 +326,35 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerEstadoPlantasXRiego(
+    suspend fun obtenerEstadoPlantasXRiego(
         filtro: FiltroRiego = FiltroRiego.TODAS,
         diasUmbral: Int = 3
     ): List<EstadoPlantasDTO> {
 
         val lista = obtenerEstadoPlantas()
+        val estacionActual = seasonRepository?.getCurrentSeason() 
+            ?: calcularEstacionOriginal(LocalDate.now())
 
-        return when (filtro){
+        return when (filtro) {
             FiltroRiego.TODAS -> lista
 
             FiltroRiego.VENCIDAS ->
                 lista.filter { it.necesitaRiego }
 
-            FiltroRiego.PROXIMAS ->
-                lista.filter {
-                    !it.necesitaRiego &&
-                    it.diasSinRegar >= (it.max_dias - diasUmbral) &&
-                    it.diasSinRegar < it.max_dias
+            FiltroRiego.PROXIMAS -> {
+                lista.filter { planta ->
+                    !planta.necesitaRiego &&
+                    planta.diasSinRegar >= (planta.umbralSegunEstacion(estacionActual) - diasUmbral) &&
+                    planta.diasSinRegar < planta.umbralSegunEstacion(estacionActual)
                 }
+            }
+        }
+    }
+
+    private fun EstadoPlantasDTO.umbralSegunEstacion(estacion: Estacion): Int {
+        return when (estacion) {
+            Estacion.INVIERNO, Estacion.OTONO -> this.max_dias_invierno
+            else -> this.max_dias
         }
     }
 
@@ -418,7 +430,8 @@ class PlantaRepository(
                     necesitaRiego = necesita,
                     nombreGrupos = nombreGrupos,
                     imagen_path = imagenPath,
-                    max_dias = maxDias
+                    max_dias = maxDias,
+                    max_dias_invierno = maxDias_invierno
             )
         }
 

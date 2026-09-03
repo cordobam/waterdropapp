@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         cargarFragment(HomeFragment())
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_home -> cargarFragment(HomeFragment())
