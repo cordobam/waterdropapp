@@ -155,7 +155,7 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerEstadoPlantas(): List<EstadoPlantasDTO> {
+    suspend fun obtenerEstadoPlantas(): List<EstadoPlantasDTO> {
         val lista = mutableListOf<EstadoPlantasDTO>()
         val db = db.readableDatabase
 
@@ -189,6 +189,9 @@ class PlantaRepository(
 
         val cursor = db.rawQuery(query, null)
 
+        val estacionActual = seasonRepository?.getCurrentSeason() 
+            ?: calcularEstacionOriginal(LocalDate.now())
+
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
@@ -202,7 +205,6 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            val estacionActual = calcularEstacion(LocalDate.now())
             var necesita = false
             when (estacionActual) {
                 Estacion.VERANO -> {
@@ -236,7 +238,7 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerEstadoPlantasPorGrupo(grupoId: Int): List<EstadoPlantasDTO> {
+    suspend fun obtenerEstadoPlantasPorGrupo(grupoId: Int): List<EstadoPlantasDTO> {
         val lista = mutableListOf<EstadoPlantasDTO>()
         val db = db.readableDatabase
 
@@ -279,6 +281,9 @@ class PlantaRepository(
             arrayOf(grupoId.toString())
         )
 
+        val estacionActual = seasonRepository?.getCurrentSeason() 
+            ?: calcularEstacionOriginal(LocalDate.now())
+
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
@@ -292,7 +297,6 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            val estacionActual = calcularEstacion(LocalDate.now())
             var necesita = false
             when (estacionActual) {
                 Estacion.VERANO -> {
@@ -359,8 +363,7 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun obtenerEstadoPlantasxId(plantaId: Int): EstadoPlantasDTO? {
-        val lista = mutableListOf<EstadoPlantasDTO>()
+    suspend fun obtenerEstadoPlantasxId(plantaId: Int): EstadoPlantasDTO? {
         val db = db.readableDatabase
 
         val query = """
@@ -395,6 +398,9 @@ class PlantaRepository(
 
         var resultado: EstadoPlantasDTO? = null
 
+        val estacionActual = seasonRepository?.getCurrentSeason() 
+            ?: calcularEstacionOriginal(LocalDate.now())
+
         if (cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre"))
@@ -408,7 +414,6 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            val estacionActual = calcularEstacion(LocalDate.now())
             var necesita = false
             when (estacionActual) {
                 Estacion.VERANO -> {
