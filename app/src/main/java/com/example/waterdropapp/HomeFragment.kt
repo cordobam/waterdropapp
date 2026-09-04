@@ -39,37 +39,41 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val repository = IndicadoresRepository(plantaRepo, riegoRepo)
 
-        val indicadores = repository.getIndicadores()
+        CoroutineScope(Dispatchers.IO).launch {
+            val indicadores = repository.getIndicadores()
+            
+            withContext(Dispatchers.Main) {
+                val tvTotal = view.findViewById<TextView>(R.id.tvTotalPlantas)
+                val tvTotalxRegar = view.findViewById<TextView>(R.id.tvPorRegar)
+                val tvTotalxNoRegar = view.findViewById<TextView>(R.id.tvRegadasHoy)
+                val tvPromedioDias = view.findViewById<TextView>(R.id.tvPromedioDias)
+                val tvPromedioTardanza = view.findViewById<TextView>(R.id.tvPromedioTardanza)
 
-        val tvTotal = view.findViewById<TextView>(R.id.tvTotalPlantas)
-        val tvTotalxRegar = view.findViewById<TextView>(R.id.tvPorRegar)
-        val tvTotalxNoRegar = view.findViewById<TextView>(R.id.tvRegadasHoy)
+                tvTotal.text = indicadores.total.toString()
+                tvTotalxRegar.text = indicadores.necesitanRiego.toString()
+                tvTotalxNoRegar.text = indicadores.noNecesitanRiego.toString()
+                tvPromedioDias.text = String.format("%.2f", indicadores.promedioDiasRiego)
+                tvPromedioTardanza.text = String.format("%.2f", indicadores.promedioTardanza)
+                
+                val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
 
-        val tvPromedioDias = view.findViewById<TextView>(R.id.tvPromedioDias)
-        val tvPromedioTardanza = view.findViewById<TextView>(R.id.tvPromedioTardanza)
-        val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
+                btnMarketplace.setOnClickListener {
+                    val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+
+                    val intent = if (isLoggedIn) {
+                        Intent(requireContext(), MarketplaceActivity::class.java)
+                    } else {
+                        Intent(requireContext(), LoginActivity::class.java)
+                    }
+                    startActivity(intent)
+                }
+            }
+        }
 
         // Clima
         val tvTempMin = view.findViewById<TextView>(R.id.tvTempMin)
         val tvTempMax = view.findViewById<TextView>(R.id.tvTempMax)
-
-        tvTotal.text = indicadores.total.toString()
-        tvTotalxRegar.text = indicadores.necesitanRiego.toString()
-        tvTotalxNoRegar.text = indicadores.noNecesitanRiego.toString()
-        tvPromedioDias.text = String.format("%.2f", indicadores.promedioDiasRiego)
-        tvPromedioTardanza.text = String.format("%.2f", indicadores.promedioTardanza)
-
-        btnMarketplace.setOnClickListener {
-            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-            val isLoggedIn = prefs.getBoolean("is_logged_in", false)
-
-            val intent = if (isLoggedIn) {
-                Intent(requireContext(), MarketplaceActivity::class.java)
-            } else {
-                Intent(requireContext(), LoginActivity::class.java)
-            }
-            startActivity(intent)
-        }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {

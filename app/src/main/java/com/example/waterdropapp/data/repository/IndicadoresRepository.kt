@@ -9,12 +9,16 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.RiegoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class IndicadoresRepository(private val plantaRepo: PlantaRepository, private val riegoRepo:RiegoRepository) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getIndicadores(): IndicadoresDTO {
-        val lista = plantaRepo.obtenerEstadoPlantas()
+    suspend fun getIndicadores(): IndicadoresDTO {
+        val lista = withContext(Dispatchers.IO) {
+            plantaRepo.obtenerEstadoPlantas()
+        }
 
         val total = lista.size
         val necesitanRiego = lista.count { it.necesitaRiego }

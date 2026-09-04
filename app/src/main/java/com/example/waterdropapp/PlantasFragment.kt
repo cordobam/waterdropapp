@@ -119,13 +119,17 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 ).show()
             },
             onEditarClick = {plantaId ->
-                val estado = plantaRepo.obtenerEstadoPlantasxId(plantaId)
-                val sheet = PlantasBottomSheet(
-                    listaPlantas = if(estado != null) listOf(estado) else emptyList(),
-                    onEditar = {id -> editarPlantas(id)},
-                    onEliminar = {id , view -> eliminarPlantas(id, view) }
-                )
-                sheet.show(parentFragmentManager, "EditarPlantaSheet")
+                CoroutineScope(Dispatchers.IO).launch {
+                    val estado = plantaRepo.obtenerEstadoPlantasxId(plantaId)
+                    withContext(Dispatchers.Main) {
+                        val sheet = PlantasBottomSheet(
+                            listaPlantas = if(estado != null) listOf(estado) else emptyList(),
+                            onEditar = {id -> editarPlantas(id)},
+                            onEliminar = {id , view -> eliminarPlantas(id, view) }
+                        )
+                        sheet.show(parentFragmentManager, "EditarPlantaSheet")
+                    }
+                }
             }
         )
 
@@ -225,9 +229,13 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun cargarPlantas() {
-        val lista = plantaRepo.obtenerEstadoPlantas()
-        val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
-        plantasAdapter.submitList(listaOrdenada)
+        CoroutineScope(Dispatchers.IO).launch {
+            val lista = plantaRepo.obtenerEstadoPlantas()
+            val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
+            withContext(Dispatchers.Main) {
+                plantasAdapter.submitList(listaOrdenada)
+            }
+        }
     }
 
     private fun cargarGrupos() {
@@ -243,8 +251,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout?.getTabAt(0)?.select()   // tab Plantas
 
-        val plantas = plantaRepo.obtenerEstadoPlantasPorGrupo(grupoId)
-        plantasAdapter.submitList(plantas)
+        CoroutineScope(Dispatchers.IO).launch {
+            val plantas = plantaRepo.obtenerEstadoPlantasPorGrupo(grupoId)
+            withContext(Dispatchers.Main) {
+                plantasAdapter.submitList(plantas)
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

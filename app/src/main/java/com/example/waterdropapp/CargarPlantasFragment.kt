@@ -25,6 +25,10 @@ import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
@@ -132,16 +136,20 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         val botonverplantas = view.findViewById<Button>(R.id.btnVerPlantas)
 
         botonverplantas.setOnClickListener {
-            // 1. Obtenemos los DTOs de la base de datos
-            val plantasDTO = plantaRepo.obtenerEstadoPlantas()
+            CoroutineScope(Dispatchers.IO).launch {
+                // 1. Obtenemos los DTOs de la base de datos
+                val plantasDTO = plantaRepo.obtenerEstadoPlantas()
 
-            // 2. Mostramos el Bottom Sheet
-            val sheet = PlantasBottomSheet(
-                listaPlantas = plantasDTO,
-                onEditar = { id -> editarPlantas(id) },
-                onEliminar = { id, vistaSheet -> eliminarPlantas(id,vistaSheet) }
-            )
-            sheet.show(parentFragmentManager, "PlantasSheet")
+                withContext(Dispatchers.Main) {
+                    // 2. Mostramos el Bottom Sheet
+                    val sheet = PlantasBottomSheet(
+                        listaPlantas = plantasDTO,
+                        onEditar = { id -> editarPlantas(id) },
+                        onEliminar = { id, vistaSheet -> eliminarPlantas(id,vistaSheet) }
+                    )
+                    sheet.show(parentFragmentManager, "PlantasSheet")
+                }
+            }
         }
     }
 
@@ -223,9 +231,12 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
                 Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
-                plantasAdapterAct.submitList(
-                    plantaRepo.obtenerEstadoPlantas()
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val lista = plantaRepo.obtenerEstadoPlantas()
+                    withContext(Dispatchers.Main) {
+                        plantasAdapterAct.submitList(lista)
+                    }
+                }
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -241,19 +252,24 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            val listaActualizada = plantaRepo.obtenerEstadoPlantas()
+            CoroutineScope(Dispatchers.IO).launch {
+                val listaActualizada = plantaRepo.obtenerEstadoPlantas()
+                withContext(Dispatchers.Main) {
+                    plantasAdapterAct.submitList(listaActualizada)
 
-            plantasAdapterAct.submitList(listaActualizada)
-
-            Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                .setAction("Deshacer") {
-
-                    plantaRepo.softDeletePlanta(id, true)
-                    //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
-                    val listaReactivada = plantaRepo.obtenerEstadoPlantas()
-                    plantasAdapterAct.submitList(listaReactivada)
+                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
+                        .setAction("Deshacer") {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                plantaRepo.softDeletePlanta(id, true)
+                                val listaReactivada = plantaRepo.obtenerEstadoPlantas()
+                                withContext(Dispatchers.Main) {
+                                    plantasAdapterAct.submitList(listaReactivada)
+                                }
+                            }
+                        }
+                        .show()
                 }
-                .show()
+            }
 
         } else {
             Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()

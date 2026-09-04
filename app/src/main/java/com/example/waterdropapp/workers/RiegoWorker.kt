@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.local.model.DBHelper
@@ -14,18 +14,22 @@ import java.util.Locale
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.repository.PlantaRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RiegoWorker(
     context: Context,
     workerParams: WorkerParameters
-) : Worker(context, workerParams) {
+) : CoroutineWorker(context, workerParams) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         Log.d("RiegoWorker", "Worker ejecutado")
 
         val plantasRepo = PlantaRepository(DBHelper(applicationContext), applicationContext)
-        val plantas = plantasRepo.obtenerEstadoPlantas() // con fechaUltimoRiego
+        val plantas = withContext(Dispatchers.IO) {
+            plantasRepo.obtenerEstadoPlantas()
+        }
 
         plantas.forEach { planta ->
             if (planta.necesitaRiego) {
@@ -34,7 +38,6 @@ class RiegoWorker(
         }
 
         return Result.success()
-
     }
 
     private fun mostrarNotificacion(nombrePlanta: String) {
