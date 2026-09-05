@@ -141,19 +141,52 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="URL de imagen"
+            android:text="Foto de la publicación"
             android:textSize="13sp"
-            android:textColor="#4E6E50" />
+            android:textColor="#4E6E50"
+            android:layout_marginBottom="8dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPreviewFoto"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imgPreviewFoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="#EAF3DE" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSeleccionarFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Seleccionar foto"
+                android:icon="@android:drawable/ic_menu_gallery"
+                app:iconGravity="textStart" />
+
+        </LinearLayout>
+
+        <!-- Campo oculto para compatibilidad con URLs existentes -->
         <EditText
             android:id="@+id/etImagenUrl"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="https://..."
-            android:textSize="14sp"
-            android:background="@drawable/border_top_gray"
-            android:paddingStart="8dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:hint="https://..." />
 
         <TextView
             android:layout_width="wrap_content"

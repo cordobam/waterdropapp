@@ -42,7 +42,10 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
 
         adapter = AdapterMisPublicaciones(
             onEditarClick = { publicacion ->
-                Toast.makeText(requireContext(), "Editar ${publicacion.titulo} - pr\u00f3ximamente", Toast.LENGTH_SHORT).show()
+                PublicacionFormlDialog(
+                    itemAEditar = publicacion,
+                    onSuccess = { cargarMisPublicaciones(view) }
+                ).show(parentFragmentManager, "EditarPublicacion")
             },
             onEliminarClick = { publicacion ->
                 repository.deletePublicacion(
