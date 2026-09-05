@@ -40,6 +40,7 @@ class FirestoreRepository {
     ) {
         db.collection("publicaciones")
             .whereEqualTo("usuarioId", usuarioId)
+            .whereEqualTo("activa", true)
             .get()
             .addOnSuccessListener { result ->
                 val lista = result.documents.map { doc ->
@@ -107,6 +108,7 @@ class FirestoreRepository {
         onError: (Exception) -> Unit
     ) {
         db.collection("publicaciones")
+            .whereEqualTo("activa", true)
             .orderBy("fechaPublicacion", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
@@ -213,6 +215,7 @@ class FirestoreRepository {
     ) {
         db.collection("viveros")
             .whereEqualTo("usuarioId", usuarioId)
+            .whereEqualTo("activo", true)
             .get()
             .addOnSuccessListener { result ->
                 val lista = result.documents.map { doc ->
