@@ -13,11 +13,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.firebase.model.Publicacion
+import com.example.waterdropapp.data.firebase.model.Chat
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterPublicaciones
+import com.example.waterdropapp.ui.marketplace.ChatBottomSheet
+import com.example.waterdropapp.ui.marketplace.OfertaDialog
+import com.example.waterdropapp.ui.marketplace.PublicacionDetalleBottomSheet
 import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.firebase.auth.FirebaseAuth
 
 class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
@@ -40,9 +45,60 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
         val chips = listOf(chipTodos, chipPlantas, chipSemillas, chipEsquejes, chipTrueque)
 
-        adapter = AdapterPublicaciones { publicacion ->
-            // click en publicacion
-        }
+        adapter = AdapterPublicaciones(
+            onPublicacionClick = { publicacion ->
+                // Click en publicación -> abrir detalle
+                val detalleSheet = PublicacionDetalleBottomSheet(
+                    publicacion = publicacion,
+                    onOfertar = {
+                        val ofertaDialog = OfertaDialog(
+                            publicacion = publicacion,
+                            onSuccess = { cargarDatos(tvCercaTuyo) }
+                        )
+                        ofertaDialog.show(parentFragmentManager, "OfertaDialog")
+                    },
+                    onChatear = {
+                        val repo = FirestoreRepository()
+                        repo.getPublicacionById(publicacion.id!!, { pub ->
+                            val repo2 = FirestoreRepository()
+                            repo2.getChatsDeUsuario(FirebaseAuth.getInstance().currentUser?.uid ?: "", { chats ->
+                                val chatExistente = chats.find { it.publicacionId == publicacion.id }
+                                if (chatExistente != null) {
+                                    val chatSheet = com.example.waterdropapp.ui.marketplace.ChatBottomSheet(chatExistente, pub)
+                                    chatSheet.show(parentFragmentManager, "ChatBottomSheet")
+                                } else {
+                                    // Crear nuevo chat
+                                    val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+                                    if (currentUser != null) {
+                                        val nuevoChat = com.example.waterdropapp.data.firebase.model.Chat(
+                                            publicacionId = publicacion.id!!,
+                                            publicacionTitulo = publicacion.titulo,
+                                            participantes = listOf(currentUser.uid, publicacion.usuarioId),
+                                            nombresParticipantes = mapOf(
+                                                currentUser.uid to (currentUser.displayName ?: "Yo"),
+                                                publicacion.usuarioId to publicacion.nombreUsuario
+                                            )
+                                        )
+                                        repo2.crearChat(nuevoChat, {
+                                            val chatSheet = com.example.waterdropapp.ui.marketplace.ChatBottomSheet(nuevoChat, pub)
+                                            chatSheet.show(parentFragmentManager, "ChatBottomSheet")
+                                        }, {})
+                                    }
+                                }
+                            }, {})
+                        }, {})
+                    }
+                )
+                detalleSheet.show(parentFragmentManager, "PublicacionDetalle")
+            },
+            onOfertarClick = { publicacion ->
+                val ofertaDialog = OfertaDialog(
+                    publicacion = publicacion,
+                    onSuccess = { cargarDatos(tvCercaTuyo) }
+                )
+                ofertaDialog.show(parentFragmentManager, "OfertaDialog")
+            }
+        )
 
         view.findViewById<RecyclerView>(R.id.rvPublicaciones).apply {
             layoutManager = LinearLayoutManager(requireContext())
