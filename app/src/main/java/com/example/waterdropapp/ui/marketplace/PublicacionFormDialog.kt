@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.FileProvider
@@ -69,8 +70,17 @@ class PublicacionFormlDialog(
             mostrarSelectorImagen()
         }
 
+        // Cambiar textos según edición o creación
+        val btnGuardar = view.findViewById<Button>(R.id.btnGuardar)
+        val tvTituloDialog = view.findViewById<TextView>(R.id.tvTituloDialog)
+        
         if (itemAEditar != null) {
+            btnGuardar.text = "Guardar cambios"
+            tvTituloDialog.text = "Editar publicación"
             cargarDatosExistente(itemAEditar!!)
+        } else {
+            btnGuardar.text = "Publicar"
+            tvTituloDialog.text = "Nueva publicación"
         }
 
         view.findViewById<Button>(R.id.btnGuardar).setOnClickListener { guardar() }

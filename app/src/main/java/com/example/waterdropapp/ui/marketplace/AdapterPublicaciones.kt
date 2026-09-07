@@ -2,8 +2,8 @@ package com.example.waterdropapp.ui.marketplace
 
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +14,8 @@ import com.example.waterdropapp.data.firebase.model.Vivero
 import com.google.android.material.button.MaterialButton
 
 class AdapterPublicaciones(
-    private val onPublicacionClick: (Publicacion) -> Unit
+    private val onPublicacionClick: (Publicacion) -> Unit,
+    private val onOfertarClick: (Publicacion) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -97,17 +98,17 @@ class AdapterPublicaciones(
         private val tvPrecio = itemView.findViewById<TextView>(R.id.tvPrecio)
         private val tvCategoria = itemView.findViewById<TextView>(R.id.tvCategoria)
         private val tvTrueque = itemView.findViewById<TextView>(R.id.tvTrueque)
+        private val btnOfertar = itemView.findViewById<MaterialButton>(R.id.btnOfertar)
 
         fun bind(publicacion: Publicacion) {
             tvNombre.text = publicacion.titulo
-            tvUbicacion.text = publicacion.barrio
+            tvUbicacion.text = "${publicacion.barrio} · ${publicacion.ciudad}"
             tvCategoria.text = publicacion.categoria.replaceFirstChar { it.uppercase() }
 
             tvPrecio.text = if (publicacion.precio == 0.0) "Gratis"
             else "$${publicacion.precio.toInt()}"
 
-            tvTrueque.visibility = if (publicacion.aceptaTrueque) View.VISIBLE
-            else View.GONE
+            tvTrueque.visibility = if (publicacion.aceptaTrueque) View.VISIBLE else View.GONE
 
             if (publicacion.imagenUrl.isNotEmpty()) {
                 Glide.with(itemView.context)
@@ -121,6 +122,10 @@ class AdapterPublicaciones(
 
             itemView.setOnClickListener {
                 onPublicacionClick(publicacion)
+            }
+
+            btnOfertar.setOnClickListener {
+                onOfertarClick(publicacion)
             }
         }
     }

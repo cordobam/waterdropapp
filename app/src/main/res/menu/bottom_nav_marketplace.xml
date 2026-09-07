@@ -9,6 +9,10 @@
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Viveros"/>
     <item
+        android:id="@+id/menu_market_chats"
+        android:icon="@android:drawable/ic_menu_send"
+        android:title="Chats"/>
+    <item
         android:id="@+id/menu_market_perfil"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="Mi perfil"/>

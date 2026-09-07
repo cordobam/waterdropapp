@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hacer Oferta"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvPublicacionInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Publicación: Nombre • $1.500"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Oferta"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgTipoOferta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:checkedButton="@+id/rbDinero">
+
+            <RadioButton
+                android:id="@+id/rbDinero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💰 Dinero"
+                android:textSize="14sp"
+                android:textColor="#333333"/>
+
+            <RadioButton
+                android:id="@+id/rbTrueque"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔄 Trueque"
+                android:textSize="14sp"
+                android:textColor="#333333"/>
+
+            <RadioButton
+                android:id="@+id/rbDineroTrueque"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💰🔄 Dinero + Trueque"
+                android:textSize="14sp"
+                android:textColor="#333333"/>
+
+        </RadioGroup>
+
+        <!-- CAMPOS DINERO -->
+        <LinearLayout
+            android:id="@+id/layoutDinero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tu Oferta ($)"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etMonto"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Ej: 1200"
+                android:textSize="14sp"
+                android:inputType="numberDecimal"
+                android:background="@drawable/border_top_gray"
+                android:paddingStart="8dp"/>
+
+            <TextView
+                android:id="@+id/tvPrecioMaximo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Precio de la publicación: $1.500"
+                android:textSize="11sp"
+                android:textColor="#666666"/>
+
+        </LinearLayout>
+
+        <!-- CAMPOS TRUEQUE -->
+        <LinearLayout
+            android:id="@+id/layoutTrueque"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Qué ofreces a cambio"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A1F"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etDescripcionTrueque"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ej: 5 esquejes de monstera + macetas"
+                android:textSize="14sp"
+                android:minLines="3"
+                android:gravity="top"
+                android:background="@drawable/border_top_gray"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"/>
+
+        </LinearLayout>
+
+        <!-- MENSAJE AL VENDEDOR -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mensaje al vendedor (opcional)"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="4dp"/>
+
+        <EditText
+            android:id="@+id/etMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Hola, me interesa tu publicación..."
+            android:textSize="14sp"
+            android:minLines="2"
+            android:gravity="top"
+            android:background="@drawable/border_top_gray"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:layout_marginBottom="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:gravity="center_horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelar"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:textColor="#E53935"
+                app:strokeColor="#E53935"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnviarOferta"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Enviar Oferta"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#3A7D44"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
