@@ -242,6 +242,7 @@ class PlantaRepository(
         val lista = mutableListOf<EstadoPlantasDTO>()
         val db = db.readableDatabase
 
+        // Usar JOIN en lugar de EXISTS para mejor rendimiento y fiabilidad
         val cursor = db.rawQuery(
             """
             SELECT            
@@ -250,7 +251,7 @@ class PlantaRepository(
                 p.dias_max_sin_riego,
                 p.dias_max_sin_riego_invierno,
                 p.fecha_creacion,
-                imagen_path,
+                p.imagen_path,
                 -- Último riego
                 (
                     SELECT MAX(r.fecha)
@@ -267,14 +268,10 @@ class PlantaRepository(
                 ) AS nombre_grupos
             
             FROM plantas p
+            INNER JOIN grupos_plantas gp ON p.planta_id = gp.planta_id
             
             WHERE p.activo = 1
-            AND EXISTS (
-                SELECT 1
-                FROM grupos_plantas gp
-                WHERE gp.planta_id = p.planta_id
-                AND gp.grupo_id = ?
-            )
+            AND gp.grupo_id = ?
             
             ORDER BY p.nombre
         """,

@@ -54,6 +54,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private var imageViewActual: ImageView? = null
     private lateinit var imgPreview: ImageView
     private lateinit var layoutPlaceholder: LinearLayout
+    private var cargaPorGrupoPendiente = false
 
     private var filtroActual = FiltroRiego.TODAS
     private var currentTab = 0
@@ -211,7 +212,11 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                     0 -> {
                         recyclerView.adapter = plantasAdapter
                         chipGroup.visibility = View.VISIBLE
-                        cargarPlantas()
+                        if (cargaPorGrupoPendiente) {
+                            cargaPorGrupoPendiente = false
+                        } else {
+                            cargarPlantas()
+                        }
                     }
                     1 -> {
                         recyclerView.adapter = gruposAdapter
@@ -244,9 +249,11 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     }
 
     // me sirve para seleccionar el otro tab y mostrar las plantas ahi
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun cargarPlantasPorGrupo(grupoId: Int) {
         //val plantas = db.obtenerEstadoPlantasPorGrupo(grupoId)
         //plantasAdapter.submitList(plantas)
+        cargaPorGrupoPendiente = true
 
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout?.getTabAt(0)?.select()   // tab Plantas
