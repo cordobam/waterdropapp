@@ -33,15 +33,6 @@ class DBHelper(context: Context) :
             )
         """.trimIndent()
 
-        val createTableRiegos = """
-            CREATE TABLE $TABLE_NAME_RIEGOS (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                planta_id INTEGER,
-                fecha TEXT NOT NULL,
-                FOREIGN KEY(planta_id) REFERENCES plantas(planta_id)
-            )
-        """.trimIndent()
-
         val createTableGrupos = """
             CREATE TABLE $TABLE_NAME_GRUPOS (
                 grupo_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,7 +74,6 @@ class DBHelper(context: Context) :
 
         db.execSQL(createTableGrupos)
         db.execSQL(createTablePlantas)
-        db.execSQL(createTableRiegos)
         db.execSQL(createTableActividades)
         db.execSQL(createTableGruposMany)
         db.execSQL(createTableWeatherCache)
@@ -105,10 +95,11 @@ class DBHelper(context: Context) :
             )
             db.execSQL(
                 """
-                INSERT INTO $TABLE_NAME_ACTIVIDADES (planta_id, tipo, fecha)
-                SELECT planta_id, 'RIEGO', fecha FROM $TABLE_NAME_RIEGOS
+                INSERT INTO actividades_planta (planta_id, tipo, fecha)
+                SELECT planta_id, 'RIEGO', fecha FROM riegos
                 """.trimIndent()
             )
+            db.execSQL("DROP TABLE IF EXISTS riegos")
         }
     }
 
@@ -116,7 +107,6 @@ class DBHelper(context: Context) :
         const val DATABASE_NAME = "plantas.db"
         const val DATABASE_VERSION = 2
         const val TABLE_NAME_PLANTAS = "plantas"
-        const val TABLE_NAME_RIEGOS = "riegos"
         const val TABLE_NAME_ACTIVIDADES = "actividades_planta"
         const val TABLE_NAME_GRUPOS = "grupos"
         const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
