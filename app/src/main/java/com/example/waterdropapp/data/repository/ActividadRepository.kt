@@ -59,6 +59,13 @@ class ActividadRepository(private val db: DBHelper) {
         val db = db.readableDatabase
         val lista = mutableListOf<ActividadPlantaDTO>()
 
+        val filtroTipoSql = if (tipo != null) " AND a.tipo = ?" else ""
+        val selectionArgs = if (tipo != null) {
+            arrayOf(plantaId.toString(), tipo.tag)
+        } else {
+            arrayOf(plantaId.toString())
+        }
+
         val cursor = db.rawQuery(
             """
         SELECT a.planta_id,
@@ -70,11 +77,11 @@ class ActividadRepository(private val db: DBHelper) {
         FROM $TABLE_NAME_ACTIVIDADES a
         INNER JOIN plantas p ON p.planta_id = a.planta_id
         WHERE a.planta_id = ?
-        AND (? IS NULL OR a.tipo = ?)
+        $filtroTipoSql
         AND p.activo = 1
         ORDER BY a.fecha DESC, a.id DESC
         """,
-            arrayOf(plantaId.toString(), tipo?.tag, tipo?.tag)
+            selectionArgs
         )
 
         var fechaRiegoAnterior: Date? = null
