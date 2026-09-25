@@ -20,19 +20,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.domain.model.FiltroRiego
+import com.example.waterdropapp.domain.model.TipoActividad
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import java.util.Date
 import java.util.Locale
+import com.example.waterdropapp.data.repository.ActividadRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.RiegoRepository
 import com.example.waterdropapp.ui.grupos.GruposBottomSheet
+import com.example.waterdropapp.ui.plantas.PlantasAccionesSheet
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -50,6 +55,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
     private lateinit var riegoRepo: RiegoRepository
+    private lateinit var actividadRepo: ActividadRepository
+    private var fechaHoy: String = ""
     private var imagenNuevaPath: String? = null
     private var imageViewActual: ImageView? = null
     private lateinit var imgPreview: ImageView
@@ -91,6 +98,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
         grupoRepo = GrupoRepository(helper)
+        actividadRepo = ActividadRepository(helper)
 
         // Dentro de tu Fragment, por ejemplo en onViewCreated:
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
@@ -104,20 +112,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 .commit()
         }
 
-        val fecha: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        fechaHoy = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         plantasAdapter = AdapterPlantas (
             modo = AdapterPlantas.Modo.MOSTRAR_PLANTAS,
-            onRegarClick = { plantaId ->
-                riegoRepo.putRiegos(plantaId, fecha)
-
-                recargarConFiltro()
-
-                Toast.makeText(
-                    requireContext(),
-                    "Planta regada con exito",
-                    Toast.LENGTH_SHORT
-                ).show()
+            onAccionesClick = { dto ->
+                abrirAcciones(dto)
             },
             onEditarClick = {plantaId ->
                 CoroutineScope(Dispatchers.IO).launch {
@@ -143,7 +143,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 cargarPlantasPorGrupo(grupoId)
             },
             onRegarGrupo = {grupoId ->
-                riegoRepo.putRiegoPorGrupo(grupoId, fecha)
+                riegoRepo.putRiegoPorGrupo(grupoId, fechaHoy)
                 Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
             },
             onEditarClick = {grupoId ->
@@ -449,6 +449,46 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             withContext(Dispatchers.Main) {
                 plantasAdapter.submitList(listaOrdenada)
             }
+        }
+    }
+
+    private fun abrirAcciones(dto: EstadoPlantasDTO) {
+        val sheet = PlantasAccionesSheet(
+            plantaId = dto.plantaId,
+            nombrePlanta = dto.nombre,
+            onAccion = { id, tipo -> confirmarActividad(id, tipo) }
+        )
+        sheet.show(parentFragmentManager, "AccionesPlantaSheet")
+    }
+
+    private fun confirmarActividad(plantaId: Int, tipo: TipoActividad) {
+        val verbo = when (tipo) {
+            TipoActividad.RIEGO -> "regar"
+            TipoActividad.ABONADO -> "abonar"
+            TipoActividad.PODADO -> "podar"
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirmar ${tipo.etiqueta}")
+            .setMessage("¿Estás seguro de que querés $verbo esta planta?")
+            .setPositiveButton("Sí") { _, _ ->
+                actividadRepo.putActividad(plantaId, tipo, fechaHoy)
+                recargarConFiltro()
+                Toast.makeText(
+                    requireContext(),
+                    mensajeRegistrado(tipo),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun mensajeRegistrado(tipo: TipoActividad): String {
+        return when (tipo) {
+            TipoActividad.RIEGO -> "Planta regada con éxito"
+            TipoActividad.ABONADO -> "Planta abonada con éxito"
+            TipoActividad.PODADO -> "Planta podada con éxito"
         }
     }
 }

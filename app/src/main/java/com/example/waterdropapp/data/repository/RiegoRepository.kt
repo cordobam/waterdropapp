@@ -8,16 +8,6 @@ import com.example.waterdropapp.data.local.model.UltimoRiego
 
 class RiegoRepository(private val db: DBHelper) {
 
-    fun putRiegos(planta_id: Int, fecha:String): Long {
-        val db = db.writableDatabase
-        val values = ContentValues().apply {
-            put("planta_id", planta_id)
-            put("tipo", "RIEGO")
-            put("fecha", fecha)
-        }
-        return db.insert(TABLE_NAME_ACTIVIDADES, null, values)
-    }
-
     fun putRiegoPorGrupo(grupoId: Int, fecha: String) {
         val db = db.writableDatabase
         val ids = mutableListOf<Int>()
