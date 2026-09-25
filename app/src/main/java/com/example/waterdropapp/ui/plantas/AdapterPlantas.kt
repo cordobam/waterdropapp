@@ -13,12 +13,11 @@ import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
 import java.io.File
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 class AdapterPlantas(
     private val modo: Modo,
-    private val onRegarClick: ((Int) -> Unit)? = null,
+    private val onAccionesClick: ((EstadoPlantasDTO) -> Unit)? = null,
     private val onEditarPlanta: ((Int) -> Unit)? = null,
     private val onEliminarPlanta: ((Int) -> Unit)? = null,
     private val onEditarClick: ((Int) -> Unit)? = null
@@ -106,14 +105,7 @@ class AdapterPlantas(
             }
 
             btnRegar.setOnClickListener {
-                MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle("Confirmar riego")
-                    .setMessage("¿Estás seguro de que querés regar esta planta?")
-                    .setPositiveButton("Sí") { _, _ ->
-                        onRegarClick?.invoke(dto.plantaId)
-                    }
-                    .setNegativeButton("Cancelar", null)
-                    .show()
+                onAccionesClick?.invoke(dto)
             }
 
             btnEditar.setOnClickListener { onEditarClick?.invoke(dto.plantaId) }

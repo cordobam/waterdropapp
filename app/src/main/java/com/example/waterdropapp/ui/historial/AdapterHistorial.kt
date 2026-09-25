@@ -8,13 +8,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
+import com.example.waterdropapp.data.local.dto.ActividadPlantaDTO
+import com.example.waterdropapp.domain.model.TipoActividad
+import kotlin.collections.addAll
 
 class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHolder>() {
 
-    private val items = mutableListOf<RiegoHistorialDTO>()
+    private val items = mutableListOf<ActividadPlantaDTO>()
 
-    fun submitList(lista: List<RiegoHistorialDTO>) {
+    fun submitList(lista: List<ActividadPlantaDTO>) {
         items.clear()
         items.addAll(lista)
         notifyDataSetChanged()
@@ -39,21 +41,27 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
         private val tvFecha = itemView.findViewById<TextView>(R.id.tv_fecha)
 
         private val imgDot = itemView.findViewById<ImageView>(R.id.img_dot)
-        fun bind(dto: RiegoHistorialDTO) {
-            tvTitulo.text = "Riego Completado de: ${dto.nombrePlanta}"
-            tvFecha.text = "Fecha: ${dto.fechaRiego}"
+        fun bind(dto: ActividadPlantaDTO) {
+            tvTitulo.text = "${dto.tipo.etiqueta} completado de: ${dto.nombrePlanta}"
+            tvFecha.text = "Fecha: ${dto.fecha}"
 
-            val color = when (dto.alerta) {
-                0 -> Color.parseColor("#4CAF50") // verde
-                1 -> Color.parseColor("#FF9800") // naranja
-                else -> Color.parseColor("#F44336") // rojo
+            imgDot.setColorFilter(colorSegunTipo(dto.tipo))
+
+            tvSubTitulo.text = when (dto.tipo) {
+                TipoActividad.RIEGO -> dto.diasDesdeUltimo?.let {
+                    "Pasaron $it días desde el riego anterior"
+                } ?: "Último riego registrado"
+
+                else -> dto.nota?.let { "Nota: $it" } ?: "Actividad registrada"
             }
+        }
 
-            imgDot.setColorFilter(color)
-
-            tvSubTitulo.text = dto.diasDesdeUltimo?.let {
-                "Pasaron $it días desde el riego anterior"
-            } ?: "Último riego registrado"
+        private fun colorSegunTipo(tipo: TipoActividad): Int {
+            return when (tipo) {
+                TipoActividad.RIEGO -> Color.parseColor("#4CAF50")
+                TipoActividad.ABONADO -> Color.parseColor("#FF9800")
+                TipoActividad.PODADO -> Color.parseColor("#9C27B0")
+            }
         }
     }
 }

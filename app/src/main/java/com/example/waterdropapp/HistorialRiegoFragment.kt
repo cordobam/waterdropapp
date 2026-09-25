@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.historial.AdapterHistorial
+import com.example.waterdropapp.data.repository.ActividadRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
-import com.example.waterdropapp.data.repository.RiegoRepository
+import com.example.waterdropapp.domain.model.TipoActividad
+import com.google.android.material.chip.ChipGroup
 
 
 class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
@@ -19,14 +21,15 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
 
     private lateinit var historialAdapter: AdapterHistorial
     private lateinit var plantaRepo: PlantaRepository
-    private lateinit var riegoRepo: RiegoRepository
+    private lateinit var actividadRepo: ActividadRepository
+    private var filtroActividad: TipoActividad? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val helper = DBHelper(requireContext())
         plantaRepo = PlantaRepository(helper, requireContext())
-        riegoRepo = RiegoRepository(helper)
+        actividadRepo = ActividadRepository(helper)
         historialAdapter = AdapterHistorial()
 
         // carga spinner
@@ -46,6 +49,22 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = historialAdapter
 
+        // filtro por tipo de actividad
+        val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroupFiltroHistorial)
+        chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            val chipId = checkedIds.firstOrNull()
+
+            filtroActividad = when (chipId) {
+                R.id.chipHistorialRiego -> TipoActividad.RIEGO
+                R.id.chipHistorialAbonado -> TipoActividad.ABONADO
+                R.id.chipHistorialPodado -> TipoActividad.PODADO
+                else -> null
+            }
+
+            if (spinnerPlantas.selectedItemPosition in plantas.indices) {
+                cargarHistorial(plantas[spinnerPlantas.selectedItemPosition].first)
+            }
+        }
 
         // seleccion spinner
         spinnerPlantas.onItemSelectedListener =
@@ -57,15 +76,17 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
                    position: Int,
                     id: Long
                 ) {
-                    val plantaSeleccionada = plantas[position]
-                    val lista = riegoRepo.obtenerHistorialRiegoxPlanta(plantaSeleccionada.first)
-                    val listaOrdenada = lista.sortedByDescending { it.fechaRiego }
-                    historialAdapter.submitList(listaOrdenada)
+                    cargarHistorial(plantas[position].first)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
+    }
+
+    private fun cargarHistorial(plantaId: Int) {
+        val lista = actividadRepo.obtenerActividadesxPlanta(plantaId, filtroActividad)
+        historialAdapter.submitList(lista)
     }
 
 }

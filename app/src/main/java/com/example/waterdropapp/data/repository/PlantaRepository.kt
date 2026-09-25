@@ -169,9 +169,9 @@ class PlantaRepository(
             imagen_path,
             -- Último riego calculado aparte
             (
-                SELECT MAX(r.fecha)
-                FROM riegos r
-                WHERE r.planta_id = p.planta_id
+                SELECT MAX(a.fecha)
+                FROM actividades_planta a
+                WHERE a.planta_id = p.planta_id AND a.tipo = 'RIEGO'
             ) AS ultimo_riego,
         
             -- Grupos calculados aparte
@@ -254,9 +254,9 @@ class PlantaRepository(
                 p.imagen_path,
                 -- Último riego
                 (
-                    SELECT MAX(r.fecha)
-                    FROM riegos r
-                    WHERE r.planta_id = p.planta_id
+                    SELECT MAX(a.fecha)
+                    FROM actividades_planta a
+                    WHERE a.planta_id = p.planta_id AND a.tipo = 'RIEGO'
                 ) AS ultimo_riego,
             
                 -- Todos los grupos de la planta
@@ -373,9 +373,9 @@ class PlantaRepository(
             imagen_path,
             -- Último riego calculado aparte
             (
-                SELECT MAX(r.fecha)
-                FROM riegos r
-                WHERE r.planta_id = p.planta_id
+                SELECT MAX(a.fecha)
+                FROM actividades_planta a
+                WHERE a.planta_id = p.planta_id AND a.tipo = 'RIEGO'
             ) AS ultimo_riego,
         
             -- Grupos calculados aparte
@@ -490,7 +490,6 @@ class PlantaRepository(
         const val DATABASE_NAME = "plantas.db"
         const val DATABASE_VERSION = 1
         const val TABLE_NAME_PLANTAS = "plantas"
-        const val TABLE_NAME_RIEGOS = "riegos"
         const val TABLE_NAME_GRUPOS = "grupos"
         const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
         const val TABLE_NAME_WEATHER_CACHE = "weather_cache"

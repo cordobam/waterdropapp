@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
 import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
-import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -33,15 +32,6 @@ class DBHelper(context: Context) :
             )
         """.trimIndent()
 
-        val createTableRiegos = """
-            CREATE TABLE $TABLE_NAME_RIEGOS (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                planta_id INTEGER,
-                fecha TEXT NOT NULL,
-                FOREIGN KEY(planta_id) REFERENCES plantas(planta_id)
-            )
-        """.trimIndent()
-
         val createTableGrupos = """
             CREATE TABLE $TABLE_NAME_GRUPOS (
                 grupo_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,6 +50,17 @@ class DBHelper(context: Context) :
             )
         """.trimIndent()
 
+        val createTableActividades = """
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME_ACTIVIDADES (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                planta_id INTEGER NOT NULL,
+                tipo TEXT NOT NULL,
+                fecha TEXT NOT NULL,
+                nota TEXT,
+                FOREIGN KEY(planta_id) REFERENCES plantas(planta_id)
+            )
+        """.trimIndent()
+
         val createTableWeatherCache = """
             CREATE TABLE IF NOT EXISTS $TABLE_NAME_WEATHER_CACHE (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,25 +73,40 @@ class DBHelper(context: Context) :
 
         db.execSQL(createTableGrupos)
         db.execSQL(createTablePlantas)
-        db.execSQL(createTableRiegos)
+        db.execSQL(createTableActividades)
         db.execSQL(createTableGruposMany)
         db.execSQL(createTableWeatherCache)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_GRUPOS_MANY")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_RIEGOS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_PLANTAS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_GRUPOS")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_WEATHER_CACHE")
-        onCreate(db)
+        if (oldVersion < 2) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS $TABLE_NAME_ACTIVIDADES (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    planta_id INTEGER NOT NULL,
+                    tipo TEXT NOT NULL,
+                    fecha TEXT NOT NULL,
+                    nota TEXT,
+                    FOREIGN KEY(planta_id) REFERENCES plantas(planta_id)
+                )
+                """.trimIndent()
+            )
+            db.execSQL(
+                """
+                INSERT INTO actividades_planta (planta_id, tipo, fecha)
+                SELECT planta_id, 'RIEGO', fecha FROM riegos
+                """.trimIndent()
+            )
+            db.execSQL("DROP TABLE IF EXISTS riegos")
+        }
     }
 
     companion object {
         const val DATABASE_NAME = "plantas.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val TABLE_NAME_PLANTAS = "plantas"
-        const val TABLE_NAME_RIEGOS = "riegos"
+        const val TABLE_NAME_ACTIVIDADES = "actividades_planta"
         const val TABLE_NAME_GRUPOS = "grupos"
         const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
         const val TABLE_NAME_WEATHER_CACHE = "weather_cache"
