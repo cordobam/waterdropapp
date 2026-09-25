@@ -7,5 +7,7 @@ data class ActividadPlantaDTO(
     val nombrePlanta: String,
     val tipo: TipoActividad,
     val fecha: String,
-    val nota: String?
+    val nota: String?,
+    val diasDesdeUltimo: Int?,
+    val alerta: Int
 )

@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
 import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
-import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import java.text.SimpleDateFormat
 import java.time.LocalDate

@@ -1,14 +1,10 @@
 package com.example.waterdropapp.data.repository
 
 import android.content.ContentValues
-import com.example.waterdropapp.data.local.dto.RiegoHistorialDTO
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_ACTIVIDADES
 import com.example.waterdropapp.data.local.model.UltimoRiego
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class RiegoRepository(private val db: DBHelper) {
 
@@ -89,59 +85,6 @@ class RiegoRepository(private val db: DBHelper) {
         }
     }
 
-    fun obtenerHistorialRiegoxPlanta(planta_id: Int): List<RiegoHistorialDTO> {
-        val lista = mutableListOf<RiegoHistorialDTO>()
-        val db = db.readableDatabase
-
-        val cursor = db.rawQuery(
-            """
-        SELECT p.nombre AS nombre_planta,
-               a.fecha AS fecha_riego,
-               p.dias_max_sin_riego
-        FROM actividades_planta a
-        INNER JOIN plantas p ON p.planta_id = a.planta_id
-        WHERE a.planta_id = ?
-        AND a.tipo = 'RIEGO'
-        AND p.activo = 1
-        ORDER BY a.fecha DESC
-        LIMIT 5
-        """,
-            arrayOf(planta_id.toString())
-        )
-
-        var fechaAnterior: Date? = null
-
-
-        while (cursor.moveToNext()) {
-            val nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre_planta"))
-            val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha_riego"))
-            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
-            val fechaActual = parseFecha(fecha)
-
-            val diasDesdeUltimo = fechaAnterior?.let { ((it.time - fechaActual.time) / (1000 * 60 * 60 * 24)).toInt() }
-            //val fueraDeRango = diasDesdeUltimo != null && diasDesdeUltimo > maxDias
-            val nivelAlerta = when {
-                diasDesdeUltimo == null -> 0
-                diasDesdeUltimo <= maxDias -> 0
-                diasDesdeUltimo <= maxDias + 2 -> 1
-                else -> 2
-            }
-
-            lista.add(
-                RiegoHistorialDTO(
-                    nombrePlanta = nombre,
-                    fechaRiego = fecha,
-                    diasDesdeUltimo = diasDesdeUltimo,
-                    alerta = nivelAlerta
-                )
-            )
-            fechaAnterior = fechaActual
-        }
-
-        cursor.close()
-        return lista
-    }
-
     // metricas y consultas particulares
 
     fun getUltimosRiegos(): List<UltimoRiego> {
@@ -166,9 +109,4 @@ class RiegoRepository(private val db: DBHelper) {
         return lista
     }
 
-    private fun parseFecha(fecha: String): Date {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        sdf.isLenient = false
-        return sdf.parse(fecha)!!
-    }
 }
