@@ -5,8 +5,11 @@ import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import java.time.Month
 
-enum class Estacion {
-    PRIMAVERA, VERANO, OTONO, INVIERNO;
+enum class Estacion(val etiqueta: String) {
+    PRIMAVERA("Primavera"),
+    VERANO("Verano"),
+    OTONO("Otoño"),
+    INVIERNO("Invierno");
 
     companion object {
         @RequiresApi(Build.VERSION_CODES.O)

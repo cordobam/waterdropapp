@@ -45,14 +45,38 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
             tvTitulo.text = "${dto.tipo.etiqueta} completado de: ${dto.nombrePlanta}"
             tvFecha.text = "Fecha: ${dto.fecha}"
 
-            imgDot.setColorFilter(colorSegunTipo(dto.tipo))
+            imgDot.setColorFilter(colorDot(dto))
 
             tvSubTitulo.text = when (dto.tipo) {
-                TipoActividad.RIEGO -> dto.diasDesdeUltimo?.let {
-                    "Pasaron $it días desde el riego anterior"
-                } ?: "Último riego registrado"
+                TipoActividad.RIEGO -> subtituloRiego(dto)
 
                 else -> dto.nota?.let { "Nota: $it" } ?: "Actividad registrada"
+            }
+        }
+
+        private fun colorDot(dto: ActividadPlantaDTO): Int {
+            return if (dto.tipo == TipoActividad.RIEGO) {
+                colorSegunAlerta(dto.alerta)
+            } else {
+                colorSegunTipo(dto.tipo)
+            }
+        }
+
+        private fun colorSegunAlerta(alerta: Int): Int {
+            return when (alerta) {
+                0 -> Color.parseColor("#4CAF50")
+                1 -> Color.parseColor("#FF9800")
+                else -> Color.parseColor("#F44336")
+            }
+        }
+
+        private fun subtituloRiego(dto: ActividadPlantaDTO): String {
+            val dias = dto.diasDesdeUltimo ?: return "Último riego registrado"
+            val estacion = dto.estacion?.let { ", ${it.etiqueta.lowercase()}" } ?: ""
+            return when (dto.alerta) {
+                0 -> "Pasaron $dias días · se respetó el umbral de ${dto.umbralDias} días$estacion"
+                1 -> "Pasaron $dias días · retraso leve (umbral ${dto.umbralDias} días$estacion)"
+                else -> "Pasaron $dias días · con retraso (umbral ${dto.umbralDias} días$estacion)"
             }
         }
 
