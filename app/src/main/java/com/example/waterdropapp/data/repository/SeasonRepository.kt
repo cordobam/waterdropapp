@@ -9,7 +9,6 @@ import com.example.waterdropapp.domain.model.Estacion
 import com.example.waterdropapp.domain.model.SeasonConfig
 import com.example.waterdropapp.domain.model.SeasonMode
 import java.time.LocalDate
-import java.time.Month
 
 class SeasonRepository(
     private val weatherDb: DatabaseHelperWeather,
@@ -70,21 +69,8 @@ class SeasonRepository(
     }
 
     @RequiresApi(android.os.Build.VERSION_CODES.O)
-    private fun calcularEstacionPorMes(fechaHoy: LocalDate): Estacion {
-        val dia = fechaHoy.dayOfMonth
-        val mes = fechaHoy.month
-
-        return when (mes) {
-            Month.JANUARY, Month.FEBRUARY -> Estacion.VERANO
-            Month.MARCH -> if (dia < 21) Estacion.VERANO else Estacion.OTONO
-            Month.APRIL, Month.MAY -> Estacion.OTONO
-            Month.JUNE -> if (dia < 21) Estacion.OTONO else Estacion.INVIERNO
-            Month.JULY, Month.AUGUST -> Estacion.INVIERNO
-            Month.SEPTEMBER -> if (dia < 21) Estacion.INVIERNO else Estacion.PRIMAVERA
-            Month.OCTOBER, Month.NOVEMBER -> Estacion.PRIMAVERA
-            Month.DECEMBER -> if (dia < 21) Estacion.PRIMAVERA else Estacion.VERANO
-        }
-    }
+    private fun calcularEstacionPorMes(fechaHoy: LocalDate): Estacion =
+        Estacion.porMes(fechaHoy)
 
     @RequiresApi(android.os.Build.VERSION_CODES.O)
     suspend fun refreshWeatherCache(ciudad: String): Boolean {

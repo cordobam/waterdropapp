@@ -57,6 +57,8 @@ class DBHelper(context: Context) :
                 tipo TEXT NOT NULL,
                 fecha TEXT NOT NULL,
                 nota TEXT,
+                dias_max_usados INTEGER,
+                estacion TEXT,
                 FOREIGN KEY(planta_id) REFERENCES plantas(planta_id)
             )
         """.trimIndent()
@@ -100,11 +102,15 @@ class DBHelper(context: Context) :
             )
             db.execSQL("DROP TABLE IF EXISTS riegos")
         }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE $TABLE_NAME_ACTIVIDADES ADD COLUMN dias_max_usados INTEGER")
+            db.execSQL("ALTER TABLE $TABLE_NAME_ACTIVIDADES ADD COLUMN estacion TEXT")
+        }
     }
 
     companion object {
         const val DATABASE_NAME = "plantas.db"
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 3
         const val TABLE_NAME_PLANTAS = "plantas"
         const val TABLE_NAME_ACTIVIDADES = "actividades_planta"
         const val TABLE_NAME_GRUPOS = "grupos"

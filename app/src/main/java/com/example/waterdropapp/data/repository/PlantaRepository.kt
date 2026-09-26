@@ -16,7 +16,6 @@ import com.example.waterdropapp.domain.model.FiltroRiego
 import com.example.waterdropapp.data.local.model.Plantas
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.Month
 import java.util.Date
 import java.util.Locale
 
@@ -469,22 +468,8 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion {
-        val dia = fechaHoy.dayOfMonth
-        val mes = fechaHoy.month
-
-        // Usamos las fechas aproximadas de los cambios de estación (día 21)
-        return when (mes) {
-            Month.JANUARY, Month.FEBRUARY -> Estacion.VERANO
-            Month.MARCH -> if (dia < 21) Estacion.VERANO else Estacion.OTONO
-            Month.APRIL, Month.MAY -> Estacion.OTONO
-            Month.JUNE -> if (dia < 21) Estacion.OTONO else Estacion.INVIERNO
-            Month.JULY, Month.AUGUST -> Estacion.INVIERNO
-            Month.SEPTEMBER -> if (dia < 21) Estacion.INVIERNO else Estacion.PRIMAVERA
-            Month.OCTOBER, Month.NOVEMBER -> Estacion.PRIMAVERA
-            Month.DECEMBER -> if (dia < 21) Estacion.PRIMAVERA else Estacion.VERANO
-        }
-    }
+    private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion =
+        Estacion.porMes(fechaHoy)
 
     companion object {
         const val DATABASE_NAME = "plantas.db"
