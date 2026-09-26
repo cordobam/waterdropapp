@@ -98,7 +98,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
         grupoRepo = GrupoRepository(helper)
-        actividadRepo = ActividadRepository(helper)
+        actividadRepo = ActividadRepository(helper, requireContext())
 
         // Dentro de tu Fragment, por ejemplo en onViewCreated:
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
@@ -452,6 +452,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun abrirAcciones(dto: EstadoPlantasDTO) {
         val sheet = PlantasAccionesSheet(
             plantaId = dto.plantaId,
@@ -461,6 +462,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         sheet.show(parentFragmentManager, "AccionesPlantaSheet")
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmarActividad(plantaId: Int, tipo: TipoActividad) {
         val verbo = when (tipo) {
             TipoActividad.RIEGO -> "regar"
@@ -472,13 +474,17 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             .setTitle("Confirmar ${tipo.etiqueta}")
             .setMessage("¿Estás seguro de que querés $verbo esta planta?")
             .setPositiveButton("Sí") { _, _ ->
-                actividadRepo.putActividad(plantaId, tipo, fechaHoy)
-                recargarConFiltro()
-                Toast.makeText(
-                    requireContext(),
-                    mensajeRegistrado(tipo),
-                    Toast.LENGTH_SHORT
-                ).show()
+                CoroutineScope(Dispatchers.IO).launch {
+                    actividadRepo.putActividad(plantaId, tipo, fechaHoy)
+                    withContext(Dispatchers.Main) {
+                        recargarConFiltro()
+                        Toast.makeText(
+                            requireContext(),
+                            mensajeRegistrado(tipo),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
             .setNegativeButton("Cancelar", null)
             .show()
