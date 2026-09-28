@@ -12,6 +12,7 @@ import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_P
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.domain.model.Estacion
+import com.example.waterdropapp.domain.model.umbral
 import com.example.waterdropapp.domain.model.FiltroRiego
 import com.example.waterdropapp.data.local.model.Plantas
 import java.text.SimpleDateFormat
@@ -204,18 +205,7 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            var necesita = false
-            when (estacionActual) {
-                Estacion.VERANO -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-                Estacion.INVIERNO , Estacion.OTONO -> {
-                    necesita = diasSinRegar >= maxDias_invierno
-                }
-                Estacion.PRIMAVERA -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-            }
+            val necesita = diasSinRegar >= estacionActual.umbral(maxDias, maxDias_invierno)
 
             lista.add(
                 EstadoPlantasDTO(
@@ -293,18 +283,7 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            var necesita = false
-            when (estacionActual) {
-                Estacion.VERANO -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-                Estacion.INVIERNO, Estacion.OTONO -> {
-                    necesita = diasSinRegar >= maxDias_invierno
-                }
-                Estacion.PRIMAVERA -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-            }
+            val necesita = diasSinRegar >= estacionActual.umbral(maxDias, maxDias_invierno)
 
             lista.add(
                 EstadoPlantasDTO(
@@ -352,10 +331,7 @@ class PlantaRepository(
     }
 
     private fun EstadoPlantasDTO.umbralSegunEstacion(estacion: Estacion): Int {
-        return when (estacion) {
-            Estacion.INVIERNO, Estacion.OTONO -> this.max_dias_invierno
-            else -> this.max_dias
-        }
+        return estacion.umbral(this.max_dias, this.max_dias_invierno)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -410,18 +386,7 @@ class PlantaRepository(
             val fechaBase = if (!ultimo.isNullOrEmpty()) ultimo else fecha_creacion
             val diasSinRegar = calcularDias(fechaBase)
 
-            var necesita = false
-            when (estacionActual) {
-                Estacion.VERANO -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-                Estacion.INVIERNO , Estacion.OTONO -> {
-                    necesita = diasSinRegar >= maxDias_invierno
-                }
-                Estacion.PRIMAVERA -> {
-                    necesita = diasSinRegar >= maxDias
-                }
-            }
+            val necesita = diasSinRegar >= estacionActual.umbral(maxDias, maxDias_invierno)
 
             resultado = EstadoPlantasDTO(
                     plantaId = id,
@@ -470,16 +435,4 @@ class PlantaRepository(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion =
         Estacion.porMes(fechaHoy)
-
-    companion object {
-        const val DATABASE_NAME = "plantas.db"
-        const val DATABASE_VERSION = 1
-        const val TABLE_NAME_PLANTAS = "plantas"
-        const val TABLE_NAME_GRUPOS = "grupos"
-        const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
-        const val TABLE_NAME_WEATHER_CACHE = "weather_cache"
-    }
-
-
-
 }

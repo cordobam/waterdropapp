@@ -8,7 +8,6 @@ import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_G
 import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_PLANTAS
 import com.example.waterdropapp.data.local.model.Grupos
 import com.example.waterdropapp.data.local.model.Plantas
-import com.example.waterdropapp.data.local.model.UltimoRiego
 
 class GrupoRepository(private val db: DBHelper) {
 
