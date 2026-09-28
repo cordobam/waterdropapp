@@ -2,7 +2,6 @@ package com.example.waterdropapp.data.repository
 
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import com.example.waterdropapp.data.local.model.DBHelper
-import com.example.waterdropapp.data.local.model.UltimoRiego
 
 class RiegoRepository(private val db: DBHelper) {
 
@@ -43,29 +42,4 @@ class RiegoRepository(private val db: DBHelper) {
             )
         }
     }
-
-    // metricas y consultas particulares
-
-    fun getUltimosRiegos(): List<UltimoRiego> {
-        val lista = mutableListOf<UltimoRiego>()
-        val db = db.readableDatabase
-        val cursor = db.rawQuery("SELECT p.nombre, MAX(a.fecha)\n"+
-                "            FROM actividades_planta a\n"+
-                "            LEFT JOIN plantas p ON p.planta_id = a.planta_id\n"+
-                "            WHERE a.tipo = 'RIEGO' AND p.activo = 1 GROUP BY p.planta_id", null)
-
-
-        if (cursor.moveToFirst()) {
-            do {
-                val ur = UltimoRiego()
-                ur.name = cursor.getString(0)
-                ur.fecha = cursor.getString(1)
-                lista.add(ur)
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        return lista
-    }
-
 }

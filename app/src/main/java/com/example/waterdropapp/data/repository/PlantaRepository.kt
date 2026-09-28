@@ -470,16 +470,4 @@ class PlantaRepository(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion =
         Estacion.porMes(fechaHoy)
-
-    companion object {
-        const val DATABASE_NAME = "plantas.db"
-        const val DATABASE_VERSION = 1
-        const val TABLE_NAME_PLANTAS = "plantas"
-        const val TABLE_NAME_GRUPOS = "grupos"
-        const val TABLE_NAME_GRUPOS_MANY = "grupos_plantas"
-        const val TABLE_NAME_WEATHER_CACHE = "weather_cache"
-    }
-
-
-
 }
