@@ -31,3 +31,6 @@ enum class Estacion(val etiqueta: String) {
         }
     }
 }
+
+fun Estacion.umbral(verano: Int, invierno: Int): Int =
+    if (this == Estacion.VERANO || this == Estacion.PRIMAVERA) verano else invierno

@@ -12,6 +12,7 @@ import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_P
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.domain.model.Estacion
+import com.example.waterdropapp.domain.model.umbral
 import com.example.waterdropapp.domain.model.TipoActividad
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -125,10 +126,7 @@ class ActividadRepository(
             val maxDiasInvierno =
                 cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
 
-            val umbralVigente = when (estacionActual) {
-                Estacion.INVIERNO, Estacion.OTONO -> maxDiasInvierno
-                else -> maxDiasVerano
-            }
+            val umbralVigente = estacionActual.umbral(maxDiasVerano, maxDiasInvierno)
 
             var diasDesdeUltimo: Int? = null
             var alerta = 0
@@ -212,10 +210,7 @@ class ActividadRepository(
         )
 
         val umbral = if (cursor.moveToFirst()) {
-            when (estacion) {
-                Estacion.INVIERNO, Estacion.OTONO -> cursor.getInt(1)
-                else -> cursor.getInt(0)
-            }
+            estacion.umbral(cursor.getInt(0), cursor.getInt(1))
         } else {
             0
         }
