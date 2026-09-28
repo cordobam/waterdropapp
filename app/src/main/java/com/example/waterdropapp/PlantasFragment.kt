@@ -35,7 +35,6 @@ import java.util.Locale
 import com.example.waterdropapp.data.repository.ActividadRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
-import com.example.waterdropapp.data.repository.RiegoRepository
 import com.example.waterdropapp.ui.grupos.GruposBottomSheet
 import com.example.waterdropapp.ui.plantas.PlantasAccionesSheet
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
@@ -54,7 +53,6 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
     private lateinit var gruposAdapter: AdapterGrupos
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
-    private lateinit var riegoRepo: RiegoRepository
     private lateinit var actividadRepo: ActividadRepository
     private var fechaHoy: String = ""
     private var imagenNuevaPath: String? = null
@@ -96,7 +94,6 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         //db = DBHelper(requireContext())
         val helper = DBHelper(requireContext())
         plantaRepo = PlantaRepository(helper, requireContext())
-        riegoRepo = RiegoRepository(helper)
         grupoRepo = GrupoRepository(helper)
         actividadRepo = ActividadRepository(helper, requireContext())
 
@@ -143,8 +140,13 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 cargarPlantasPorGrupo(grupoId)
             },
             onRegarGrupo = {grupoId ->
-                riegoRepo.putRiegoPorGrupo(grupoId, fechaHoy)
-                Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+                CoroutineScope(Dispatchers.IO).launch {
+                    actividadRepo.putRiegoPorGrupo(grupoId, fechaHoy)
+                    withContext(Dispatchers.Main) {
+                        cargarGrupos()
+                        Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+                    }
+                }
             },
             onEditarClick = {grupoId ->
                 val estado = grupoRepo.getGruposxId(grupoId)

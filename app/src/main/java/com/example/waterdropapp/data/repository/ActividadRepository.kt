@@ -50,12 +50,7 @@ class ActividadRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    suspend fun putActividadPorGrupo(
-        grupoId: Int,
-        tipo: TipoActividad,
-        fecha: String,
-        nota: String? = null
-    ) {
+    suspend fun putRiegoPorGrupo(grupoId: Int, fecha: String) {
         val db = db.writableDatabase
         val ids = mutableListOf<Int>()
         val cursor = db.rawQuery(
@@ -75,7 +70,7 @@ class ActividadRepository(
         db.beginTransaction()
         try {
             ids.forEach { id ->
-                insertActividad(db, id, tipo, fecha, nota, estacion)
+                insertActividad(db, id, TipoActividad.RIEGO, fecha, null, estacion)
             }
             db.setTransactionSuccessful()
         } finally {

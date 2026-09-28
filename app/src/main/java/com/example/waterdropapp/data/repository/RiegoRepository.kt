@@ -1,41 +1,10 @@
 package com.example.waterdropapp.data.repository
 
-import android.content.ContentValues
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import com.example.waterdropapp.data.local.model.DBHelper
-import com.example.waterdropapp.data.local.model.DBHelper.Companion.TABLE_NAME_ACTIVIDADES
 import com.example.waterdropapp.data.local.model.UltimoRiego
 
 class RiegoRepository(private val db: DBHelper) {
-
-    fun putRiegoPorGrupo(grupoId: Int, fecha: String) {
-        val db = db.writableDatabase
-        val ids = mutableListOf<Int>()
-        val cursor = db.rawQuery("""select gp.planta_id from 
-            grupos_plantas gp inner join plantas p ON p.planta_id = gp.planta_id
-            where gp.grupo_id = ? and p.activo = 1""", arrayOf(grupoId.toString()))
-        //val plantasIds = obtenerEstadoPlantasPorGrupo(grupoId)
-
-        while (cursor.moveToNext()){
-            ids.add(cursor.getInt(0))
-        }
-        cursor.close()
-
-        db.beginTransaction()
-        try {
-            ids.forEach { id ->
-                val values = ContentValues().apply {
-                    put("planta_id", id)
-                    put("tipo", "RIEGO")
-                    put("fecha", fecha)
-                }
-                db.insert(TABLE_NAME_ACTIVIDADES, null, values)
-            }
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-        }
-    }
 
     fun obtenerRiegosPorPlanta(): List<RiegosPlantaDTO> {
         val db = db.readableDatabase
