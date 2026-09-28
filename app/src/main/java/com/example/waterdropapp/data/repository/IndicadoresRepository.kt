@@ -1,9 +1,14 @@
 package com.example.waterdropapp.data.repository
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.dto.IndicadoresDTO
+import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
+import com.example.waterdropapp.data.local.prefs.SeasonPrefs
+import com.example.waterdropapp.domain.model.Estacion
+import com.example.waterdropapp.domain.model.umbral
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -12,7 +17,22 @@ import com.example.waterdropapp.data.repository.RiegoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class IndicadoresRepository(private val plantaRepo: PlantaRepository, private val riegoRepo:RiegoRepository) {
+class IndicadoresRepository(
+    private val plantaRepo: PlantaRepository,
+    private val riegoRepo: RiegoRepository,
+    private val context: Context
+) {
+
+    private val seasonRepository: SeasonRepository? by lazy {
+        val weatherDb = DatabaseHelperWeather(context)
+        val weatherRepo = WeatherRepository()
+        val prefs = SeasonPrefs.create(context)
+        SeasonRepository(weatherDb, weatherRepo, prefs, context)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun resolverEstacion(): Estacion =
+        seasonRepository?.getCurrentSeason() ?: Estacion.porMes(LocalDate.now())
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getIndicadores(): IndicadoresDTO {
@@ -36,19 +56,19 @@ class IndicadoresRepository(private val plantaRepo: PlantaRepository, private va
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun calcularPromedioDiasEntreRiegos(): Double {
+    suspend fun calcularPromedioDiasEntreRiegos(): Double {
         val plantas = riegoRepo.obtenerRiegosPorPlanta()
 
         val promedios = plantas.mapNotNull { planta ->
 
-            val fechas = planta.fechas
+            val riegos = planta.riegos
 
-            if (fechas.size < 2) return@mapNotNull null
+            if (riegos.size < 2) return@mapNotNull null
 
             val diferencias = mutableListOf<Long>()
 
-            for (i in 1 until fechas.size) {
-                val dias = calcularDiasEntre(fechas[i - 1], fechas[i])
+            for (i in 1 until riegos.size) {
+                val dias = calcularDiasEntre(riegos[i - 1].fecha, riegos[i].fecha)
                 diferencias.add(dias)
             }
 
@@ -59,25 +79,29 @@ class IndicadoresRepository(private val plantaRepo: PlantaRepository, private va
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun calcularPromedioTardanza(): Double {
+    suspend fun calcularPromedioTardanza(): Double {
+        val estacionActual = resolverEstacion()
         val plantas = riegoRepo.obtenerRiegosPorPlanta()
 
         val tardanzas = plantas.mapNotNull { planta ->
 
-            if (planta.fechas.size < 2) return@mapNotNull null
+            val riegos = planta.riegos
 
-            val diferencias = mutableListOf<Long>()
+            if (riegos.size < 2) return@mapNotNull null
 
-            for (i in 1 until planta.fechas.size) {
-                val dias = calcularDiasEntre(planta.fechas[i - 1], planta.fechas[i])
-                diferencias.add(dias)
+            var sumaExcesos = 0.0
+            var intervalos = 0
+
+            for (i in 1 until riegos.size) {
+                val dias = calcularDiasEntre(riegos[i - 1].fecha, riegos[i].fecha)
+                val umbralAplicado = riegos[i - 1].umbralDias
+                    ?: estacionActual.umbral(planta.maxVerano, planta.maxInvierno)
+
+                sumaExcesos += (dias - umbralAplicado).coerceAtLeast(0L)
+                intervalos++
             }
 
-            val promedioRiego = diferencias.average()
-
-            val tardanza = (promedioRiego - planta.diasMax).coerceAtLeast(0.0)
-
-            tardanza
+            if (intervalos == 0) null else sumaExcesos / intervalos
         }
 
         return if (tardanzas.isNotEmpty()) tardanzas.average() else 0.0

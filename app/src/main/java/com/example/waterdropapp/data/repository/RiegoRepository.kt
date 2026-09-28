@@ -1,5 +1,6 @@
 package com.example.waterdropapp.data.repository
 
+import com.example.waterdropapp.data.local.dto.RiegoConUmbral
 import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
 import com.example.waterdropapp.data.local.model.DBHelper
 
@@ -7,10 +8,12 @@ class RiegoRepository(private val db: DBHelper) {
 
     fun obtenerRiegosPorPlanta(): List<RiegosPlantaDTO> {
         val db = db.readableDatabase
-        val map = mutableMapOf<Int, Pair<Int, MutableList<String>>>()
+        val mapa = mutableMapOf<Int, MutableList<RiegoConUmbral>>()
+        val umbrales = mutableMapOf<Int, Pair<Int, Int>>()
 
         val query = """
-        SELECT a.planta_id, a.fecha, p.dias_max_sin_riego
+        SELECT a.planta_id, a.fecha, a.dias_max_usados,
+               p.dias_max_sin_riego, p.dias_max_sin_riego_invierno
         FROM actividades_planta a
         JOIN plantas p ON p.planta_id = a.planta_id
         WHERE p.activo = 1
@@ -23,22 +26,27 @@ class RiegoRepository(private val db: DBHelper) {
         while (cursor.moveToNext()) {
             val plantaId = cursor.getInt(cursor.getColumnIndexOrThrow("planta_id"))
             val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
-            val maxDias = cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val maxVerano =
+                cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego"))
+            val maxInvierno =
+                cursor.getInt(cursor.getColumnIndexOrThrow("dias_max_sin_riego_invierno"))
 
-            if (!map.containsKey(plantaId)) {
-                map[plantaId] = Pair(maxDias, mutableListOf())
-            }
+            val idxUmbral = cursor.getColumnIndexOrThrow("dias_max_usados")
+            val umbralSnapshot = if (cursor.isNull(idxUmbral)) null else cursor.getInt(idxUmbral)
 
-            map[plantaId]?.second?.add(fecha)
+            umbrales[plantaId] = Pair(maxVerano, maxInvierno)
+            mapa.getOrPut(plantaId) { mutableListOf() }.add(RiegoConUmbral(fecha, umbralSnapshot))
         }
 
         cursor.close()
 
-        return map.map {
+        return mapa.map { (plantaId, riegos) ->
+            val umbralesPlanta = umbrales[plantaId] ?: Pair(0, 0)
             RiegosPlantaDTO(
-                plantaId = it.key,
-                diasMax = it.value.first,
-                fechas = it.value.second
+                plantaId = plantaId,
+                maxVerano = umbralesPlanta.first,
+                maxInvierno = umbralesPlanta.second,
+                riegos = riegos
             )
         }
     }

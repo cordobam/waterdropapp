@@ -37,7 +37,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         plantaRepo = PlantaRepository(helper, requireContext())
         riegoRepo = RiegoRepository(helper)
 
-        val repository = IndicadoresRepository(plantaRepo, riegoRepo)
+        val repository = IndicadoresRepository(plantaRepo, riegoRepo, requireContext())
 
         CoroutineScope(Dispatchers.IO).launch {
             val indicadores = repository.getIndicadores()
