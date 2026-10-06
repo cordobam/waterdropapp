@@ -1,7 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+}
+
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = if (keystorePropsFile.exists()) {
+    Properties().apply { keystorePropsFile.inputStream().use { load(it) } }
+} else {
+    null
 }
 
 android {
@@ -12,7 +20,17 @@ android {
 
     buildFeatures {
         viewBinding = true
-        compose = true
+    }
+
+    signingConfigs {
+        if (keystoreProps != null) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
     }
 
     defaultConfig {
@@ -27,7 +45,11 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            if (keystoreProps != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -37,31 +59,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-    val nav_version = "2.7.7"
-    // Java language implementation
-    implementation("androidx.navigation:navigation-fragment:${nav_version}")
-    implementation("androidx.navigation:navigation-ui:${nav_version}")
-    // Kotlin (esto es lo que habilita findNavController() y las extensiones KTX)
-    implementation("androidx.navigation:navigation-fragment-ktx:${nav_version}")
-    implementation("androidx.navigation:navigation-ui-ktx:${nav_version}")
-    // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:${nav_version}")
-    // Testing Navigation
-    testImplementation("androidx.navigation:navigation-testing:${nav_version}")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -84,7 +88,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
     implementation(libs.gson)
 
 }

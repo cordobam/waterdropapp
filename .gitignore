@@ -14,6 +14,10 @@
 .cxx
 local.properties
 /app/google-services.json
+keystore.properties
+/app/keystore/
+*.jks
+*.keystore
 /dialog_editar_perfil_market.xml.txt
 /plan_cambios.txt
 /fragment_vivero_form_dialog.xml.txt
