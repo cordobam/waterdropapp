@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -73,6 +74,10 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
 
         view.findViewById<MaterialButton>(R.id.btnCerrarSesion).setOnClickListener {
             FirebaseAuth.getInstance().signOut()
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean("is_logged_in", false)
+                .apply()
             startActivity(Intent(requireContext(), LoginActivity::class.java))
             activity?.finish()
         }

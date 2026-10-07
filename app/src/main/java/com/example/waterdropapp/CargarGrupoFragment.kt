@@ -18,6 +18,8 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
     private lateinit var gruposAdapterAct: AdapterGrupos
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         db = GrupoRepository(DBHelper(requireContext()))
 
         view.findViewById<Button>(R.id.btnGuardarGrupo).setOnClickListener{

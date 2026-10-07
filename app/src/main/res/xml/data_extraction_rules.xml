@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+   Reglas de backup y transferencia para API 31+.
+   Ver https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <!-- Estado de sesión de la app (is_logged_in, ciudad, estación) -->
+        <exclude domain="sharedpref" path="app_prefs.xml"/>
+        <!-- Caché del clima, se regenera sola -->
+        <exclude domain="database" path="weather_cache.db"/>
+        <!-- Caché local de Firestore, se regenera sola -->
+        <exclude domain="database" path="(default)"/>
+        <!-- plantas.db (historial de riego) SÍ se respalda -->
     </cloud-backup>
-    <!--
     <device-transfer>
-        <include .../>
-        <exclude .../>
+        <!-- Estado de sesión de la app (is_logged_in, ciudad, estación) -->
+        <exclude domain="sharedpref" path="app_prefs.xml"/>
+        <!-- Caché del clima, se regenera sola -->
+        <exclude domain="database" path="weather_cache.db"/>
+        <!-- Caché local de Firestore, se regenera sola -->
+        <exclude domain="database" path="(default)"/>
+        <!-- plantas.db (historial de riego) SÍ se transfiere -->
     </device-transfer>
-    -->
 </data-extraction-rules>

@@ -69,6 +69,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         //carga spinner con datos
         val helper = DBHelper(requireContext())

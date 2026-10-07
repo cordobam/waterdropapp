@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
@@ -31,7 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onViewCreated(view, savedInstanceState)
 
         val helper = DBHelper(requireContext())
         plantaRepo = PlantaRepository(helper, requireContext())
@@ -39,34 +40,40 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val repository = IndicadoresRepository(plantaRepo, riegoRepo, requireContext())
 
+        val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
+        btnMarketplace.setOnClickListener {
+            val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            val isLoggedIn = prefs.getBoolean("is_logged_in", false)
+
+            val intent = if (isLoggedIn) {
+                Intent(requireContext(), MarketplaceActivity::class.java)
+            } else {
+                Intent(requireContext(), LoginActivity::class.java)
+            }
+            startActivity(intent)
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
-            val indicadores = repository.getIndicadores()
-            
-            withContext(Dispatchers.Main) {
-                val tvTotal = view.findViewById<TextView>(R.id.tvTotalPlantas)
-                val tvTotalxRegar = view.findViewById<TextView>(R.id.tvPorRegar)
-                val tvTotalxNoRegar = view.findViewById<TextView>(R.id.tvRegadasHoy)
-                val tvPromedioDias = view.findViewById<TextView>(R.id.tvPromedioDias)
-                val tvPromedioTardanza = view.findViewById<TextView>(R.id.tvPromedioTardanza)
+            try {
+                val indicadores = repository.getIndicadores()
 
-                tvTotal.text = indicadores.total.toString()
-                tvTotalxRegar.text = indicadores.necesitanRiego.toString()
-                tvTotalxNoRegar.text = indicadores.noNecesitanRiego.toString()
-                tvPromedioDias.text = String.format("%.2f", indicadores.promedioDiasRiego)
-                tvPromedioTardanza.text = String.format("%.2f", indicadores.promedioTardanza)
-                
-                val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
+                withContext(Dispatchers.Main) {
+                    val tvTotal = view.findViewById<TextView>(R.id.tvTotalPlantas)
+                    val tvTotalxRegar = view.findViewById<TextView>(R.id.tvPorRegar)
+                    val tvTotalxNoRegar = view.findViewById<TextView>(R.id.tvRegadasHoy)
+                    val tvPromedioDias = view.findViewById<TextView>(R.id.tvPromedioDias)
+                    val tvPromedioTardanza = view.findViewById<TextView>(R.id.tvPromedioTardanza)
 
-                btnMarketplace.setOnClickListener {
-                    val prefs = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                    val isLoggedIn = prefs.getBoolean("is_logged_in", false)
-
-                    val intent = if (isLoggedIn) {
-                        Intent(requireContext(), MarketplaceActivity::class.java)
-                    } else {
-                        Intent(requireContext(), LoginActivity::class.java)
-                    }
-                    startActivity(intent)
+                    tvTotal.text = indicadores.total.toString()
+                    tvTotalxRegar.text = indicadores.necesitanRiego.toString()
+                    tvTotalxNoRegar.text = indicadores.noNecesitanRiego.toString()
+                    tvPromedioDias.text = String.format("%.2f", indicadores.promedioDiasRiego)
+                    tvPromedioTardanza.text = String.format("%.2f", indicadores.promedioTardanza)
+                }
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error al cargar indicadores", e)
+                withContext(Dispatchers.Main) {
+                    Snackbar.make(view, "No se pudieron cargar los indicadores", Snackbar.LENGTH_LONG).show()
                 }
             }
         }
@@ -111,7 +118,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
             } catch (e: Exception) {
+                Log.e("HomeFragment", "Error al cargar clima o estación", e)
                 withContext(Dispatchers.Main) {
+                    Snackbar.make(view, "No se pudo cargar el clima", Snackbar.LENGTH_LONG).show()
                 }
             }
         }
