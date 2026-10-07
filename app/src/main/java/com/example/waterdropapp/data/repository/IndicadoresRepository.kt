@@ -3,7 +3,6 @@ package com.example.waterdropapp.data.repository
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.dto.IndicadoresDTO
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs

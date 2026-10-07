@@ -11,7 +11,6 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.firebase.model.Oferta
 import com.example.waterdropapp.data.firebase.model.Publicacion

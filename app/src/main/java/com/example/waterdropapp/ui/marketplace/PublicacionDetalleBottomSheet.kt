@@ -8,10 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.R
-import com.example.waterdropapp.data.firebase.model.Oferta
 import com.example.waterdropapp.data.firebase.model.Publicacion
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

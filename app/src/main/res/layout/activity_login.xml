@@ -222,23 +222,6 @@
                         app:iconSize="16dp"
                         app:iconPadding="6dp"/>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnApple"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        android:text="Apple"
-                        android:textSize="13sp"
-                        android:textColor="#1A3A1F"
-                        app:strokeColor="#C8DFC0"
-                        app:cornerRadius="10dp"
-                        app:backgroundTint="#F0F4ED"
-                        app:icon="@drawable/ic_apple"
-                        app:iconSize="16dp"
-                        app:iconPadding="6dp"/>
-
                 </LinearLayout>
 
                 <!-- REGISTRARSE -->

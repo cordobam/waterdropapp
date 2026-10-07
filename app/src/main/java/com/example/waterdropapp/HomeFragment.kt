@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs
-import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.IndicadoresRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.RiegoRepository

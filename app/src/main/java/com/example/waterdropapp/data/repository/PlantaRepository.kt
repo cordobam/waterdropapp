@@ -423,16 +423,6 @@ class PlantaRepository(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun calcularEstacion(fechaHoy: LocalDate): Estacion {
-        return seasonRepository?.let { repo ->
-            // SeasonRepository.getCurrentSeason() es suspend, necesitamos manejarlo
-            // Como este método no es suspend, usamos la lógica original como fallback
-            // para operaciones síncronas. Para operaciones asíncronas, usar SeasonRepository directamente.
-            calcularEstacionOriginal(fechaHoy)
-        } ?: calcularEstacionOriginal(fechaHoy)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun calcularEstacionOriginal(fechaHoy: LocalDate): Estacion =
         Estacion.porMes(fechaHoy)
 }

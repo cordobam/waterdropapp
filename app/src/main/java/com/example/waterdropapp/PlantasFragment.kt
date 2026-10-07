@@ -48,7 +48,6 @@ import kotlinx.coroutines.withContext
 
 class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
-    private lateinit var db: DBHelper
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
     private lateinit var plantaRepo: PlantaRepository

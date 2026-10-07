@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.example.waterdropapp.domain.model.Estacion
 import com.example.waterdropapp.domain.model.SeasonConfig
 import com.example.waterdropapp.domain.model.SeasonMode
-import com.google.gson.Gson
 
 class SeasonPrefs(private val prefs: SharedPreferences) {
 

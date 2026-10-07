@@ -9,8 +9,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.local.model.DBHelper
-import java.text.SimpleDateFormat
-import java.util.Locale
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.waterdropapp.data.repository.PlantaRepository

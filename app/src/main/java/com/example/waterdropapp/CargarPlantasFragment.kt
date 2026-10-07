@@ -33,7 +33,6 @@ import kotlinx.coroutines.withContext
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
-    private lateinit var db: DBHelper
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
     private lateinit var plantasAdapterAct: AdapterPlantas
@@ -153,8 +152,6 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             }
         }
     }
-
-    private fun findViewById(cardContenedorLista: Int) {}
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun editarPlantas(id:Int) {
