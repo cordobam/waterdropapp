@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Waterdropapp" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">#4CAF50</item>
-        <item name="colorPrimaryContainer">#C8E6C9</item>
-        <item name="android:statusBarColor">#4CAF50</item>
+    <style name="Theme.Waterdropapp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#66BB6A</item>
+        <item name="colorPrimaryContainer">#2E5233</item>
+        <item name="android:statusBarColor">#121414</item>
     </style>
 </resources>

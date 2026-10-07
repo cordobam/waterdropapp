@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_planta"
                 android:scaleType="centerCrop"
-                android:background="#FFFFFF"/>
+                android:background="@color/surface_card"/>
 
         </com.google.android.material.card.MaterialCardView>
 

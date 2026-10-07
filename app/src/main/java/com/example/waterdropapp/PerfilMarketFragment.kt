@@ -15,7 +15,7 @@ import com.example.waterdropapp.data.firebase.model.UsuarioMarket
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterMisPublicaciones
 import com.example.waterdropapp.ui.marketplace.EditarPerfilDialog
-import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
+import com.example.waterdropapp.ui.marketplace.PublicacionFormDialog
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 
@@ -25,9 +25,12 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
     private lateinit var adapter: AdapterMisPublicaciones
     private val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
     private var usuarioActual: UsuarioMarket? = null
+    private lateinit var safeContext: Context
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        safeContext = requireContext()
 
         val user = FirebaseAuth.getInstance().currentUser
 
@@ -43,7 +46,7 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
 
         adapter = AdapterMisPublicaciones(
             onEditarClick = { publicacion ->
-                PublicacionFormlDialog(
+                PublicacionFormDialog(
                     itemAEditar = publicacion,
                     onSuccess = { cargarMisPublicaciones(view) }
                 ).show(parentFragmentManager, "EditarPublicacion")
@@ -52,11 +55,15 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
                 repository.deletePublicacion(
                     id = publicacion.id,
                     onSuccess = {
-                        Toast.makeText(requireContext(), getString(R.string.profile_pub_deleted), Toast.LENGTH_SHORT).show()
+                        if (!isAdded) {
+                        Toast.makeText(safeContext, safeContext.getString(R.string.profile_pub_deleted), Toast.LENGTH_SHORT).show()
                         cargarMisPublicaciones(view)
+                        }
                     },
                     onError = {
-                        Toast.makeText(requireContext(), getString(R.string.profile_delete_error), Toast.LENGTH_SHORT).show()
+                        if (!isAdded) {
+                            Toast.makeText(safeContext, safeContext.getString(R.string.profile_delete_error), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 )
             }
@@ -122,7 +129,13 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
                 view.findViewById<TextView>(R.id.tvTotalPublicaciones).text = "${lista.size}"
             },
             onError = {
-                Toast.makeText(requireContext(), getString(R.string.profile_error_load_pubs), Toast.LENGTH_SHORT).show()
+                if (!isAdded) {
+                    Toast.makeText(
+                        safeContext,
+                        safeContext.getString(R.string.profile_error_load_pubs),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         )
     }

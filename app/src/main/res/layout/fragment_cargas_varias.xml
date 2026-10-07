@@ -40,7 +40,7 @@
         android:id="@+id/tabLayoutCargas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/surface_card"
         app:tabIndicatorColor="#3A7D44"
         app:tabTextColor="#888888"
         app:tabSelectedTextColor="#3A7D44"

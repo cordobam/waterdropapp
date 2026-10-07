@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -16,7 +17,6 @@ import com.example.waterdropapp.data.repository.ActividadRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.domain.model.TipoActividad
 import com.google.android.material.chip.ChipGroup
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,7 +93,7 @@ class HistorialRiegoFragment : Fragment(R.layout.fragment_historial_riego) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun cargarHistorial(plantaId: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val lista = actividadRepo.obtenerActividadesxPlanta(plantaId, filtroActividad)
             withContext(Dispatchers.Main) {
                 historialAdapter.submitList(lista)

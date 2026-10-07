@@ -46,7 +46,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@color/surface_card"
             android:padding="14dp">
 
             <!-- Fecha — arriba a la derecha -->

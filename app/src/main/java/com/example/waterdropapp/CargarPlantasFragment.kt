@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
@@ -25,7 +27,6 @@ import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +43,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     private lateinit var cardFoto: MaterialCardView
     private var imagenNuevaPath: String? = null
     private var imageViewActual: ImageView? = null
+    private lateinit var safeContext: Context
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -71,8 +73,9 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         super.onViewCreated(view, savedInstanceState)
 
         //carga spinner con datos
-        val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper, requireContext())
+        safeContext = requireContext()
+        val helper = DBHelper(safeContext)
+        plantaRepo = PlantaRepository(helper, safeContext)
         grupoRepo = GrupoRepository(helper)
 
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
@@ -136,7 +139,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         val botonverplantas = view.findViewById<Button>(R.id.btnVerPlantas)
 
         botonverplantas.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 // 1. Obtenemos los DTOs de la base de datos
                 val plantasDTO = plantaRepo.obtenerEstadoPlantas()
 
@@ -229,7 +232,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
                 Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
-                CoroutineScope(Dispatchers.IO).launch {
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     val lista = plantaRepo.obtenerEstadoPlantas()
                     withContext(Dispatchers.Main) {
                         plantasAdapterAct.submitList(lista)
@@ -250,14 +253,15 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val listaActualizada = plantaRepo.obtenerEstadoPlantas()
                 withContext(Dispatchers.Main) {
+                    if (!isAdded) return@withContext
                     plantasAdapterAct.submitList(listaActualizada)
 
-                Snackbar.make(snackbarView, getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.common_undo)) {
-                            CoroutineScope(Dispatchers.IO).launch {
+                Snackbar.make(snackbarView, safeContext.getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
+                    .setAction(safeContext.getString(R.string.common_undo)) {
+                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                                 plantaRepo.softDeletePlanta(id, true)
                                 val listaReactivada = plantaRepo.obtenerEstadoPlantas()
                                 withContext(Dispatchers.Main) {

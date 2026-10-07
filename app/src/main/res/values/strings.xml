@@ -186,6 +186,11 @@
     <string name="ajustes_last_detection">Última detección: %1$s</string>
     <string name="ajustes_enter_city">Ingresá una ciudad</string>
     <string name="ajustes_config_saved">Configuración guardada</string>
+    <string name="ajustes_theme_title">Apariencia de la app</string>
+    <string name="ajustes_theme_help">Elegí el modo de la interfaz</string>
+    <string name="ajustes_theme_light">Claro</string>
+    <string name="ajustes_theme_dark">Oscuro</string>
+    <string name="ajustes_theme_system">Seguir al sistema</string>
     <!-- Marketplace / Chats / Viveros -->
     <string name="common_user">Usuario</string>
     <string name="common_free">Gratis</string>

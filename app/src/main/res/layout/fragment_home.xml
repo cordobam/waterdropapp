@@ -149,7 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="@color/surface_card"
                         android:padding="14dp">
 
                         <FrameLayout
@@ -201,7 +201,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="@color/surface_card"
                         android:padding="14dp">
 
                         <FrameLayout
@@ -265,7 +265,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="@color/surface_card"
                         android:padding="14dp">
 
                         <FrameLayout
@@ -317,7 +317,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="#FFFFFF"
+                        android:background="@color/surface_card"
                         android:padding="14dp">
 
                         <FrameLayout
@@ -396,7 +396,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="#FFFFFF"
+                    android:background="@color/surface_card"
                     android:padding="16dp"
                     android:gravity="center_vertical">
 

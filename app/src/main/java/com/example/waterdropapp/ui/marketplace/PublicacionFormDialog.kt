@@ -24,7 +24,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
-class PublicacionFormlDialog(
+class PublicacionFormDialog(
     private val itemAEditar: Publicacion? = null,
     private val onSuccess: () -> Unit
 ) : BottomSheetDialogFragment() {

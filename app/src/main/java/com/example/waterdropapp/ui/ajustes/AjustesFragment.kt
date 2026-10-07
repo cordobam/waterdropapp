@@ -1,5 +1,6 @@
 package com.example.waterdropapp.ui.ajustes
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.waterdropapp.MainActivity
@@ -32,6 +34,7 @@ class AjustesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var seasonRepository: SeasonRepository
+    private lateinit var safeContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +49,27 @@ class AjustesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val weatherDb = DatabaseHelperWeather(requireContext())
+        safeContext = requireContext()
+
+        val weatherDb = DatabaseHelperWeather(safeContext)
         val weatherRepo = WeatherRepository()
-        val prefs = SeasonPrefs.create(requireContext())
-        seasonRepository = SeasonRepository(weatherDb, weatherRepo, prefs, requireContext())
+        val prefs = SeasonPrefs.create(safeContext)
+        seasonRepository = SeasonRepository(weatherDb, weatherRepo, prefs, safeContext)
 
         loadConfig()
+        cargarTemaActual()
         setupListeners()
+    }
+
+    private fun cargarTemaActual() {
+        val modo = safeContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getInt("night_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val radioId = when (modo) {
+            AppCompatDelegate.MODE_NIGHT_NO -> R.id.rbTemaClaro
+            AppCompatDelegate.MODE_NIGHT_YES -> R.id.rbTemaOscuro
+            else -> R.id.rbTemaSistema
+        }
+        binding.rgTemaApp.check(radioId)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -90,6 +107,20 @@ class AjustesFragment : Fragment() {
         binding.btnGuardar.setOnClickListener {
             guardarConfig()
         }
+
+        binding.rgTemaApp.setOnCheckedChangeListener { _, checkedId ->
+            val modo = when (checkedId) {
+                R.id.rbTemaClaro -> AppCompatDelegate.MODE_NIGHT_NO
+                R.id.rbTemaOscuro -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+            safeContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .edit()
+                .putInt("night_mode", modo)
+                .apply()
+            AppCompatDelegate.setDefaultNightMode(modo)
+            requireActivity().recreate()
+        }
     }
 
     private fun updateVisibility(modo: SeasonMode) {
@@ -102,7 +133,7 @@ class AjustesFragment : Fragment() {
         binding.btnDetectarAhora.isEnabled = false
         binding.btnDetectarAhora.text = getString(R.string.ajustes_detecting)
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val config = seasonRepository.getConfig()
             val success = seasonRepository.refreshWeatherCache(config.ciudad)
 
@@ -111,27 +142,28 @@ class AjustesFragment : Fragment() {
             }
 
             withContext(Dispatchers.Main) {
+                if (!isAdded) return@withContext
                 binding.btnDetectarAhora.isEnabled = true
-                binding.btnDetectarAhora.text = getString(R.string.ajustes_detect_now)
+                binding.btnDetectarAhora.text = safeContext.getString(R.string.ajustes_detect_now)
 
                 if (success) {
                     when (result) {
                         is SeasonChangeResult.Changed -> {
-                            val fromStr = result.from?.let { getString(seasonRes(it)) }
-                                ?: getString(R.string.ajustes_unknown_season)
-                            val msg = getString(R.string.ajustes_season_change, fromStr, getString(seasonRes(result.to)))
+                            val fromStr = result.from?.let { safeContext.getString(seasonRes(it)) }
+                                ?: safeContext.getString(R.string.ajustes_unknown_season)
+                            val msg = safeContext.getString(R.string.ajustes_season_change, fromStr, safeContext.getString(seasonRes(result.to)))
                             Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
                             updateInfoDisplay(result.to)
                         }
                         SeasonChangeResult.NoChange -> {
                             val config = seasonRepository.getConfig()
                             val currentSeason = seasonRepository.calculateAutoSeasonForDisplay(config.ciudad)
-                            Snackbar.make(binding.root, getString(R.string.ajustes_no_change, getString(seasonRes(currentSeason))), Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(binding.root, safeContext.getString(R.string.ajustes_no_change, safeContext.getString(seasonRes(currentSeason))), Snackbar.LENGTH_LONG).show()
                             updateInfoDisplay(currentSeason)
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), getString(R.string.ajustes_weather_error), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(safeContext, safeContext.getString(R.string.ajustes_weather_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -195,7 +227,7 @@ class AjustesFragment : Fragment() {
 
         if (modo == SeasonMode.AUTO) {
             // Forzar check inmediato en modo auto
-            lifecycleScope.launch(Dispatchers.IO) {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val result = seasonRepository.checkSeasonChange()
                 withContext(Dispatchers.Main) {
                     when (result) {

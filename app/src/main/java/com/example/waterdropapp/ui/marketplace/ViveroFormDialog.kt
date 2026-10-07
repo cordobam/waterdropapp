@@ -12,7 +12,7 @@ import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 
-class ViveroForrmDialog(
+class ViveroFormDialog(
     private val itemAEditar: Vivero? = null,
     private val onSuccess: () -> Unit
 ) : BottomSheetDialogFragment() {
