@@ -14,7 +14,7 @@
             android:id="@+id/tvTituloDialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nueva publicación"
+            android:text="@string/form_title_new"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Título"
+            android:text="@string/field_title"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -31,7 +31,7 @@
             android:id="@+id/etTitulo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Nombre de la planta"
+            android:hint="@string/form_title_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descripción"
+            android:text="@string/field_description"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -48,7 +48,7 @@
             android:id="@+id/etDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Describí tu publicación..."
+            android:hint="@string/form_description_hint"
             android:textSize="14sp"
             android:minLines="3"
             android:gravity="top"
@@ -60,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Categoría"
+            android:text="@string/field_category"
             android:textSize="13sp"
             android:textColor="#4E6E50"
             android:layout_marginBottom="8dp" />
@@ -76,7 +76,7 @@
                 android:id="@+id/chipCategoriaPlanta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Planta"
+                android:text="@string/form_cat_plant"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:checked="true" />
 
@@ -84,14 +84,14 @@
                 android:id="@+id/chipCategoriaSemilla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Semilla"
+                android:text="@string/form_cat_seed"
                 style="@style/Widget.Material3.Chip.Filter" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCategoriaEsqueje"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Esqueje"
+                android:text="@string/form_cat_cutting"
                 style="@style/Widget.Material3.Chip.Filter" />
 
         </com.google.android.material.chip.ChipGroup>
@@ -99,7 +99,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Precio"
+            android:text="@string/field_price"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -107,7 +107,7 @@
             android:id="@+id/etPrecio"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="0 = Gratis"
+            android:hint="@string/form_price_hint"
             android:textSize="14sp"
             android:inputType="numberDecimal"
             android:background="@drawable/border_top_gray"
@@ -125,7 +125,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Acepta trueque"
+                android:text="@string/form_accepts_barter"
                 android:textSize="13sp"
                 android:textColor="#4E6E50" />
 
@@ -141,7 +141,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Foto de la publicación"
+            android:text="@string/form_photo_label"
             android:textSize="13sp"
             android:textColor="#4E6E50"
             android:layout_marginBottom="8dp" />
@@ -174,7 +174,7 @@
                 android:id="@+id/btnSeleccionarFoto"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:text="Seleccionar foto"
+                android:text="@string/photo_select_title"
                 android:icon="@android:drawable/ic_menu_gallery"
                 app:iconGravity="textStart" />
 
@@ -186,12 +186,12 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
-            android:hint="https://..." />
+            android:hint="@string/hint_url" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ciudad"
+            android:text="@string/field_city"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -199,7 +199,7 @@
             android:id="@+id/etCiudad"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Córdoba"
+            android:hint="@string/hint_city"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -208,7 +208,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Barrio"
+            android:text="@string/field_neighborhood"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -216,7 +216,7 @@
             android:id="@+id/etBarrio"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Nueva Córdoba"
+            android:hint="@string/form_neighborhood_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -226,7 +226,7 @@
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Publicar"
+            android:text="@string/common_publish"
             android:backgroundTint="#3A7D44"
             android:textColor="#FFFFFF" />
 
@@ -234,7 +234,7 @@
             android:id="@+id/btnCancelar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Cancelar"
+            android:text="@string/common_cancel"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:textColor="#3A7D44"
             app:strokeColor="#C8DFC0"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="@color/surface_card">
 
     <!-- HEADER -->
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:id="@+id/tvChatTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chat sobre publicación"
+                android:text="@string/chat_header"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"/>
@@ -43,7 +43,7 @@
                 android:id="@+id/tvChatCon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Conversación con Usuario"
+                android:text="@string/chat_with_preview"
                 android:textSize="12sp"
                 android:textColor="#B8D4B8"/>
 
@@ -84,7 +84,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:hint="Escribe un mensaje..."
+            android:hint="@string/chat_input_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="12dp"

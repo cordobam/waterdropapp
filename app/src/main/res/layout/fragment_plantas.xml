@@ -25,7 +25,7 @@
                 android:id="@+id/tvPromedio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Regar Plantas"
+                android:text="@string/plantas_header_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"/>
@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Revisá el estado de tus plantas"
+                android:text="@string/plantas_header_subtitle"
                 android:textSize="13sp"
                 android:textColor="#B8D4BC"
                 android:layout_marginTop="2dp"/>
@@ -45,7 +45,7 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="@color/surface_card"
             app:tabIndicatorColor="#3A7D44"
             app:tabTextColor="#888888"
             app:tabSelectedTextColor="#3A7D44"
@@ -55,12 +55,12 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Plantas Individuales"/>
+            android:text="@string/plantas_tab_individual"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Grupos de Plantas"/>
+            android:text="@string/plantas_tab_groups"/>
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -82,7 +82,7 @@
                 android:id="@+id/chipTodas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Todas"
+                android:text="@string/plantas_filter_all"
                 android:checked="true"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
@@ -95,7 +95,7 @@
                 android:id="@+id/chipProximas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Próximas"
+                android:text="@string/plantas_filter_next"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
                 android:textColor="@color/chip_text_selector"
@@ -107,7 +107,7 @@
                 android:id="@+id/chipVencidas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vencidas"
+                android:text="@string/plantas_filter_overdue"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 app:chipBackgroundColor="@color/chip_selector"
                 android:textColor="@color/chip_text_selector"
@@ -142,7 +142,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="90dp"
-        android:contentDescription="Opciones de carga"
+        android:contentDescription="@string/plantas_fab_desc"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="#3A7D44"
         app:tint="@android:color/white"

@@ -1,20 +1,8 @@
 package com.example.waterdropapp.data.local.model
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
-import com.example.waterdropapp.data.local.dto.EstadoGruposDTO
-import com.example.waterdropapp.data.local.dto.EstadoPlantasDTO
-import com.example.waterdropapp.data.local.dto.RiegosPlantaDTO
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Month
-import java.util.Date
-import java.util.Locale
 
 class DBHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {

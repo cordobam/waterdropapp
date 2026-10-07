@@ -19,14 +19,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Córdoba"
+            android:text="@string/hint_city"
             android:textSize="13sp"
             android:textColor="#B8D4BC"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Viveros cercanos"
+            android:text="@string/viveros_title"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
@@ -61,7 +61,7 @@
                     android:id="@+id/etBuscarVivero"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Buscar vivero o planta..."
+                    android:hint="@string/viveros_search_hint"
                     android:textColorHint="#B8D4BC"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="🗺️ Mapa próximamente"
+            android:text="@string/viveros_map_placeholder"
             android:textSize="13sp"
             android:textColor="#3A7D44"/>
 
@@ -96,7 +96,7 @@
         android:id="@+id/tvCantidadViveros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Viveros encontrados cerca tuyo"
+        android:text="@string/viveros_count_label"
         android:textSize="12sp"
         android:textColor="#888888"
         android:layout_marginStart="16dp"
@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_margin="16dp"
-        android:text="Editar/Viveros"
+        android:text="@string/viveros_edit"
         android:textSize="14sp"
         android:textColor="#FFFFFF"
         app:backgroundTint="#3A7D44"

@@ -22,7 +22,7 @@
             android:id="@+id/btnCambiarFoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cambiar foto"
+            android:text="@string/plantas_dialog_change_photo"
             android:backgroundTint="#00611A"
             android:layout_marginTop="8dp"/>
 
@@ -30,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Grupo"
+            android:text="@string/plantas_group_label"
             android:textColor="#4E6E50"
             android:layout_marginTop="16dp"/>
 
@@ -43,19 +43,19 @@
             android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre de la planta"/>
+            android:hint="@string/plantas_name_hint"/>
 
         <EditText
             android:id="@+id/etDias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Días sin riego verano"
+            android:hint="@string/plantas_dialog_days_summer_hint"
             android:inputType="number"/>
         <EditText
             android:id="@+id/etDiasInv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Días sin riego invierno"
+            android:hint="@string/plantas_dialog_days_winter_hint"
             android:inputType="number"/>
 
     </LinearLayout>

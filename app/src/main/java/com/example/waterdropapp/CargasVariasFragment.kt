@@ -23,8 +23,8 @@ class CargasVariasFragment : Fragment(R.layout.fragment_cargas_varias) {
         // Vinculamos el TabLayout con el ViewPager2
         TabLayoutMediator(binding.tabLayoutCargas, binding.viewPagerCarga) { tab, position ->
             tab.text = when (position) {
-                0 -> "Nueva Planta"
-                1 -> "Nuevo Grupo"
+                0 -> getString(R.string.plantas_form_title)
+                1 -> getString(R.string.grupos_form_title)
                 else -> ""
             }
         }.attach()

@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -79,9 +78,10 @@ class ChatBottomSheet(
         // Determinar con quién chateamos
         val currentUid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
         val otroNombre = chat.nombresParticipantes[currentUid]?.let { nombres ->
-            chat.nombresParticipantes.entries.find { it.key != currentUid }?.value ?: "Usuario"
-        } ?: "Usuario"
-        view.findViewById<TextView>(R.id.tvChatCon).text = "Chat con $otroNombre"
+            chat.nombresParticipantes.entries.find { it.key != currentUid }?.value
+                ?: getString(R.string.common_user)
+        } ?: getString(R.string.common_user)
+        view.findViewById<TextView>(R.id.tvChatCon).text = getString(R.string.chat_with, otroNombre)
 
         view.findViewById<ImageView>(R.id.btnCerrarChat).setOnClickListener {
             dismiss()

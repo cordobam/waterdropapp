@@ -21,7 +21,7 @@ class PlantasAccionesSheet(
     ): View? {
         val view = inflater.inflate(R.layout.layout_bottom_sheet_acciones_planta, container, false)
 
-        view.findViewById<TextView>(R.id.tvTituloAcciones).text = "Acciones de $nombrePlanta"
+        view.findViewById<TextView>(R.id.tvTituloAcciones).text = getString(R.string.plantas_actions_of, nombrePlanta)
 
         view.findViewById<LinearLayout>(R.id.rowAccionRiego).setOnClickListener {
             onAccion(plantaId, TipoActividad.RIEGO)

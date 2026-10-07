@@ -14,7 +14,6 @@ import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.data.repository.SeasonRepository
 import com.example.waterdropapp.data.repository.SeasonChangeResult
 import com.example.waterdropapp.data.repository.WeatherRepository
-import com.example.waterdropapp.ui.ajustes.AjustesFragment
 import com.example.waterdropapp.ui.marketplace.ChatsFragment
 import com.example.waterdropapp.workers.RiegoWorker
 import com.example.waterdropapp.workers.SeasonCheckWorker

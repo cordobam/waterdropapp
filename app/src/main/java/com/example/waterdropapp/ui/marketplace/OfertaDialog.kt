@@ -11,7 +11,6 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.firebase.model.Oferta
 import com.example.waterdropapp.data.firebase.model.Publicacion
@@ -47,12 +46,12 @@ class OfertaDialog(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupPublicacionInfo(view: View) {
-        val precioTexto = if (publicacion.precio == 0.0) "Gratis" else "$${publicacion.precio.toInt()}"
-        view.findViewById<TextView>(R.id.tvPublicacionInfo).text = 
-            "Publicación: ${publicacion.titulo} • $precioTexto"
+        val precioTexto = if (publicacion.precio == 0.0) getString(R.string.common_free) else "$${publicacion.precio.toInt()}"
+        view.findViewById<TextView>(R.id.tvPublicacionInfo).text =
+            getString(R.string.oferta_pub_info, publicacion.titulo, precioTexto)
         
-        view.findViewById<TextView>(R.id.tvPrecioMaximo).text = 
-            "Precio de la publicación: $precioTexto"
+        view.findViewById<TextView>(R.id.tvPrecioMaximo).text =
+            getString(R.string.oferta_pub_price, precioTexto)
     }
 
     private fun setupRadioGroup(view: View) {
@@ -110,7 +109,7 @@ class OfertaDialog(
             R.id.rbTrueque -> com.example.waterdropapp.data.firebase.model.TipoOferta.TRUEQUE
             R.id.rbDineroTrueque -> com.example.waterdropapp.data.firebase.model.TipoOferta.DINERO_TRUEQUE
             else -> {
-                Toast.makeText(requireContext(), "Selecciona un tipo de oferta", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.oferta_select_type), Toast.LENGTH_SHORT).show()
                 return
             }
         }
@@ -128,18 +127,18 @@ class OfertaDialog(
             tipoOferta == com.example.waterdropapp.data.firebase.model.TipoOferta.DINERO || 
             tipoOferta == com.example.waterdropapp.data.firebase.model.TipoOferta.DINERO_TRUEQUE -> {
                 if (monto <= 0) {
-                    etMonto.error = "Ingresa un monto válido"
+                    etMonto.error = getString(R.string.oferta_invalid_amount)
                     return
                 }
                 if (publicacion.precio > 0 && monto > publicacion.precio) {
-                    etMonto.error = "El monto no puede superar el precio de la publicación"
+                    etMonto.error = getString(R.string.oferta_amount_too_high)
                     return
                 }
             }
             tipoOferta == com.example.waterdropapp.data.firebase.model.TipoOferta.TRUEQUE || tipoOferta == com.example.waterdropapp.data.firebase.model.TipoOferta.DINERO_TRUEQUE -> {
                 val desc = view.findViewById<EditText>(R.id.etDescripcionTrueque).text.toString().trim()
                 if (desc.isEmpty()) {
-                    view.findViewById<EditText>(R.id.etDescripcionTrueque).error = "Describe qué ofreces a cambio"
+                    view.findViewById<EditText>(R.id.etDescripcionTrueque).error = getString(R.string.oferta_barter_required)
                     return
                 }
             }
@@ -147,7 +146,7 @@ class OfertaDialog(
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
-            Toast.makeText(requireContext(), "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_login_required), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -165,9 +164,9 @@ class OfertaDialog(
         repo.agregarOferta(oferta, { 
             dismiss()
             onSuccess()
-            Toast.makeText(requireContext(), "Oferta enviada correctamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.oferta_sent), Toast.LENGTH_SHORT).show()
         }, { e ->
-            Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_error_detail, e.message), Toast.LENGTH_SHORT).show()
         })
     }
 }

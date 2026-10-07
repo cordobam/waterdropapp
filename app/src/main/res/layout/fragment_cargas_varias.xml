@@ -20,7 +20,7 @@
             android:id="@+id/tvTituloCargas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cargas varias"
+            android:text="@string/cargas_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"/>
@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agregá plantas o grupos nuevos"
+            android:text="@string/cargas_subtitle"
             android:textSize="13sp"
             android:textColor="#B8D4BC"
             android:layout_marginTop="2dp"/>
@@ -40,7 +40,7 @@
         android:id="@+id/tabLayoutCargas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/surface_card"
         app:tabIndicatorColor="#3A7D44"
         app:tabTextColor="#888888"
         app:tabSelectedTextColor="#3A7D44"
@@ -49,10 +49,10 @@
         app:tabMode="fixed">
 
         <com.google.android.material.tabs.TabItem
-            android:text="Cargar plantas"/>
+            android:text="@string/cargas_plants_button"/>
 
         <com.google.android.material.tabs.TabItem
-            android:text="Cargar grupos"/>
+            android:text="@string/cargas_groups_button"/>
 
     </com.google.android.material.tabs.TabLayout>
 

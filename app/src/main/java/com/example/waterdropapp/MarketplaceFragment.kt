@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,7 +20,7 @@ import com.example.waterdropapp.ui.marketplace.AdapterPublicaciones
 import com.example.waterdropapp.ui.marketplace.ChatBottomSheet
 import com.example.waterdropapp.ui.marketplace.OfertaDialog
 import com.example.waterdropapp.ui.marketplace.PublicacionDetalleBottomSheet
-import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
+import com.example.waterdropapp.ui.marketplace.PublicacionFormDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
@@ -31,9 +32,12 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
     private var listaCompleta = listOf<Publicacion>()
     private var filtroActual = "todos"
     private var queryBusqueda = ""
+    private lateinit var safeContext: Context
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        safeContext = requireContext()
 
         val chipTodos = view.findViewById<Chip>(R.id.chipTodos)
         val chipPlantas = view.findViewById<Chip>(R.id.chipPlantas)
@@ -143,7 +147,7 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
 
         view.findViewById<MaterialButton>(R.id.btnPublicar).setOnClickListener {
-            PublicacionFormlDialog(
+            PublicacionFormDialog(
                 onSuccess = {cargarDatos(tvCercaTuyo)}
             ).show(parentFragmentManager,"PublicarPublicacion")
         }
@@ -158,8 +162,9 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
                 Log.d("FIRESTORE_TEST", "${lista.size} publicaciones")
                 aplicarFiltros(tvCercaTuyo)
             },
-            onError = {
-                Toast.makeText(requireContext(), "Error al cargar", Toast.LENGTH_SHORT).show()
+            onError = onError@ {
+                if (!isAdded) return@onError
+                Toast.makeText(safeContext, "Error al cargar", Toast.LENGTH_SHORT).show()
             }
         )
 
@@ -174,6 +179,7 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
     }
 
     private fun aplicarFiltros(tvCercaTuyo: TextView) {
+        if (!isAdded) return
         var lista = listaCompleta
 
         when (filtroActual) {
@@ -188,6 +194,6 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
         }
 
         adapter.submitList(lista)
-        tvCercaTuyo.text = "Cerca tuyo · ${lista.size} publicaciones"
+        tvCercaTuyo.text = safeContext.getString(R.string.market_nearby_count, lista.size)
     }
 }

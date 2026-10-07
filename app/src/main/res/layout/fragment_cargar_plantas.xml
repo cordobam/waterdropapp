@@ -25,7 +25,7 @@
                 android:id="@+id/tvTituloCargas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nueva planta"
+                android:text="@string/plantas_form_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />
@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Completá los datos para agregar"
+                android:text="@string/plantas_form_subtitle"
                 android:textSize="13sp"
                 android:textColor="#B8D4BC"
                 android:layout_marginTop="2dp"/>
@@ -65,7 +65,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FFFFFF">
+                    android:background="@color/surface_card">
 
                     <ImageView
                         android:id="@+id/imgPreview"
@@ -103,7 +103,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Subir foto de la planta"
+                            android:text="@string/plantas_form_upload_photo"
                             android:textColor="#3A7D44"
                             android:textSize="13sp"
                             android:layout_marginTop="10dp"/>
@@ -111,7 +111,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tocá para seleccionar"
+                            android:text="@string/plantas_form_tap_select"
                             android:textColor="#AAAAAA"
                             android:textSize="11sp"
                             android:layout_marginTop="2dp"/>
@@ -136,13 +136,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#FFFFFF"
+                    android:background="@color/surface_card"
                     android:padding="16dp">
 
                     <!-- Nombre -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Nombre de la planta"
+                        android:hint="@string/plantas_name_hint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:boxCornerRadiusTopStart="10dp"
@@ -162,7 +162,7 @@
                     <!-- Dias max -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Días máximo sin riego Verano"
+                        android:hint="@string/plantas_form_days_summer_hint"
                         android:layout_marginTop="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
                     <!-- Dias max -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="Días máximo sin riego Invierno"
+                        android:hint="@string/plantas_form_days_winter_hint"
                         android:layout_marginTop="12dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Grupo"
+                        android:text="@string/plantas_group_label"
                         android:textColor="#888888"
                         android:textSize="11sp"
                         android:layout_marginBottom="6dp"/>
@@ -243,7 +243,7 @@
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="Guardar planta"
+                android:text="@string/plantas_form_save"
                 android:textSize="15sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#3A7D44"
@@ -256,33 +256,13 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="Ver plantas"
+                android:text="@string/plantas_form_show"
                 android:textSize="15sp"
                 android:textColor="#3A7D44"
                 app:strokeColor="#3A7D44"
                 app:strokeWidth="1.5dp"
                 app:cornerRadius="14dp"
                 android:layout_marginBottom="16dp"/>
-
-            <!-- LISTA -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardContenedorLista"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#C8DFC0"
-                app:strokeWidth="1dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvEliminarActualizarPlantas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:padding="8dp"/>
-
-            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </LinearLayout>

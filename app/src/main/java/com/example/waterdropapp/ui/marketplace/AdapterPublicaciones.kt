@@ -105,7 +105,7 @@ class AdapterPublicaciones(
             tvUbicacion.text = "${publicacion.barrio} · ${publicacion.ciudad}"
             tvCategoria.text = publicacion.categoria.replaceFirstChar { it.uppercase() }
 
-            tvPrecio.text = if (publicacion.precio == 0.0) "Gratis"
+            tvPrecio.text = if (publicacion.precio == 0.0) itemView.context.getString(R.string.common_free)
             else "$${publicacion.precio.toInt()}"
 
             tvTrueque.visibility = if (publicacion.aceptaTrueque) View.VISIBLE else View.GONE

@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.etPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Completá todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_error_empty_fields), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
                     loginExitoso()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.login_error_invalid_credentials), Toast.LENGTH_SHORT).show()
                 }
         }
 
@@ -85,16 +85,16 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString().trim()
 
             if (email.isEmpty()) {
-                Toast.makeText(this, "Ingresá tu email primero", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.login_error_email_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             auth.sendPasswordResetEmail(email)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Te enviamos un email para restablecer tu contraseña", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, getString(R.string.login_error_reset_sent), Toast.LENGTH_LONG).show()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "No encontramos ese email", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.login_error_email_not_found), Toast.LENGTH_SHORT).show()
                 }
         }
     }
@@ -110,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
                 firebaseAuthConGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 Log.e("LOGIN_GOOGLE", "ApiException code: ${e.statusCode} - ${e.message}")
-                Toast.makeText(this, "Código error: ${e.statusCode}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.login_error_code, e.statusCode), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -124,7 +124,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 // Cambiá el Toast por esto temporalmente
                 Log.e("LOGIN_GOOGLE", "Error: ${e.message}")
-                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, getString(R.string.login_error_generic, e.message), Toast.LENGTH_LONG).show()
             }
     }
 

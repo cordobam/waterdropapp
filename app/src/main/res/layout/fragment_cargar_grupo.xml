@@ -24,7 +24,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nuevo grupo"
+                android:text="@string/grupos_form_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"/>
@@ -32,7 +32,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Agrupá tus plantas por ubicación"
+                android:text="@string/grupos_form_subtitle"
                 android:textSize="13sp"
                 android:textColor="#B8D4BC"
                 android:layout_marginTop="2dp"/>
@@ -61,14 +61,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#FFFFFF"
+                    android:background="@color/surface_card"
                     android:padding="16dp">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Nombre del grupo"
+                        android:hint="@string/grupos_name_hint"
                         app:boxCornerRadiusTopStart="10dp"
                         app:boxCornerRadiusTopEnd="10dp"
                         app:boxCornerRadiusBottomStart="10dp"
@@ -92,7 +92,7 @@
                 android:id="@+id/btnGuardarGrupo"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="Guardar grupo"
+                android:text="@string/grupos_form_save"
                 android:textSize="15sp"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#3A7D44"
@@ -105,33 +105,13 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="Ver grupos"
+                android:text="@string/grupos_form_show"
                 android:textSize="15sp"
                 android:textColor="#3A7D44"
                 app:strokeColor="#3A7D44"
                 app:strokeWidth="1.5dp"
                 app:cornerRadius="14dp"
                 android:layout_marginBottom="16dp"/>
-
-            <!-- LISTA -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardContenedorLista"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#C8DFC0"
-                app:strokeWidth="1dp"
-                android:visibility="gone">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvEliminarActualizarGrupo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:padding="8dp"/>
-
-            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </LinearLayout>

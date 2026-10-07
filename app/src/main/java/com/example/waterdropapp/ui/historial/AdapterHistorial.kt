@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.local.dto.ActividadPlantaDTO
+import com.example.waterdropapp.domain.model.Estacion
 import com.example.waterdropapp.domain.model.TipoActividad
 import kotlin.collections.addAll
 
@@ -42,15 +43,18 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
 
         private val imgDot = itemView.findViewById<ImageView>(R.id.img_dot)
         fun bind(dto: ActividadPlantaDTO) {
-            tvTitulo.text = "${dto.tipo.etiqueta} completado de: ${dto.nombrePlanta}"
-            tvFecha.text = "Fecha: ${dto.fecha}"
+            val ctx = itemView.context
+            tvTitulo.text = ctx.getString(R.string.historial_title_done,
+                ctx.getString(tipoRes(dto.tipo)), dto.nombrePlanta)
+            tvFecha.text = ctx.getString(R.string.historial_date_label, dto.fecha)
 
             imgDot.setColorFilter(colorDot(dto))
 
             tvSubTitulo.text = when (dto.tipo) {
                 TipoActividad.RIEGO -> subtituloRiego(dto)
 
-                else -> dto.nota?.let { "Nota: $it" } ?: "Actividad registrada"
+                else -> dto.nota?.let { ctx.getString(R.string.historial_note, it) }
+                    ?: ctx.getString(R.string.historial_registered)
             }
         }
 
@@ -71,13 +75,30 @@ class AdapterHistorial : RecyclerView.Adapter<AdapterHistorial.HistorialViewHold
         }
 
         private fun subtituloRiego(dto: ActividadPlantaDTO): String {
-            val dias = dto.diasDesdeUltimo ?: return "Último riego registrado"
-            val estacion = dto.estacion?.let { ", ${it.etiqueta.lowercase()}" } ?: ""
+            val ctx = itemView.context
+            val dias = dto.diasDesdeUltimo
+                ?: return ctx.getString(R.string.historial_last_watering)
+            val estacion = dto.estacion?.let {
+                ctx.getString(R.string.historial_season_suffix, ctx.getString(seasonRes(it)).lowercase())
+            } ?: ""
             return when (dto.alerta) {
-                0 -> "Pasaron $dias días · se respetó el umbral de ${dto.umbralDias} días$estacion"
-                1 -> "Pasaron $dias días · retraso leve (umbral ${dto.umbralDias} días$estacion)"
-                else -> "Pasaron $dias días · con retraso (umbral ${dto.umbralDias} días$estacion)"
+                0 -> ctx.getString(R.string.historial_riego_ok, dias, dto.umbralDias, estacion)
+                1 -> ctx.getString(R.string.historial_riego_mild, dias, dto.umbralDias, estacion)
+                else -> ctx.getString(R.string.historial_riego_late, dias, dto.umbralDias, estacion)
             }
+        }
+
+        private fun tipoRes(tipo: TipoActividad): Int = when (tipo) {
+            TipoActividad.RIEGO -> R.string.tipo_riego
+            TipoActividad.ABONADO -> R.string.tipo_abonado
+            TipoActividad.PODADO -> R.string.tipo_podado
+        }
+
+        private fun seasonRes(estacion: Estacion): Int = when (estacion) {
+            Estacion.PRIMAVERA -> R.string.season_primavera
+            Estacion.VERANO -> R.string.season_verano
+            Estacion.OTONO -> R.string.season_otono
+            Estacion.INVIERNO -> R.string.season_invierno
         }
 
         private fun colorSegunTipo(tipo: TipoActividad): Int {

@@ -1,11 +1,7 @@
 package com.example.waterdropapp.ui.marketplace
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +12,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.R
 import com.example.waterdropapp.data.firebase.model.Publicacion
@@ -29,7 +24,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
-class PublicacionFormlDialog(
+class PublicacionFormDialog(
     private val itemAEditar: Publicacion? = null,
     private val onSuccess: () -> Unit
 ) : BottomSheetDialogFragment() {
@@ -75,12 +70,12 @@ class PublicacionFormlDialog(
         val tvTituloDialog = view.findViewById<TextView>(R.id.tvTituloDialog)
         
         if (itemAEditar != null) {
-            btnGuardar.text = "Guardar cambios"
-            tvTituloDialog.text = "Editar publicación"
+            btnGuardar.text = getString(R.string.common_save_changes)
+            tvTituloDialog.text = getString(R.string.form_title_edit)
             cargarDatosExistente(itemAEditar!!)
         } else {
-            btnGuardar.text = "Publicar"
-            tvTituloDialog.text = "Nueva publicación"
+            btnGuardar.text = getString(R.string.common_publish)
+            tvTituloDialog.text = getString(R.string.form_title_new)
         }
 
         view.findViewById<Button>(R.id.btnGuardar).setOnClickListener { guardar() }
@@ -89,8 +84,8 @@ class PublicacionFormlDialog(
 
     private fun mostrarSelectorImagen() {
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setTitle("Seleccionar foto")
-            .setItems(arrayOf("Galería", "Cámara")) { _, which ->
+            .setTitle(R.string.photo_select_title)
+            .setItems(arrayOf(getString(R.string.photo_gallery), getString(R.string.photo_camera))) { _, which ->
                 when (which) {
                     0 -> pickImage.launch("image/*")
                     1 -> tomarFoto()
@@ -203,7 +198,7 @@ class PublicacionFormlDialog(
         val barrio = requireView().findViewById<EditText>(R.id.etBarrio)?.text?.toString()?.trim() ?: ""
 
         if (titulo.isEmpty()) {
-            requireView().findViewById<EditText>(R.id.etTitulo)?.error = "Título requerido"
+            requireView().findViewById<EditText>(R.id.etTitulo)?.error = getString(R.string.form_title_required)
             return
         }
 

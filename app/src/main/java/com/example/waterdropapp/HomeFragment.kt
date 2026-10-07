@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs
-import com.example.waterdropapp.data.repository.GrupoRepository
 import com.example.waterdropapp.data.repository.IndicadoresRepository
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.RiegoRepository
@@ -21,7 +21,6 @@ import com.example.waterdropapp.data.repository.SeasonChangeResult
 import com.example.waterdropapp.data.repository.WeatherRepository
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,11 +33,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper, requireContext())
+        val safeContext = requireContext()
+
+        val helper = DBHelper(safeContext)
+        plantaRepo = PlantaRepository(helper, safeContext)
         riegoRepo = RiegoRepository(helper)
 
-        val repository = IndicadoresRepository(plantaRepo, riegoRepo, requireContext())
+        val repository = IndicadoresRepository(plantaRepo, riegoRepo, safeContext)
 
         val btnMarketplace = view.findViewById<MaterialButton>(R.id.btnMarketplace)
         btnMarketplace.setOnClickListener {
@@ -53,7 +54,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             startActivity(intent)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val indicadores = repository.getIndicadores()
 
@@ -73,7 +74,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error al cargar indicadores", e)
                 withContext(Dispatchers.Main) {
-                    Snackbar.make(view, "No se pudieron cargar los indicadores", Snackbar.LENGTH_LONG).show()
+                    if (!isAdded) return@withContext
+                    Snackbar.make(view, safeContext.getString(R.string.home_error_indicators), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
@@ -82,10 +84,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val tvTempMin = view.findViewById<TextView>(R.id.tvTempMin)
         val tvTempMax = view.findViewById<TextView>(R.id.tvTempMax)
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val weatherRepo = WeatherRepository()
-                val prefs = SeasonPrefs.create(requireContext())
+                val prefs = SeasonPrefs.create(safeContext)
                 val config = prefs.load()
                 val weather = weatherRepo.getWeeklyTemperatures(config.ciudad)
 
@@ -102,16 +104,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
 
                 // Check for season change
-                val weatherDb = DatabaseHelperWeather(requireContext())
-                val seasonRepo = SeasonRepository(weatherDb, weatherRepo, prefs, requireContext())
+                val weatherDb = DatabaseHelperWeather(safeContext)
+                val seasonRepo = SeasonRepository(weatherDb, weatherRepo, prefs, safeContext)
                 val result = seasonRepo.checkSeasonChange()
 
                 if (result is SeasonChangeResult.Changed) {
                     withContext(Dispatchers.Main) {
-                        Snackbar.make(requireView(),
-                            "Detectado cambio de estación: ${result.from?.name ?: "desconocida"} → ${result.to.name}. ¿Configurar?",
+                        if (!isAdded) return@withContext
+                        Snackbar.make(view,
+                            safeContext.getString(R.string.home_season_changed,
+                                result.from?.name ?: safeContext.getString(R.string.home_season_unknown),
+                                result.to.name),
                             Snackbar.LENGTH_LONG)
-                            .setAction("Ajustes") {
+                            .setAction(safeContext.getString(R.string.home_action_settings)) {
                                 (activity as? MainActivity)?.cargarFragment(com.example.waterdropapp.ui.ajustes.AjustesFragment())
                             }
                             .show()
@@ -120,7 +125,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error al cargar clima o estación", e)
                 withContext(Dispatchers.Main) {
-                    Snackbar.make(view, "No se pudo cargar el clima", Snackbar.LENGTH_LONG).show()
+                    if (!isAdded) return@withContext
+                    Snackbar.make(view, safeContext.getString(R.string.home_error_weather), Snackbar.LENGTH_LONG).show()
                 }
             }
         }

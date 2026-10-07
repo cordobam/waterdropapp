@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.graphics.Rect
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -40,7 +42,6 @@ import com.example.waterdropapp.ui.plantas.PlantasAccionesSheet
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,12 +49,12 @@ import kotlinx.coroutines.withContext
 
 class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
-    private lateinit var db: DBHelper
     private lateinit var plantasAdapter: AdapterPlantas
     private lateinit var gruposAdapter: AdapterGrupos
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
     private lateinit var actividadRepo: ActividadRepository
+    private lateinit var safeContext: Context
     private var fechaHoy: String = ""
     private var imagenNuevaPath: String? = null
     private var imageViewActual: ImageView? = null
@@ -92,10 +93,11 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         super.onViewCreated(view, savedInstanceState)
 
         //db = DBHelper(requireContext())
-        val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper, requireContext())
+        safeContext = requireContext()
+        val helper = DBHelper(safeContext)
+        plantaRepo = PlantaRepository(helper, safeContext)
         grupoRepo = GrupoRepository(helper)
-        actividadRepo = ActividadRepository(helper, requireContext())
+        actividadRepo = ActividadRepository(helper, safeContext)
 
         // Dentro de tu Fragment, por ejemplo en onViewCreated:
         val fab = view.findViewById<FloatingActionButton>(R.id.fabPrincipal)
@@ -117,7 +119,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 abrirAcciones(dto)
             },
             onEditarClick = {plantaId ->
-                CoroutineScope(Dispatchers.IO).launch {
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     val estado = plantaRepo.obtenerEstadoPlantasxId(plantaId)
                     withContext(Dispatchers.Main) {
                         val sheet = PlantasBottomSheet(
@@ -140,11 +142,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 cargarPlantasPorGrupo(grupoId)
             },
             onRegarGrupo = {grupoId ->
-                CoroutineScope(Dispatchers.IO).launch {
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     actividadRepo.putRiegoPorGrupo(grupoId, fechaHoy)
                     withContext(Dispatchers.Main) {
+                        if (!isAdded) return@withContext
                         cargarGrupos()
-                        Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(safeContext, safeContext.getString(R.string.plantas_toast_group_watered), Toast.LENGTH_SHORT).show()
                     }
                 }
             },
@@ -178,7 +181,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 else -> FiltroRiego.TODAS
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
                 val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
 
@@ -236,7 +239,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun cargarPlantas() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val lista = plantaRepo.obtenerEstadoPlantas()
             val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
             withContext(Dispatchers.Main) {
@@ -260,7 +263,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val tabLayout = view?.findViewById<TabLayout>(R.id.tabLayout)
         tabLayout?.getTabAt(0)?.select()   // tab Plantas
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val plantas = plantaRepo.obtenerEstadoPlantasPorGrupo(grupoId)
             withContext(Dispatchers.Main) {
                 plantasAdapter.submitList(plantas)
@@ -325,9 +328,9 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar Planta")
+            .setTitle(getString(R.string.plantas_edit_plant_title))
             .setView(dialogView)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
                 // seleccion de spinner
                 val posicion = spGrupos.selectedItemPosition
@@ -343,10 +346,10 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 recargarConFiltro()
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -354,17 +357,17 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val input = EditText(requireContext())
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar grupo")
+            .setTitle(getString(R.string.plantas_edit_group_title))
             .setView(input)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
 
                 val nombre = input.text.toString()
                 grupoRepo.actualizarGrupos(id, nombre)
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 gruposAdapter.submitList(grupoRepo.getEstadosGrupos())
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -378,14 +381,15 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val listaActualizada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
                 withContext(Dispatchers.Main) {
+                    if (!isAdded) return@withContext
                     plantasAdapter.submitList(listaActualizada)
 
-                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                        .setAction("Deshacer") {
-                            CoroutineScope(Dispatchers.IO).launch {
+                    Snackbar.make(snackbarView, safeContext.getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
+                        .setAction(safeContext.getString(R.string.common_undo)) {
+                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                                 plantaRepo.softDeletePlanta(id, true)
                                 val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
                                 withContext(Dispatchers.Main) {
@@ -398,7 +402,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             }
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -415,8 +419,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
             gruposAdapter.submitList(listaActualizada)
 
-            Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
-                .setAction("Deshacer") {
+            Snackbar.make(snackbarView, getString(R.string.common_group_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.common_undo)) {
 
                     grupoRepo.softDeleteGrupo(id , true)
                     val listaReactivada = grupoRepo.getEstadosGrupos()
@@ -425,7 +429,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 .show()
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -445,7 +449,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun recargarConFiltro() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val lista = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
             val listaOrdenada = lista.sortedByDescending { it.diasSinRegar }
             withContext(Dispatchers.Main) {
@@ -466,37 +470,46 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmarActividad(plantaId: Int, tipo: TipoActividad) {
-        val verbo = when (tipo) {
-            TipoActividad.RIEGO -> "regar"
-            TipoActividad.ABONADO -> "abonar"
-            TipoActividad.PODADO -> "podar"
-        }
+        val verbo = getString(verboRes(tipo))
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Confirmar ${tipo.etiqueta}")
-            .setMessage("¿Estás seguro de que querés $verbo esta planta?")
-            .setPositiveButton("Sí") { _, _ ->
-                CoroutineScope(Dispatchers.IO).launch {
+            .setTitle(getString(R.string.plantas_confirm_title, getString(tipoRes(tipo))))
+            .setMessage(getString(R.string.plantas_confirm_message, verbo))
+            .setPositiveButton(getString(R.string.common_yes)) { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     actividadRepo.putActividad(plantaId, tipo, fechaHoy)
                     withContext(Dispatchers.Main) {
+                        if (!isAdded) return@withContext
                         recargarConFiltro()
                         Toast.makeText(
-                            requireContext(),
-                            mensajeRegistrado(tipo),
+                            safeContext,
+                            mensajeRegistrado(tipo, safeContext),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
-    private fun mensajeRegistrado(tipo: TipoActividad): String {
+    private fun verboRes(tipo: TipoActividad): Int = when (tipo) {
+        TipoActividad.RIEGO -> R.string.verb_water
+        TipoActividad.ABONADO -> R.string.verb_fertilize
+        TipoActividad.PODADO -> R.string.verb_prune
+    }
+
+    private fun tipoRes(tipo: TipoActividad): Int = when (tipo) {
+        TipoActividad.RIEGO -> R.string.tipo_riego
+        TipoActividad.ABONADO -> R.string.tipo_abonado
+        TipoActividad.PODADO -> R.string.tipo_podado
+    }
+
+    private fun mensajeRegistrado(tipo: TipoActividad, ctx: Context): String {
         return when (tipo) {
-            TipoActividad.RIEGO -> "Planta regada con éxito"
-            TipoActividad.ABONADO -> "Planta abonada con éxito"
-            TipoActividad.PODADO -> "Planta podada con éxito"
+            TipoActividad.RIEGO -> ctx.getString(R.string.plantas_msg_watered_done)
+            TipoActividad.ABONADO -> ctx.getString(R.string.plantas_msg_fertilized_done)
+            TipoActividad.PODADO -> ctx.getString(R.string.plantas_msg_pruned_done)
         }
     }
 }

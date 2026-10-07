@@ -2,7 +2,6 @@ package com.example.waterdropapp.data.repository
 
 import android.content.Context
 import androidx.annotation.RequiresApi
-import com.example.waterdropapp.data.local.dto.TemperaturaDiaria
 import com.example.waterdropapp.data.local.model.DatabaseHelperWeather
 import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.domain.model.Estacion

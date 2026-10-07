@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,8 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.waterdropapp.data.firebase.model.Vivero
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.AdapterViveros
-import com.example.waterdropapp.ui.marketplace.PublicacionFormlDialog
-import com.example.waterdropapp.ui.marketplace.ViveroForrmDialog
+import com.example.waterdropapp.ui.marketplace.ViveroFormDialog
 import com.google.android.material.button.MaterialButton
 
 class ViverosFragment : Fragment(R.layout.fragment_viveros) {
@@ -24,16 +24,19 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
     private lateinit var adapter: AdapterViveros
     private var listaCompleta = listOf<Vivero>()
     private var queryBusqueda = ""
+    private lateinit var safeContext: Context
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        safeContext = requireContext()
 
         val etBuscar = view.findViewById<EditText>(R.id.etBuscarVivero)
         val tvCantidad = view.findViewById<TextView>(R.id.tvCantidadViveros)
         val rv = view.findViewById<RecyclerView>(R.id.rvViveros)
 
         adapter = AdapterViveros { vivero ->
-            Toast.makeText(requireContext(), "Detalle de ${vivero.nombre} - pr\u00f3ximamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(safeContext, safeContext.getString(R.string.vivero_detail_soon, vivero.nombre), Toast.LENGTH_SHORT).show()
         }
 
         rv.layoutManager = LinearLayoutManager(requireContext())
@@ -57,7 +60,7 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
         }
 
         view.findViewById<MaterialButton>(R.id.btnPublicar).setOnClickListener {
-            ViveroForrmDialog(
+            ViveroFormDialog(
                 onSuccess = {cargarDatos(tvCantidad)}
             ).show(parentFragmentManager,"NuevoVivero")
         }
@@ -72,12 +75,15 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
                 aplicarFiltros(tvCantidad)
             },
             onError = {
-                Toast.makeText(requireContext(), "Error al cargar viveros", Toast.LENGTH_SHORT).show()
+                if (!isAdded){
+                Toast.makeText(safeContext, safeContext.getString(R.string.vivero_error_load), Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }
 
     private fun aplicarFiltros(tvCantidad: TextView) {
+        if (!isAdded) return
         var lista = listaCompleta
 
         if (queryBusqueda.isNotEmpty()) {
@@ -89,6 +95,6 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
         }
 
         adapter.submitList(lista)
-        tvCantidad.text = "${lista.size} viveros encontrados"
+        tvCantidad.text = safeContext.getString(R.string.vivero_count, lista.size)
     }
 }

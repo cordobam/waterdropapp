@@ -1,5 +1,6 @@
 package com.example.waterdropapp
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
@@ -25,7 +27,6 @@ import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
 import com.example.waterdropapp.data.repository.PlantaRepository
 import com.example.waterdropapp.data.repository.GrupoRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,7 +34,6 @@ import kotlinx.coroutines.withContext
 
 class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
-    private lateinit var db: DBHelper
     private lateinit var plantaRepo: PlantaRepository
     private lateinit var grupoRepo: GrupoRepository
     private lateinit var plantasAdapterAct: AdapterPlantas
@@ -43,6 +43,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
     private lateinit var cardFoto: MaterialCardView
     private var imagenNuevaPath: String? = null
     private var imageViewActual: ImageView? = null
+    private lateinit var safeContext: Context
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -72,8 +73,9 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         super.onViewCreated(view, savedInstanceState)
 
         //carga spinner con datos
-        val helper = DBHelper(requireContext())
-        plantaRepo = PlantaRepository(helper, requireContext())
+        safeContext = requireContext()
+        val helper = DBHelper(safeContext)
+        plantaRepo = PlantaRepository(helper, safeContext)
         grupoRepo = GrupoRepository(helper)
 
         val spinnerGrupos = view.findViewById<Spinner>(R.id.spinnerGrupos)
@@ -102,7 +104,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             // seleccion de spinner
             val posicion = spinnerGrupos.selectedItemPosition
             if (posicion == AdapterView.INVALID_POSITION) {
-                Toast.makeText(requireContext(), "Seleccione un grupo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.plantas_select_group), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val grupoSeleccionado = grupos[posicion]
@@ -123,7 +125,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
             Toast.makeText(
                 requireContext(),
-                "Planta $nombre cargada con exito",
+                getString(R.string.plantas_loaded_ok, nombre),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -137,7 +139,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         val botonverplantas = view.findViewById<Button>(R.id.btnVerPlantas)
 
         botonverplantas.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 // 1. Obtenemos los DTOs de la base de datos
                 val plantasDTO = plantaRepo.obtenerEstadoPlantas()
 
@@ -153,8 +155,6 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             }
         }
     }
-
-    private fun findViewById(cardContenedorLista: Int) {}
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun editarPlantas(id:Int) {
@@ -213,9 +213,9 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar Planta")
+            .setTitle(getString(R.string.plantas_edit_plant_title))
             .setView(dialogView)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
                 // seleccion de spinner
                 val posicion = spGrupos.selectedItemPosition
@@ -231,15 +231,15 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
-                CoroutineScope(Dispatchers.IO).launch {
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
+                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                     val lista = plantaRepo.obtenerEstadoPlantas()
                     withContext(Dispatchers.Main) {
                         plantasAdapterAct.submitList(lista)
                     }
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -253,14 +253,15 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             // Refrescamos primero la lista
             //plantasAdapterAct.submitList(db.obtenerEstadoPlantas())
             val snackbarView = view ?: requireView()
-            CoroutineScope(Dispatchers.IO).launch {
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val listaActualizada = plantaRepo.obtenerEstadoPlantas()
                 withContext(Dispatchers.Main) {
+                    if (!isAdded) return@withContext
                     plantasAdapterAct.submitList(listaActualizada)
 
-                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                        .setAction("Deshacer") {
-                            CoroutineScope(Dispatchers.IO).launch {
+                Snackbar.make(snackbarView, safeContext.getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
+                    .setAction(safeContext.getString(R.string.common_undo)) {
+                            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                                 plantaRepo.softDeletePlanta(id, true)
                                 val listaReactivada = plantaRepo.obtenerEstadoPlantas()
                                 withContext(Dispatchers.Main) {
@@ -273,7 +274,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             }
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 

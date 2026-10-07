@@ -14,7 +14,7 @@
         android:id="@+id/tvMensajeRemitente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Usuario"
+        android:text="@string/common_user"
         android:textSize="10sp"
         android:textStyle="bold"
         android:textColor="#666666"
@@ -24,7 +24,7 @@
         android:id="@+id/tvMensajeTexto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mensaje de ejemplo"
+        android:text="@string/item_msg_preview"
         android:textSize="14sp"
         android:textColor="#333333"/>
 
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="14:30"
+        android:text="@string/time_preview"
         android:textSize="9sp"
         android:textColor="#999999"/>
 

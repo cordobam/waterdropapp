@@ -14,7 +14,7 @@
             android:id="@+id/tvTituloDialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nuevo vivero"
+            android:text="@string/vivero_form_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre"
+            android:text="@string/field_name"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -31,7 +31,7 @@
             android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Nombre del vivero"
+            android:hint="@string/vivero_name_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descripción"
+            android:text="@string/field_description"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -48,7 +48,7 @@
             android:id="@+id/etDescripcion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Describí el vivero..."
+            android:hint="@string/vivero_description_hint"
             android:textSize="14sp"
             android:minLines="3"
             android:gravity="top"
@@ -60,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dirección"
+            android:text="@string/vivero_address"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -68,7 +68,7 @@
             android:id="@+id/etDireccion"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Av. siempre viva 123"
+            android:hint="@string/vivero_address_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -77,7 +77,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ciudad"
+            android:text="@string/field_city"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -85,7 +85,7 @@
             android:id="@+id/etCiudad"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Córdoba"
+            android:hint="@string/hint_city"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -94,7 +94,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Barrio"
+            android:text="@string/field_neighborhood"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -102,7 +102,7 @@
             android:id="@+id/etBarrio"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Nueva Córdoba"
+            android:hint="@string/form_neighborhood_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -111,7 +111,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Teléfono"
+            android:text="@string/vivero_phone"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -119,7 +119,7 @@
             android:id="@+id/etTelefono"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="351 123 4567"
+            android:hint="@string/vivero_phone_hint"
             android:textSize="14sp"
             android:inputType="phone"
             android:background="@drawable/border_top_gray"
@@ -129,7 +129,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Horario"
+            android:text="@string/vivero_hours"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -137,7 +137,7 @@
             android:id="@+id/etHorario"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Lun-Vie 9:00-18:00"
+            android:hint="@string/vivero_hours_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -146,7 +146,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Especialidades (separadas por coma)"
+            android:text="@string/vivero_specialties"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -154,7 +154,7 @@
             android:id="@+id/etEspecialidades"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Suculentas, Interior, Exterior"
+            android:hint="@string/vivero_specialties_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -163,7 +163,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="URL de imagen"
+            android:text="@string/vivero_image_url"
             android:textSize="13sp"
             android:textColor="#4E6E50" />
 
@@ -171,7 +171,7 @@
             android:id="@+id/etImagenUrl"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="https://..."
+            android:hint="@string/hint_url"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp"
@@ -182,7 +182,7 @@
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Guardar vivero"
+            android:text="@string/vivero_save"
             android:backgroundTint="#3A7D44"
             android:textColor="#FFFFFF" />
 
@@ -190,7 +190,7 @@
             android:id="@+id/btnCancelar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Cancelar"
+            android:text="@string/common_cancel"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:textColor="#3A7D44"
             app:strokeColor="#C8DFC0"

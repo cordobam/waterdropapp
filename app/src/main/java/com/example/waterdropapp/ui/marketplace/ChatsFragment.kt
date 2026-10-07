@@ -6,26 +6,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.firebase.model.Chat
-import com.example.waterdropapp.data.firebase.model.Publicacion
 import com.example.waterdropapp.data.repository.FirestoreRepository
 import com.example.waterdropapp.ui.marketplace.ChatBottomSheet
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.waterdropapp.R
 
 class ChatsFragment : Fragment() {
 
-    private var _binding: View? = null
     private lateinit var repository: FirestoreRepository
     private var listenerRegistro: ListenerRegistration? = null
     private lateinit var adapter: ChatsAdapter
@@ -35,9 +30,7 @@ class ChatsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_chats, container, false)
-        _binding = view
-        return view
+        return inflater.inflate(R.layout.fragment_chats, container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -99,11 +92,9 @@ class ChatsFragment : Fragment() {
         }
 
         inner class ChatVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            private val imgPublicacion = itemView.findViewById<ImageView>(R.id.imgChatItemPublicacion)
             private val tvTitulo = itemView.findViewById<TextView>(R.id.tvChatItemTitulo)
             private val tvUltimoMensaje = itemView.findViewById<TextView>(R.id.tvChatItemUltimoMensaje)
             private val tvHora = itemView.findViewById<TextView>(R.id.tvChatItemHora)
-            private val tvNoLeidos = itemView.findViewById<TextView>(R.id.tvChatItemNoLeidos)
 
             fun bind(chat: Chat) {
                 val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
@@ -126,7 +117,6 @@ class ChatsFragment : Fragment() {
                 }
 
                 // Imagen
-                val imgPublicacion = itemView.findViewById<ImageView>(R.id.imgChatItemPublicacion)
                 if (chat.publicacionId.isNotEmpty()) {
                     // TODO: Cargar imagen de la publicación
                     // Por ahora placeholder
