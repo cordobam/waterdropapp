@@ -72,7 +72,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error al cargar indicadores", e)
                 withContext(Dispatchers.Main) {
-                    Snackbar.make(view, "No se pudieron cargar los indicadores", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(view, getString(R.string.home_error_indicators), Snackbar.LENGTH_LONG).show()
                 }
             }
         }
@@ -108,9 +108,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 if (result is SeasonChangeResult.Changed) {
                     withContext(Dispatchers.Main) {
                         Snackbar.make(requireView(),
-                            "Detectado cambio de estación: ${result.from?.name ?: "desconocida"} → ${result.to.name}. ¿Configurar?",
+                            getString(R.string.home_season_changed,
+                                result.from?.name ?: getString(R.string.home_season_unknown),
+                                result.to.name),
                             Snackbar.LENGTH_LONG)
-                            .setAction("Ajustes") {
+                            .setAction(getString(R.string.home_action_settings)) {
                                 (activity as? MainActivity)?.cargarFragment(com.example.waterdropapp.ui.ajustes.AjustesFragment())
                             }
                             .show()
@@ -119,7 +121,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error al cargar clima o estación", e)
                 withContext(Dispatchers.Main) {
-                    Snackbar.make(view, "No se pudo cargar el clima", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(view, getString(R.string.home_error_weather), Snackbar.LENGTH_LONG).show()
                 }
             }
         }

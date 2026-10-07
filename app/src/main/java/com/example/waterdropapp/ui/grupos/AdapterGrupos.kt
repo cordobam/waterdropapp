@@ -76,18 +76,18 @@ class AdapterGrupos(
 
         fun bind(grupo: EstadoGruposDTO) {
             tvNombre.text = grupo.nombreGrupo
-            tvCantPlantas.text = "Cantidad de plantas ${grupo.cantPlantasGrupo}"
+            tvCantPlantas.text = itemView.context.getString(R.string.grupos_plant_count, grupo.cantPlantasGrupo)
             btnVer.setOnClickListener {
                 onVerGrupo?.invoke(grupo.grupoId)
             }
             btnRegar.setOnClickListener {
                 MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle("Confirmar Riego")
-                    .setMessage("¿Estás seguro de que querés regar todo el grupo?")
-                    .setPositiveButton("Sí") { _, _ ->
+                    .setTitle(itemView.context.getString(R.string.grupos_water_confirm_title))
+                    .setMessage(itemView.context.getString(R.string.grupos_water_confirm_message))
+                    .setPositiveButton(itemView.context.getString(R.string.common_yes)) { _, _ ->
                         onRegarGrupo?.invoke(grupo.grupoId)
                     }
-                    .setNegativeButton("Cancelar", null)
+                    .setNegativeButton(itemView.context.getString(R.string.common_cancel), null)
                     .show()
 
             }

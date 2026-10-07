@@ -27,7 +27,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
             val values = db.putGrupos(nombre)
             Toast.makeText(
                 requireContext(),
-                "Grupo $nombre cargado con exito",
+                getString(R.string.grupos_loaded_ok, nombre),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -56,17 +56,17 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
         val input = EditText(requireContext())
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar grupo")
+            .setTitle(getString(R.string.plantas_edit_group_title))
             .setView(input)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
 
                 val nombre = input.text.toString()
                 db.actualizarGrupos(id, nombre)
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 gruposAdapterAct.submitList(db.getEstadosGrupos())
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -83,8 +83,8 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
 
             gruposAdapterAct.submitList(listaActualizada)
 
-            Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
-                .setAction("Deshacer") {
+            Snackbar.make(snackbarView, getString(R.string.common_group_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.common_undo)) {
 
                     db.softDeleteGrupo(id , true)
                     val listaReactivada = db.getEstadosGrupos()
@@ -93,7 +93,7 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
                 .show()
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 }

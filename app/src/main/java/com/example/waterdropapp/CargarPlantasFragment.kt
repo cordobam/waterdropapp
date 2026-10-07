@@ -101,7 +101,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             // seleccion de spinner
             val posicion = spinnerGrupos.selectedItemPosition
             if (posicion == AdapterView.INVALID_POSITION) {
-                Toast.makeText(requireContext(), "Seleccione un grupo", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.plantas_select_group), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val grupoSeleccionado = grupos[posicion]
@@ -122,7 +122,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
 
             Toast.makeText(
                 requireContext(),
-                "Planta $nombre cargada con exito",
+                getString(R.string.plantas_loaded_ok, nombre),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -210,9 +210,9 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar Planta")
+            .setTitle(getString(R.string.plantas_edit_plant_title))
             .setView(dialogView)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
                 // seleccion de spinner
                 val posicion = spGrupos.selectedItemPosition
@@ -228,7 +228,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 CoroutineScope(Dispatchers.IO).launch {
                     val lista = plantaRepo.obtenerEstadoPlantas()
                     withContext(Dispatchers.Main) {
@@ -236,7 +236,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                     }
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -255,8 +255,8 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
                 withContext(Dispatchers.Main) {
                     plantasAdapterAct.submitList(listaActualizada)
 
-                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                        .setAction("Deshacer") {
+                Snackbar.make(snackbarView, getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.common_undo)) {
                             CoroutineScope(Dispatchers.IO).launch {
                                 plantaRepo.softDeletePlanta(id, true)
                                 val listaReactivada = plantaRepo.obtenerEstadoPlantas()
@@ -270,7 +270,7 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             }
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 

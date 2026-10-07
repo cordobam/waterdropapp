@@ -18,7 +18,7 @@
         android:id="@+id/tvTituloAcciones"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Acciones de la planta"
+        android:text="@string/plantas_preview_actions_title"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#3A7D44"
@@ -46,7 +46,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Regar"
+            android:text="@string/plantas_action_water"
             android:textSize="16sp"
             android:textColor="#1A3A1F"/>
     </LinearLayout>
@@ -73,7 +73,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Abonar"
+            android:text="@string/plantas_action_fertilize"
             android:textSize="16sp"
             android:textColor="#1A3A1F"/>
     </LinearLayout>
@@ -100,7 +100,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Podar"
+            android:text="@string/plantas_action_prune"
             android:textSize="16sp"
             android:textColor="#1A3A1F"/>
     </LinearLayout>

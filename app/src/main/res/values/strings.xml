@@ -1,7 +1,357 @@
 <resources>
-    <string name="app_name">waterdropapp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_marketplace">MarketplaceActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="app_name">WaterDrop</string>
+    <string name="title_activity_marketplace">Marketplace</string>
+    <string name="title_activity_login">WaterDrop</string>
+
+    <!-- LOGIN: layout -->
+    <string name="login_header_title">Marketplace</string>
+    <string name="login_header_subtitle">Comprá, vendé e intercambiá plantas</string>
+    <string name="login_sign_in_title">Ingresá a tu cuenta</string>
+    <string name="login_label_email">Email</string>
+    <string name="login_hint_email">tu@email.com</string>
+    <string name="login_label_password">Contraseña</string>
+    <string name="login_hint_password" translatable="false">••••••••</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button_sign_in">Ingresar</string>
+    <string name="login_separator_or_continue">o continuá con</string>
+    <string name="login_button_google" translatable="false">Google</string>
+    <string name="login_no_account">¿No tenés cuenta?</string>
+    <string name="login_register">Registrate</string>
+    <string name="login_guest_note">Podés ver viveros sin iniciar sesión</string>
+    <string name="login_guest_explore">Explorar sin cuenta →</string>
+
+    <!-- LOGIN: códigos -->
+    <string name="login_error_empty_fields">Completá todos los campos</string>
+    <string name="login_error_invalid_credentials">Email o contraseña incorrectos</string>
+    <string name="login_error_email_required">Ingresá tu email primero</string>
+    <string name="login_error_reset_sent">Te enviamos un email para restablecer tu contraseña</string>
+    <string name="login_error_email_not_found">No encontramos ese email</string>
+    <string name="login_error_code">Código de error: %1$d</string>
+    <string name="login_error_generic">Error: %1$s</string>
+
+    <!-- HOME: layout -->
+    <string name="home_greeting">Buen día 🌿</string>
+    <string name="home_title">Mis Plantas</string>
+    <string name="home_button_marketplace">Marketplace</string>
+    <string name="home_section_summary">Resumen general</string>
+    <string name="home_temp_separator" translatable="false">" / "</string>
+    <string name="home_stat_total_plants">Total plantas</string>
+    <string name="home_stat_to_water">Por regar</string>
+    <string name="home_stat_watered">Regadas</string>
+    <string name="home_stat_days">" días"</string>
+    <string name="home_stat_watering_avg">Prom. riego</string>
+    <string name="home_section_health">Salud del riego</string>
+    <string name="home_delay_title">Promedio de tardanza</string>
+    <string name="home_delay_days_avg">" días de retraso promedio"</string>
+    <string name="placeholder_dash" translatable="false">—</string>
+
+    <!-- HOME: códigos -->
+    <string name="home_error_indicators">No se pudieron cargar los indicadores</string>
+    <string name="home_error_weather">No se pudo cargar el clima</string>
+    <string name="home_season_changed">Detectado cambio de estación: %1$s → %2$s. ¿Configurar?</string>
+    <string name="home_season_unknown">desconocida</string>
+    <string name="home_action_settings">Ajustes</string>
+
+    <!-- COMMON (compartidos entre pantallas) -->
+    <string name="common_save">Guardar</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_yes">Sí</string>
+    <string name="common_saved">Cambios guardados</string>
+    <string name="common_undo">Deshacer</string>
+    <string name="common_plant_deleted">Planta eliminada</string>
+    <string name="common_group_deleted">Grupo eliminado</string>
+    <string name="common_delete_failed">No se pudo eliminar</string>
+    <string name="common_edit">Editar</string>
+
+    <!-- PLANTAS: layout -->
+    <string name="plantas_header_title">Regar Plantas</string>
+    <string name="plantas_header_subtitle">Revisá el estado de tus plantas</string>
+    <string name="plantas_tab_individual">Plantas Individuales</string>
+    <string name="plantas_tab_groups">Grupos de Plantas</string>
+    <string name="plantas_filter_all">Todas</string>
+    <string name="plantas_filter_next">Próximas</string>
+    <string name="plantas_filter_overdue">Vencidas</string>
+    <string name="plantas_fab_desc">Opciones de carga</string>
+    <string name="plantas_form_title">Nueva planta</string>
+    <string name="plantas_form_subtitle">Completá los datos para agregar</string>
+    <string name="plantas_form_upload_photo">Subir foto de la planta</string>
+    <string name="plantas_form_tap_select">Tocá para seleccionar</string>
+    <string name="plantas_name_hint">Nombre de la planta</string>
+    <string name="plantas_form_days_summer_hint">Días máximo sin riego Verano</string>
+    <string name="plantas_form_days_winter_hint">Días máximo sin riego Invierno</string>
+    <string name="plantas_group_label">Grupo</string>
+    <string name="plantas_form_save">Guardar planta</string>
+    <string name="plantas_form_show">Ver plantas</string>
+    <string name="plantas_dialog_change_photo">Cambiar foto</string>
+    <string name="plantas_dialog_days_summer_hint">Días sin riego verano</string>
+    <string name="plantas_dialog_days_winter_hint">Días sin riego invierno</string>
+    <string name="plantas_preview_name" translatable="false">Aloe Vera</string>
+    <string name="plantas_preview_watering">Próximo riego: en 5 días</string>
+    <string name="plantas_preview_name_edit" translatable="false">San Severina</string>
+    <string name="plantas_preview_group" translatable="false">Balcón</string>
+    <string name="plantas_preview_actions_title">Acciones de la planta</string>
+    <string name="plantas_sheet_title">Mis Plantas</string>
+    <string name="plantas_sheet_search">Buscar planta...</string>
+    <string name="plantas_action_water">Regar</string>
+    <string name="plantas_action_fertilize">Abonar</string>
+    <string name="plantas_action_prune">Podar</string>
+
+    <!-- PLANTAS: códigos -->
+    <string name="plantas_toast_group_watered">Grupo regado</string>
+    <string name="plantas_edit_plant_title">Editar Planta</string>
+    <string name="plantas_edit_group_title">Editar grupo</string>
+    <string name="plantas_confirm_title">Confirmar %1$s</string>
+    <string name="plantas_confirm_message">¿Estás seguro de que querés %1$s esta planta?</string>
+    <string name="verb_water">regar</string>
+    <string name="verb_fertilize">abonar</string>
+    <string name="verb_prune">podar</string>
+    <string name="tipo_riego">Riego</string>
+    <string name="tipo_abonado">Abonado</string>
+    <string name="tipo_podado">Podado</string>
+    <string name="plantas_msg_watered_done">Planta regada con éxito</string>
+    <string name="plantas_msg_fertilized_done">Planta abonada con éxito</string>
+    <string name="plantas_msg_pruned_done">Planta podada con éxito</string>
+    <string name="plantas_select_group">Seleccioná un grupo</string>
+    <string name="plantas_loaded_ok">Planta %1$s cargada con éxito</string>
+    <string name="plantas_actions_of">Acciones de %1$s</string>
+    <string name="plantas_days_without_watering">⚠️ %1$d días sin regar</string>
+    <string name="plantas_last_watering">💧 Hace %1$d días</string>
+
+    <!-- GRUPOS: layout -->
+    <string name="grupos_form_title">Nuevo grupo</string>
+    <string name="grupos_form_subtitle">Agrupá tus plantas por ubicación</string>
+    <string name="grupos_name_hint">Nombre del grupo</string>
+    <string name="grupos_form_save">Guardar grupo</string>
+    <string name="grupos_form_show">Ver grupos</string>
+    <string name="grupos_preview_name" translatable="false">Grupo</string>
+    <string name="grupos_preview_count">Cant de plantas: 0</string>
+    <string name="grupos_preview_name_act">Grupo Jardín</string>
+    <string name="grupos_sheet_title">Mis Grupos</string>
+    <string name="grupos_sheet_search">Buscar grupo...</string>
+
+    <!-- GRUPOS: códigos -->
+    <string name="grupos_loaded_ok">Grupo %1$s cargado con éxito</string>
+    <string name="grupos_plant_count">Cantidad de plantas %1$d</string>
+    <string name="grupos_water_confirm_title">Confirmar Riego</string>
+    <string name="grupos_water_confirm_message">¿Estás seguro de que querés regar todo el grupo?</string>
+
+    <!-- HISTORIAL: layout -->
+    <string name="historial_title">Historial de riego</string>
+    <string name="historial_subtitle">Revisá cuándo regaste cada planta</string>
+    <string name="historial_filter_all">Todas</string>
+    <string name="historial_preview_datetime">30 Ene · 09:00</string>
+    <string name="historial_preview_title">Riego completado</string>
+    <string name="historial_preview_subtitle">Se respetó el umbral de 5 días</string>
+
+    <!-- HISTORIAL: códigos -->
+    <string name="historial_title_done">%1$s completado de: %2$s</string>
+    <string name="historial_date_label">Fecha: %1$s</string>
+    <string name="historial_note">Nota: %1$s</string>
+    <string name="historial_registered">Actividad registrada</string>
+    <string name="historial_last_watering">Último riego registrado</string>
+    <string name="historial_riego_ok">Pasaron %1$d días · se respetó el umbral de %2$d días%3$s</string>
+    <string name="historial_riego_mild">Pasaron %1$d días · retraso leve (umbral %2$d días%3$s)</string>
+    <string name="historial_riego_late">Pasaron %1$d días · con retraso (umbral %2$d días%3$s)</string>
+    <string name="historial_season_suffix">, %1$s</string>
+
+    <!-- ESTACIONES (compartido) -->
+    <string name="season_primavera">Primavera</string>
+    <string name="season_verano">Verano</string>
+    <string name="season_otono">Otoño</string>
+    <string name="season_invierno">Invierno</string>
+
+    <!-- Ajustes -->
+    <string name="ajustes_section_mode">Modo de detección de estación</string>
+    <string name="ajustes_mode_help">Automático: usa temperaturas de los últimos 15 días. Manual: elegís la estación.</string>
+    <string name="ajustes_auto_detection">Detección automática</string>
+    <string name="ajustes_city_label">Ciudad para datos climáticos</string>
+    <string name="ajustes_city_hint">Ciudad (ej: Córdoba, Buenos Aires)</string>
+    <string name="ajustes_thresholds_title">Umbrales automáticos</string>
+    <string name="ajustes_thresholds_help">Media de máximas ≥ valor = Verano. Media de mínimas ≤ valor = Invierno.</string>
+    <string name="ajustes_threshold_summer_hint">Máxima media 15 días para VERANO (°C)</string>
+    <string name="ajustes_threshold_winter_hint">Mínima media 15 días para INVIERNO (°C)</string>
+    <string name="ajustes_manual_title">Estación actual (modo manual)</string>
+    <string name="ajustes_preview_last_detection">Última detección: --</string>
+    <string name="ajustes_current_season_placeholder">Estación actual: --</string>
+    <string name="ajustes_detect_now">Detectar ahora</string>
+    <string name="ajustes_detecting">Detectando...</string>
+    <string name="ajustes_season_change">Cambio detectado: %1$s → %2$s</string>
+    <string name="ajustes_unknown_season">desconocida</string>
+    <string name="ajustes_no_change">Sin cambios. Estación actual: %1$s</string>
+    <string name="ajustes_weather_error">Error al obtener datos climáticos</string>
+    <string name="ajustes_current_manual">Estación actual (manual): %1$s</string>
+    <string name="ajustes_mode_manual">Modo manual - sin detección automática</string>
+    <string name="ajustes_mode_auto">Modo automático - usa últimos 15 días</string>
+    <string name="ajustes_season_detected">Estación detectada: %1$s</string>
+    <string name="ajustes_last_detection">Última detección: %1$s</string>
+    <string name="ajustes_enter_city">Ingresá una ciudad</string>
+    <string name="ajustes_config_saved">Configuración guardada</string>
+    <!-- Marketplace / Chats / Viveros -->
+    <string name="common_user">Usuario</string>
+    <string name="common_free">Gratis</string>
+    <string name="common_publish">Publicar</string>
+    <string name="common_save_changes">Guardar cambios</string>
+    <string name="common_login_required">Tenés que iniciar sesión</string>
+    <string name="common_error_detail">Error: %1$s</string>
+    <string name="action_chat">Chatear</string>
+    <string name="action_offer">Ofertar</string>
+    <string name="action_view">Ver</string>
+    <string name="price_preview">$1.500</string>
+    <string name="time_preview">14:30</string>
+
+    <!-- Marketplace: pantalla principal -->
+    <string name="market_subtitle">Explorá y comprá</string>
+    <string name="market_search_hint">Buscar plantas, semillas...</string>
+    <string name="market_filter_all">Todos</string>
+    <string name="market_filter_plants">Plantas</string>
+    <string name="market_filter_seeds">Semillas</string>
+    <string name="market_filter_cuttings">Esquejes</string>
+    <string name="market_filter_barter">Trueque</string>
+    <string name="market_nearby_initial">Cerca tuyo · Córdoba</string>
+    <string name="market_publish_button">+ Publicar planta o semilla</string>
+    <string name="market_error_load">Error al cargar</string>
+    <string name="market_nearby_count">Cerca tuyo · %1$d publicaciones</string>
+
+    <!-- Chats -->
+    <string name="chats_empty">No tenés conversaciones aún</string>
+    <string name="chat_header">Chat sobre publicación</string>
+    <string name="chat_with_preview">Conversación con Usuario</string>
+    <string name="chat_input_hint">Escribí un mensaje...</string>
+    <string name="chat_with">Chat con %1$s</string>
+
+    <!-- Detalle de publicación -->
+    <string name="pub_category_preview">PLANTA</string>
+    <string name="pub_title_preview">Nombre de la publicación</string>
+    <string name="publicacion_accepts_barter">🔄 Acepta trueque</string>
+    <string name="publicacion_barter_badge">🔄 Trueque</string>
+    <string name="detalle_description_preview">Descripción detallada de la publicación...</string>
+    <string name="detalle_location_preview">Córdoba · Nueva Córdoba</string>
+    <string name="detalle_seller_label">Vendedor</string>
+    <string name="detalle_seller_name_preview">Nombre vendedor</string>
+    <string name="detalle_rating_preview">4.8</string>
+    <string name="detalle_rating_count_preview">(12)</string>
+
+    <!-- Perfil marketplace -->
+    <string name="profile_name_placeholder">Tu nombre</string>
+    <string name="profile_email_placeholder">tu@email.com</string>
+    <string name="profile_count_preview">0</string>
+    <string name="profile_label_publications">Publicaciones</string>
+    <string name="profile_rating_dash">—</string>
+    <string name="profile_label_rating">Calificación</string>
+    <string name="profile_my_publications">Mis publicaciones</string>
+    <string name="profile_logout">Cerrar sesión</string>
+    <string name="profile_edit_title">Editar perfil</string>
+    <string name="profile_name_hint">Tu nombre</string>
+    <string name="profile_photo_url">URL de foto</string>
+    <string name="profile_pub_deleted">Publicación eliminada</string>
+    <string name="profile_delete_error">Error al eliminar</string>
+    <string name="profile_error_load_pubs">Error al cargar publicaciones</string>
+
+    <!-- Campos compartidos -->
+    <string name="field_title">Título</string>
+    <string name="field_description">Descripción</string>
+    <string name="field_category">Categoría</string>
+    <string name="field_price">Precio</string>
+    <string name="field_city">Ciudad</string>
+    <string name="field_neighborhood">Barrio</string>
+    <string name="field_name">Nombre</string>
+    <string name="hint_city">Córdoba</string>
+    <string name="hint_url">https://...</string>
+
+    <!-- Formulario de publicación -->
+    <string name="form_title_new">Nueva publicación</string>
+    <string name="form_title_edit">Editar publicación</string>
+    <string name="form_title_hint">Nombre de la planta</string>
+    <string name="form_description_hint">Describí tu publicación...</string>
+    <string name="form_cat_plant">Planta</string>
+    <string name="form_cat_seed">Semilla</string>
+    <string name="form_cat_cutting">Esqueje</string>
+    <string name="form_price_hint">0 = Gratis</string>
+    <string name="form_accepts_barter">Acepta trueque</string>
+    <string name="form_photo_label">Foto de la publicación</string>
+    <string name="form_neighborhood_hint">Nueva Córdoba</string>
+    <string name="form_title_required">Título requerido</string>
+    <string name="photo_select_title">Seleccionar foto</string>
+    <string name="photo_gallery">Galería</string>
+    <string name="photo_camera">Cámara</string>
+
+    <!-- Oferta -->
+    <string name="oferta_title">Hacer Oferta</string>
+    <string name="oferta_pub_info_preview">Publicación: Nombre • $1.500</string>
+    <string name="oferta_type_label">Tipo de Oferta</string>
+    <string name="oferta_money">💰 Dinero</string>
+    <string name="oferta_barter">🔄 Trueque</string>
+    <string name="oferta_both">💰🔄 Dinero + Trueque</string>
+    <string name="oferta_amount_label">Tu Oferta ($)</string>
+    <string name="oferta_amount_hint">Ej: 1200</string>
+    <string name="oferta_pub_price_preview">Precio de la publicación: $1.500</string>
+    <string name="oferta_barter_label">Qué ofrecés a cambio</string>
+    <string name="oferta_barter_hint">Ej: 5 esquejes de monstera + macetas</string>
+    <string name="oferta_message_label">Mensaje al vendedor (opcional)</string>
+    <string name="oferta_message_hint">Hola, me interesa tu publicación...</string>
+    <string name="oferta_send">Enviar Oferta</string>
+    <string name="oferta_pub_info">Publicación: %1$s • %2$s</string>
+    <string name="oferta_pub_price">Precio de la publicación: %1$s</string>
+    <string name="oferta_select_type">Seleccioná un tipo de oferta</string>
+    <string name="oferta_invalid_amount">Ingresá un monto válido</string>
+    <string name="oferta_amount_too_high">El monto no puede superar el precio de la publicación</string>
+    <string name="oferta_barter_required">Describí qué ofreces a cambio</string>
+    <string name="oferta_sent">Oferta enviada correctamente</string>
+
+    <!-- Viveros -->
+    <string name="viveros_title">Viveros cercanos</string>
+    <string name="viveros_search_hint">Buscar vivero o planta...</string>
+    <string name="viveros_map_placeholder">🗺️ Mapa próximamente</string>
+    <string name="viveros_count_label">Viveros encontrados cerca tuyo</string>
+    <string name="viveros_edit">Editar/Viveros</string>
+    <string name="vivero_form_title">Nuevo vivero</string>
+    <string name="vivero_name_hint">Nombre del vivero</string>
+    <string name="vivero_description_hint">Describí el vivero...</string>
+    <string name="vivero_address">Dirección</string>
+    <string name="vivero_address_hint">Av. siempre viva 123</string>
+    <string name="vivero_phone">Teléfono</string>
+    <string name="vivero_phone_hint">351 123 4567</string>
+    <string name="vivero_hours">Horario</string>
+    <string name="vivero_hours_hint">Lun-Vie 9:00-18:00</string>
+    <string name="vivero_specialties">Especialidades (separadas por coma)</string>
+    <string name="vivero_specialties_hint">Suculentas, Interior, Exterior</string>
+    <string name="vivero_image_url">URL de imagen</string>
+    <string name="vivero_save">Guardar vivero</string>
+    <string name="vivero_detail_soon">Detalle de %1$s - próximamente</string>
+    <string name="vivero_error_load">Error al cargar viveros</string>
+    <string name="vivero_count">%1$d viveros encontrados</string>
+    <string name="vivero_available">Disponible</string>
+    <string name="vivero_name_preview">Nombre vivero</string>
+    <string name="vivero_rating_preview">⭐ 4.7</string>
+    <string name="vivero_distance_preview">Barrio · 0.8 km</string>
+    <string name="vivero_hours_preview">Abierto · cierra 19:00</string>
+    <string name="banner_featured">Vivero destacado 🌿</string>
+    <string name="banner_barrio">Barrio</string>
+    <string name="banner_specialties_preview">Interior · Suculentas</string>
+
+    <!-- Items y edades de publicación -->
+    <string name="item_chat_title_preview">Título de la publicación</string>
+    <string name="item_chat_last_msg_preview">Último mensaje de la conversación...</string>
+    <string name="item_chat_badge_preview">3</string>
+    <string name="item_msg_preview">Mensaje de ejemplo</string>
+    <string name="item_pub_category_preview">Planta</string>
+    <string name="item_pub_name_preview">Nombre planta</string>
+    <string name="item_pub_location_preview">Barrio · Ciudad</string>
+    <string name="pub_age_preview">Publicado hace 2 días</string>
+    <string name="pub_age_now">Publicado hace segundos</string>
+    <string name="pub_age_min">Publicado hace %1$d min</string>
+    <string name="pub_age_hours">Publicado hace %1$d h</string>
+    <string name="pub_age_days">Publicado hace %1$d días</string>
+    <string name="pub_age_weeks">Publicado hace %1$d sem</string>
+    <!-- Cargas varias / Workers y notificaciones -->
+    <string name="cargas_title">Cargas varias</string>
+    <string name="cargas_subtitle">Agregá plantas o grupos nuevos</string>
+    <string name="cargas_plants_button">Cargar plantas</string>
+    <string name="cargas_groups_button">Cargar grupos</string>
+    <string name="notif_channel_watering">Riegos</string>
+    <string name="notif_channel_season">Cambio de Estación</string>
+    <string name="notif_watering_title">🌱 Hora de regar</string>
+    <string name="notif_watering_text">Tenés que regar %1$s</string>
+    <string name="notif_season_title">🌤 Cambio de estación detectado</string>
+    <string name="notif_season_text">Pasamos de %1$s a %2$s. Revisá ajustes para confirmar.</string>
 </resources>

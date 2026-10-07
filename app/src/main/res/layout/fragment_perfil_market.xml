@@ -52,7 +52,7 @@
                 android:id="@+id/tvNombreUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tu nombre"
+                android:text="@string/profile_name_placeholder"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"/>
@@ -61,7 +61,7 @@
                 android:id="@+id/tvEmailUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="tu@email.com"
+                android:text="@string/profile_email_placeholder"
                 android:textSize="13sp"
                 android:textColor="#B8D4BC"
                 android:layout_marginTop="4dp"/>
@@ -103,7 +103,7 @@
                             android:id="@+id/tvTotalPublicaciones"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/profile_count_preview"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="#1A3A1F"/>
@@ -111,7 +111,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Publicaciones"
+                            android:text="@string/profile_label_publications"
                             android:textSize="11sp"
                             android:textColor="#888888"/>
 
@@ -140,7 +140,7 @@
                             android:id="@+id/tvCalificacion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="—"
+                            android:text="@string/profile_rating_dash"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:textColor="#1A3A1F"/>
@@ -148,7 +148,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Calificación"
+                            android:text="@string/profile_label_rating"
                             android:textSize="11sp"
                             android:textColor="#888888"/>
 
@@ -161,7 +161,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mis publicaciones"
+                android:text="@string/profile_my_publications"
                 android:textSize="13sp"
                 android:textColor="#888888"
                 android:layout_marginBottom="10dp"/>
@@ -179,7 +179,7 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:text="Cerrar sesión"
+                android:text="@string/profile_logout"
                 android:textColor="#E53935"
                 app:strokeColor="#FFCDD2"
                 app:cornerRadius="12dp"
@@ -191,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="5dp"
-                android:text="Editar"
+                android:text="@string/common_edit"
                 android:textSize="14sp"
                 android:textColor="#FFFFFF"
                 app:backgroundTint="#3A7D44"

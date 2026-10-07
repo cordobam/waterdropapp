@@ -100,7 +100,7 @@ class AjustesFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun detectarAhora() {
         binding.btnDetectarAhora.isEnabled = false
-        binding.btnDetectarAhora.text = "Detectando..."
+        binding.btnDetectarAhora.text = getString(R.string.ajustes_detecting)
 
         lifecycleScope.launch(Dispatchers.IO) {
             val config = seasonRepository.getConfig()
@@ -112,24 +112,26 @@ class AjustesFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
                 binding.btnDetectarAhora.isEnabled = true
-                binding.btnDetectarAhora.text = "Detectar ahora"
+                binding.btnDetectarAhora.text = getString(R.string.ajustes_detect_now)
 
                 if (success) {
                     when (result) {
                         is SeasonChangeResult.Changed -> {
-                            val msg = "Cambio detectado: ${result.from?.name ?: "desconocida"} → ${result.to.name}"
+                            val fromStr = result.from?.let { getString(seasonRes(it)) }
+                                ?: getString(R.string.ajustes_unknown_season)
+                            val msg = getString(R.string.ajustes_season_change, fromStr, getString(seasonRes(result.to)))
                             Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
                             updateInfoDisplay(result.to)
                         }
                         SeasonChangeResult.NoChange -> {
                             val config = seasonRepository.getConfig()
                             val currentSeason = seasonRepository.calculateAutoSeasonForDisplay(config.ciudad)
-                            Snackbar.make(binding.root, "Sin cambios. Estación actual: ${currentSeason.name}", Snackbar.LENGTH_LONG).show()
+                            Snackbar.make(binding.root, getString(R.string.ajustes_no_change, getString(seasonRes(currentSeason))), Snackbar.LENGTH_LONG).show()
                             updateInfoDisplay(currentSeason)
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Error al obtener datos climáticos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.ajustes_weather_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -139,22 +141,22 @@ class AjustesFragment : Fragment() {
         val config = seasonRepository.getConfig()
         if (modo == SeasonMode.MANUAL) {
             config.estacionManual?.let { estacion ->
-                binding.tvEstacionActual.text = "Estación actual (manual): ${estacion.name}"
+                binding.tvEstacionActual.text = getString(R.string.ajustes_current_manual, getString(seasonRes(estacion)))
             } ?: run {
-                binding.tvEstacionActual.text = "Estación actual (manual): --"
+                binding.tvEstacionActual.text = getString(R.string.ajustes_current_manual, "--")
             }
-            binding.tvUltimaDeteccion.text = "Modo manual - sin detección automática"
+            binding.tvUltimaDeteccion.text = getString(R.string.ajustes_mode_manual)
         } else {
-            binding.tvUltimaDeteccion.text = "Modo automático - usa últimos 15 días"
+            binding.tvUltimaDeteccion.text = getString(R.string.ajustes_mode_auto)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateInfoDisplay(season: Estacion) {
-        binding.tvEstacionActual.text = "Estación detectada: ${season.name}"
+        binding.tvEstacionActual.text = getString(R.string.ajustes_season_detected, getString(seasonRes(season)))
         val config = seasonRepository.getConfig()
         if (config.modo == SeasonMode.AUTO) {
-            binding.tvUltimaDeteccion.text = "Última detección: ${season.name}"
+            binding.tvUltimaDeteccion.text = getString(R.string.ajustes_last_detection, getString(seasonRes(season)))
         }
     }
 
@@ -162,7 +164,7 @@ class AjustesFragment : Fragment() {
     private fun guardarConfig() {
         val ciudad = binding.etCiudad.text.toString().trim()
         if (ciudad.isEmpty()) {
-            Toast.makeText(requireContext(), "Ingresa una ciudad", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.ajustes_enter_city), Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -211,10 +213,17 @@ class AjustesFragment : Fragment() {
             updateInfoDisplay(modo)
         }
 
-        Toast.makeText(requireContext(), "Configuración guardada", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.ajustes_config_saved), Toast.LENGTH_SHORT).show()
 
         // Actualizar badge en MainActivity
         (activity as? MainActivity)?.updateAjustesBadge()
+    }
+
+    private fun seasonRes(estacion: Estacion): Int = when (estacion) {
+        Estacion.PRIMAVERA -> R.string.season_primavera
+        Estacion.VERANO -> R.string.season_verano
+        Estacion.OTONO -> R.string.season_otono
+        Estacion.INVIERNO -> R.string.season_invierno
     }
 
     override fun onDestroyView() {

@@ -73,7 +73,7 @@ class AdapterViveros(
                 layoutEspecialidades.addView(chip)
             }
 
-            tvEstado.text = vivero.horario.ifEmpty { "Disponible" }
+            tvEstado.text = vivero.horario.ifEmpty { itemView.context.getString(R.string.vivero_available) }
 
             if (vivero.imagenUrl.isNotEmpty()) {
                 Glide.with(itemView.context)

@@ -43,14 +43,14 @@
                 android:id="@+id/tvNombreGrupo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Grupo"
+                android:text="@string/grupos_preview_name"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="#1A3A1F"/>
 
             <TextView
                 android:id="@+id/tvCantPlantas"
-                android:text="Cant de plantas: 0"
+                android:text="@string/grupos_preview_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

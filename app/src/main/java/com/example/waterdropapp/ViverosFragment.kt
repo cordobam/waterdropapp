@@ -32,7 +32,7 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
         val rv = view.findViewById<RecyclerView>(R.id.rvViveros)
 
         adapter = AdapterViveros { vivero ->
-            Toast.makeText(requireContext(), "Detalle de ${vivero.nombre} - pr\u00f3ximamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.vivero_detail_soon, vivero.nombre), Toast.LENGTH_SHORT).show()
         }
 
         rv.layoutManager = LinearLayoutManager(requireContext())
@@ -71,7 +71,7 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
                 aplicarFiltros(tvCantidad)
             },
             onError = {
-                Toast.makeText(requireContext(), "Error al cargar viveros", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.vivero_error_load), Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -88,6 +88,6 @@ class ViverosFragment : Fragment(R.layout.fragment_viveros) {
         }
 
         adapter.submitList(lista)
-        tvCantidad.text = "${lista.size} viveros encontrados"
+        tvCantidad.text = getString(R.string.vivero_count, lista.size)
     }
 }

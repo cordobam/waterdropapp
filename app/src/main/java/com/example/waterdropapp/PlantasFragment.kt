@@ -143,7 +143,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                     actividadRepo.putRiegoPorGrupo(grupoId, fechaHoy)
                     withContext(Dispatchers.Main) {
                         cargarGrupos()
-                        Toast.makeText(requireContext(), "Grupo regado", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.plantas_toast_group_watered), Toast.LENGTH_SHORT).show()
                     }
                 }
             },
@@ -324,9 +324,9 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar Planta")
+            .setTitle(getString(R.string.plantas_edit_plant_title))
             .setView(dialogView)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
                 // seleccion de spinner
                 val posicion = spGrupos.selectedItemPosition
@@ -342,10 +342,10 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
 
                 plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 recargarConFiltro()
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -353,17 +353,17 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
         val input = EditText(requireContext())
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Editar grupo")
+            .setTitle(getString(R.string.plantas_edit_group_title))
             .setView(input)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
 
 
                 val nombre = input.text.toString()
                 grupoRepo.actualizarGrupos(id, nombre)
-                Toast.makeText(requireContext(), "Cambios guardados", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
                 gruposAdapter.submitList(grupoRepo.getEstadosGrupos())
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
     }
 
@@ -382,8 +382,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 withContext(Dispatchers.Main) {
                     plantasAdapter.submitList(listaActualizada)
 
-                    Snackbar.make(snackbarView, "Planta eliminada", Snackbar.LENGTH_LONG)
-                        .setAction("Deshacer") {
+                    Snackbar.make(snackbarView, getString(R.string.common_plant_deleted), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.common_undo)) {
                             CoroutineScope(Dispatchers.IO).launch {
                                 plantaRepo.softDeletePlanta(id, true)
                                 val listaReactivada = plantaRepo.obtenerEstadoPlantasXRiego(filtroActual)
@@ -397,7 +397,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             }
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -414,8 +414,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
             gruposAdapter.submitList(listaActualizada)
 
-            Snackbar.make(snackbarView, "Grupo eliminado", Snackbar.LENGTH_LONG)
-                .setAction("Deshacer") {
+            Snackbar.make(snackbarView, getString(R.string.common_group_deleted), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.common_undo)) {
 
                     grupoRepo.softDeleteGrupo(id , true)
                     val listaReactivada = grupoRepo.getEstadosGrupos()
@@ -424,7 +424,7 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 .show()
 
         } else {
-            Toast.makeText(requireContext(), "No se pudo eliminar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.common_delete_failed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -465,16 +465,12 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmarActividad(plantaId: Int, tipo: TipoActividad) {
-        val verbo = when (tipo) {
-            TipoActividad.RIEGO -> "regar"
-            TipoActividad.ABONADO -> "abonar"
-            TipoActividad.PODADO -> "podar"
-        }
+        val verbo = getString(verboRes(tipo))
 
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Confirmar ${tipo.etiqueta}")
-            .setMessage("¿Estás seguro de que querés $verbo esta planta?")
-            .setPositiveButton("Sí") { _, _ ->
+            .setTitle(getString(R.string.plantas_confirm_title, getString(tipoRes(tipo))))
+            .setMessage(getString(R.string.plantas_confirm_message, verbo))
+            .setPositiveButton(getString(R.string.common_yes)) { _, _ ->
                 CoroutineScope(Dispatchers.IO).launch {
                     actividadRepo.putActividad(plantaId, tipo, fechaHoy)
                     withContext(Dispatchers.Main) {
@@ -487,15 +483,27 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                     }
                 }
             }
-            .setNegativeButton("Cancelar", null)
+            .setNegativeButton(getString(R.string.common_cancel), null)
             .show()
+    }
+
+    private fun verboRes(tipo: TipoActividad): Int = when (tipo) {
+        TipoActividad.RIEGO -> R.string.verb_water
+        TipoActividad.ABONADO -> R.string.verb_fertilize
+        TipoActividad.PODADO -> R.string.verb_prune
+    }
+
+    private fun tipoRes(tipo: TipoActividad): Int = when (tipo) {
+        TipoActividad.RIEGO -> R.string.tipo_riego
+        TipoActividad.ABONADO -> R.string.tipo_abonado
+        TipoActividad.PODADO -> R.string.tipo_podado
     }
 
     private fun mensajeRegistrado(tipo: TipoActividad): String {
         return when (tipo) {
-            TipoActividad.RIEGO -> "Planta regada con éxito"
-            TipoActividad.ABONADO -> "Planta abonada con éxito"
-            TipoActividad.PODADO -> "Planta podada con éxito"
+            TipoActividad.RIEGO -> getString(R.string.plantas_msg_watered_done)
+            TipoActividad.ABONADO -> getString(R.string.plantas_msg_fertilized_done)
+            TipoActividad.PODADO -> getString(R.string.plantas_msg_pruned_done)
         }
     }
 }

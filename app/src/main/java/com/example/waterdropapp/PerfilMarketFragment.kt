@@ -31,7 +31,7 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
 
         val user = FirebaseAuth.getInstance().currentUser
 
-        view.findViewById<TextView>(R.id.tvNombreUsuario).text = user?.displayName ?: "Usuario"
+        view.findViewById<TextView>(R.id.tvNombreUsuario).text = user?.displayName ?: getString(R.string.common_user)
         view.findViewById<TextView>(R.id.tvEmailUsuario).text = user?.email ?: ""
 
         if (user?.photoUrl != null) {
@@ -52,11 +52,11 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
                 repository.deletePublicacion(
                     id = publicacion.id,
                     onSuccess = {
-                        Toast.makeText(requireContext(), "Publicaci\u00f3n eliminada", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.profile_pub_deleted), Toast.LENGTH_SHORT).show()
                         cargarMisPublicaciones(view)
                     },
                     onError = {
-                        Toast.makeText(requireContext(), "Error al eliminar", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.profile_delete_error), Toast.LENGTH_SHORT).show()
                     }
                 )
             }
@@ -122,7 +122,7 @@ class PerfilMarketFragment : Fragment(R.layout.fragment_perfil_market) {
                 view.findViewById<TextView>(R.id.tvTotalPublicaciones).text = "${lista.size}"
             },
             onError = {
-                Toast.makeText(requireContext(), "Error al cargar publicaciones", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.profile_error_load_pubs), Toast.LENGTH_SHORT).show()
             }
         )
     }

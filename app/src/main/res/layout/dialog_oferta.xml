@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hacer Oferta"
+            android:text="@string/oferta_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -23,7 +23,7 @@
             android:id="@+id/tvPublicacionInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Publicación: Nombre • $1.500"
+            android:text="@string/oferta_pub_info_preview"
             android:textSize="13sp"
             android:textColor="#666666"
             android:layout_marginBottom="20dp"/>
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tipo de Oferta"
+            android:text="@string/oferta_type_label"
             android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -49,7 +49,7 @@
                 android:id="@+id/rbDinero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💰 Dinero"
+                android:text="@string/oferta_money"
                 android:textSize="14sp"
                 android:textColor="#333333"/>
 
@@ -57,7 +57,7 @@
                 android:id="@+id/rbTrueque"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔄 Trueque"
+                android:text="@string/oferta_barter"
                 android:textSize="14sp"
                 android:textColor="#333333"/>
 
@@ -65,7 +65,7 @@
                 android:id="@+id/rbDineroTrueque"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💰🔄 Dinero + Trueque"
+                android:text="@string/oferta_both"
                 android:textSize="14sp"
                 android:textColor="#333333"/>
 
@@ -83,7 +83,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tu Oferta ($)"
+                android:text="@string/oferta_amount_label"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="#1A3A1F"
@@ -93,7 +93,7 @@
                 android:id="@+id/etMonto"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Ej: 1200"
+                android:hint="@string/oferta_amount_hint"
                 android:textSize="14sp"
                 android:inputType="numberDecimal"
                 android:background="@drawable/border_top_gray"
@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Precio de la publicación: $1.500"
+                android:text="@string/oferta_pub_price_preview"
                 android:textSize="11sp"
                 android:textColor="#666666"/>
 
@@ -122,7 +122,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Qué ofreces a cambio"
+                android:text="@string/oferta_barter_label"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="#1A3A1F"
@@ -132,7 +132,7 @@
                 android:id="@+id/etDescripcionTrueque"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ej: 5 esquejes de monstera + macetas"
+                android:hint="@string/oferta_barter_hint"
                 android:textSize="14sp"
                 android:minLines="3"
                 android:gravity="top"
@@ -146,7 +146,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mensaje al vendedor (opcional)"
+            android:text="@string/oferta_message_label"
             android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -156,7 +156,7 @@
             android:id="@+id/etMensaje"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Hola, me interesa tu publicación..."
+            android:hint="@string/oferta_message_hint"
             android:textSize="14sp"
             android:minLines="2"
             android:gravity="top"
@@ -178,7 +178,7 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:text="Cancelar"
+                android:text="@string/common_cancel"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:textColor="#E53935"
                 app:strokeColor="#E53935"/>
@@ -189,7 +189,7 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Enviar Oferta"
+                android:text="@string/oferta_send"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#3A7D44"/>
 

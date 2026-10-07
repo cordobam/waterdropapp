@@ -66,7 +66,7 @@ class PublicacionDetalleBottomSheet(
         binding.findViewById<TextView>(R.id.tvCategoriaDetalle).text = publicacion.categoria.uppercase()
         binding.findViewById<TextView>(R.id.tvNombreDetalle).text = publicacion.titulo
 
-        val precio = if (publicacion.precio == 0.0) "Gratis" else "$${publicacion.precio.toInt()}"
+        val precio = if (publicacion.precio == 0.0) getString(R.string.common_free) else "$${publicacion.precio.toInt()}"
         binding.findViewById<TextView>(R.id.tvPrecioDetalle).text = precio
 
         val tvTrueque = binding.findViewById<TextView>(R.id.tvTruequeDetalle)
@@ -86,7 +86,7 @@ class PublicacionDetalleBottomSheet(
 
         // Trueque
         val tvTrueque_ = binding.findViewById<TextView>(R.id.tvTruequeDetalle)
-        tvTrueque_.text = if (publicacion.aceptaTrueque) "🔄 Acepta trueque" else ""
+        tvTrueque_.text = if (publicacion.aceptaTrueque) getString(R.string.publicacion_accepts_barter) else ""
         tvTrueque_.visibility = if (publicacion.aceptaTrueque) View.VISIBLE else View.GONE
 
         // Botones

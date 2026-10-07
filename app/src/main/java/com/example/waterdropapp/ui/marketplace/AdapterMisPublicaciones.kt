@@ -46,18 +46,19 @@ class AdapterMisPublicaciones(
         fun bind(publicacion: Publicacion) {
             tvNombre.text = publicacion.titulo
 
-            tvPrecio.text = if (publicacion.precio == 0.0) "Gratis"
+            tvPrecio.text = if (publicacion.precio == 0.0) itemView.context.getString(R.string.common_free)
             else "$${publicacion.precio.toInt()}"
 
             if (publicacion.fechaPublicacion > 0L) {
                 val ahora = System.currentTimeMillis()
                 val diff = ahora - publicacion.fechaPublicacion
+                val ctx = itemView.context
                 val texto = when {
-                    diff < 60_000 -> "Publicado hace segundos"
-                    diff < 3_600_000 -> "Publicado hace ${diff / 60_000} min"
-                    diff < 86_400_000 -> "Publicado hace ${diff / 3_600_000} h"
-                    diff < 604_800_000 -> "Publicado hace ${diff / 86_400_000} d\u00edas"
-                    else -> "Publicado hace ${diff / 604_800_000} sem"
+                    diff < 60_000 -> ctx.getString(R.string.pub_age_now)
+                    diff < 3_600_000 -> ctx.getString(R.string.pub_age_min, diff / 60_000)
+                    diff < 86_400_000 -> ctx.getString(R.string.pub_age_hours, diff / 3_600_000)
+                    diff < 604_800_000 -> ctx.getString(R.string.pub_age_days, diff / 86_400_000)
+                    else -> ctx.getString(R.string.pub_age_weeks, diff / 604_800_000)
                 }
                 tvFecha.text = texto
             } else {

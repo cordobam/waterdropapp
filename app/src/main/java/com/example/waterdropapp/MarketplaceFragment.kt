@@ -159,7 +159,7 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
                 aplicarFiltros(tvCercaTuyo)
             },
             onError = {
-                Toast.makeText(requireContext(), "Error al cargar", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.market_error_load), Toast.LENGTH_SHORT).show()
             }
         )
 
@@ -188,6 +188,6 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
         }
 
         adapter.submitList(lista)
-        tvCercaTuyo.text = "Cerca tuyo · ${lista.size} publicaciones"
+        tvCercaTuyo.text = getString(R.string.market_nearby_count, lista.size)
     }
 }

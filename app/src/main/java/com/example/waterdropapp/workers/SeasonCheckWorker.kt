@@ -14,6 +14,7 @@ import com.example.waterdropapp.data.local.prefs.SeasonPrefs
 import com.example.waterdropapp.data.repository.SeasonRepository
 import com.example.waterdropapp.data.repository.SeasonChangeResult
 import com.example.waterdropapp.data.repository.WeatherRepository
+import com.example.waterdropapp.domain.model.Estacion
 import com.example.waterdropapp.domain.model.SeasonMode
 
 class SeasonCheckWorker(
@@ -68,21 +69,35 @@ class SeasonCheckWorker(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Cambio de Estación",
+                applicationContext.getString(R.string.notif_channel_season),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             manager.createNotificationChannel(channel)
         }
 
-        val fromText = from?.name ?: "desconocida"
+        val fromText = from?.let { applicationContext.getString(seasonRes(it)) }
+            ?: applicationContext.getString(R.string.ajustes_unknown_season)
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_planta)
-            .setContentTitle("🌤 Cambio de estación detectado")
-            .setContentText("Pasamos de $fromText a ${to.name}. Revisa ajustes para confirmar.")
+            .setContentTitle(applicationContext.getString(R.string.notif_season_title))
+            .setContentText(
+                applicationContext.getString(
+                    R.string.notif_season_text,
+                    fromText,
+                    applicationContext.getString(seasonRes(to))
+                )
+            )
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
         manager.notify("estacion_change".hashCode(), notification)
+    }
+
+    private fun seasonRes(estacion: Estacion): Int = when (estacion) {
+        Estacion.PRIMAVERA -> R.string.season_primavera
+        Estacion.VERANO -> R.string.season_verano
+        Estacion.OTONO -> R.string.season_otono
+        Estacion.INVIERNO -> R.string.season_invierno
     }
 }

@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Editar perfil"
+            android:text="@string/profile_edit_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#1A3A1F"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre"
+            android:text="@string/field_name"
             android:textSize="13sp"
             android:textColor="#4E6E50"
             android:layout_marginTop="12dp" />
@@ -51,7 +51,7 @@
             android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Tu nombre"
+            android:hint="@string/profile_name_hint"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp" />
@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="URL de foto"
+            android:text="@string/profile_photo_url"
             android:textSize="13sp"
             android:textColor="#4E6E50"
             android:layout_marginTop="12dp" />
@@ -68,7 +68,7 @@
             android:id="@+id/etFotoUrl"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="https://..."
+            android:hint="@string/hint_url"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp" />
@@ -76,7 +76,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ciudad"
+            android:text="@string/field_city"
             android:textSize="13sp"
             android:textColor="#4E6E50"
             android:layout_marginTop="12dp" />
@@ -85,7 +85,7 @@
             android:id="@+id/etCiudad"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Córdoba"
+            android:hint="@string/hint_city"
             android:textSize="14sp"
             android:background="@drawable/border_top_gray"
             android:paddingStart="8dp" />
@@ -94,7 +94,7 @@
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Guardar cambios"
+            android:text="@string/common_save_changes"
             android:backgroundTint="#3A7D44"
             android:textColor="#FFFFFF"
             android:layout_marginTop="24dp" />
@@ -103,7 +103,7 @@
             android:id="@+id/btnCancelar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:text="Cancelar"
+            android:text="@string/common_cancel"
             style="@style/Widget.Material3.Button.OutlinedButton"
             android:textColor="#3A7D44"
             app:strokeColor="#C8DFC0"

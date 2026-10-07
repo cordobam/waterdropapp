@@ -48,7 +48,7 @@ class RiegoWorker(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Riegos",
+                applicationContext.getString(R.string.notif_channel_watering),
                 NotificationManager.IMPORTANCE_HIGH
             )
             manager.createNotificationChannel(channel)
@@ -56,8 +56,8 @@ class RiegoWorker(
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_planta)
-            .setContentTitle("🌱 Hora de regar")
-            .setContentText("Tenés que regar $nombrePlanta")
+            .setContentTitle(applicationContext.getString(R.string.notif_watering_title))
+            .setContentText(applicationContext.getString(R.string.notif_watering_text, nombrePlanta))
             .setAutoCancel(true)
             .build()
 
