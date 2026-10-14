@@ -15,7 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class PlantasBottomSheet(
     private val listaPlantas: List<EstadoPlantasDTO>, // Tipo correcto
     private val onEditar: (Int) -> Unit,
-    private val onEliminar: (Int, View) -> Unit
+    private val onEliminar: (Int, View) -> Unit,
+    private val mostrarBuscador: Boolean = true
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -41,9 +42,13 @@ class PlantasBottomSheet(
         adapter.submitList(listaPlantas)
 
         // Lógica de búsqueda
-        etBuscar.addTextChangedListener { text ->
-            val filtrados = listaPlantas.filter { it.nombre.lowercase().contains(text.toString().lowercase()) }
-            adapter.submitList(filtrados)
+        if (mostrarBuscador) {
+            etBuscar.addTextChangedListener { text ->
+                val filtrados = listaPlantas.filter { it.nombre.lowercase().contains(text.toString().lowercase()) }
+                adapter.submitList(filtrados)
+            }
+        } else {
+            (etBuscar.parent as? View)?.visibility = View.GONE
         }
 
         return view

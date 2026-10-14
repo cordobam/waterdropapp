@@ -161,6 +161,7 @@
     <string name="season_invierno">Invierno</string>
 
     <!-- Ajustes -->
+    <string name="ajustes_header_title">Ajustes</string>
     <string name="ajustes_section_mode">Modo de detección de estación</string>
     <string name="ajustes_mode_help">Automático: usa temperaturas de los últimos 15 días. Manual: elegís la estación.</string>
     <string name="ajustes_auto_detection">Detección automática</string>
@@ -206,6 +207,7 @@
 
     <!-- Marketplace: pantalla principal -->
     <string name="market_subtitle">Explorá y comprá</string>
+    <string name="market_exit_desc">Salir del marketplace</string>
     <string name="market_search_hint">Buscar plantas, semillas...</string>
     <string name="market_filter_all">Todos</string>
     <string name="market_filter_plants">Plantas</string>

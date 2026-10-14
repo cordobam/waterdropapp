@@ -125,7 +125,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                         val sheet = PlantasBottomSheet(
                             listaPlantas = if(estado != null) listOf(estado) else emptyList(),
                             onEditar = {id -> editarPlantas(id)},
-                            onEliminar = {id , view -> eliminarPlantas(id, view) }
+                            onEliminar = {id , view -> eliminarPlantas(id, view) },
+                            mostrarBuscador = false
                         )
                         sheet.show(parentFragmentManager, "EditarPlantaSheet")
                     }
@@ -156,7 +157,8 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
                 val sheet = GruposBottomSheet(
                     listaGrupos = if(estado != null) listOf(estado) else emptyList(),
                     onEditar = {id -> editarGrupo(id)},
-                    onEliminar = {id , view -> eliminarGrupo(id, view) }
+                    onEliminar = {id , view -> eliminarGrupo(id, view) },
+                    mostrarBuscador = false
                 )
                 sheet.show(parentFragmentManager, "EditarPlantaSheet")
             }

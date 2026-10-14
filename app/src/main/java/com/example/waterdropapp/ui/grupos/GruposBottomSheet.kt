@@ -15,7 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class GruposBottomSheet(
     private val listaGrupos: List<EstadoGruposDTO>, // Tipo correcto
     private val onEditar: (Int) -> Unit,
-    private val onEliminar: (Int, View) -> Unit
+    private val onEliminar: (Int, View) -> Unit,
+    private val mostrarBuscador: Boolean = true
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -41,9 +42,13 @@ class GruposBottomSheet(
         adapter.submitList(listaGrupos)
 
         // Lógica de búsqueda
-        etBuscar.addTextChangedListener { text ->
-            val filtrados = listaGrupos.filter { it.nombreGrupo.lowercase().contains(text.toString().lowercase()) }
-            adapter.submitList(filtrados)
+        if (mostrarBuscador) {
+            etBuscar.addTextChangedListener { text ->
+                val filtrados = listaGrupos.filter { it.nombreGrupo.lowercase().contains(text.toString().lowercase()) }
+                adapter.submitList(filtrados)
+            }
+        } else {
+            (etBuscar.parent as? View)?.visibility = View.GONE
         }
 
         return view

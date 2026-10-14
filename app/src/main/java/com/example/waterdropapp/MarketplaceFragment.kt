@@ -39,6 +39,10 @@ class MarketplaceFragment : Fragment(R.layout.fragment_marketplace) {
 
         safeContext = requireContext()
 
+        view.findViewById<android.widget.ImageButton>(R.id.btnSalirMarketplace).setOnClickListener {
+            requireActivity().finish()
+        }
+
         val chipTodos = view.findViewById<Chip>(R.id.chipTodos)
         val chipPlantas = view.findViewById<Chip>(R.id.chipPlantas)
         val chipSemillas = view.findViewById<Chip>(R.id.chipSemillas)
