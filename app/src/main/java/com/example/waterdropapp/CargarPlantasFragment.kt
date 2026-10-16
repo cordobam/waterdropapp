@@ -16,12 +16,12 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.plantas.AdapterPlantas
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import com.example.waterdropapp.ui.plantas.PlantasBottomSheet
 import com.google.android.material.snackbar.Snackbar
@@ -212,35 +212,39 @@ class CargarPlantasFragment : Fragment(R.layout.fragment_cargar_plantas) {
             spGrupos.setSelection(posicionGrupoActual)
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.plantas_edit_plant_title))
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
+            .create()
 
-                // seleccion de spinner
-                val posicion = spGrupos.selectedItemPosition
+        dialogView.findViewById<Button>(R.id.btnGuardar).setOnClickListener {
 
-                val grupoSeleccionado = grupos[posicion]
-                val codigoGrupo = grupoSeleccionado.grupo_id
+            // seleccion de spinner
+            val posicion = spGrupos.selectedItemPosition
 
-                val nombre = etNombre.text.toString()
-                val diasInt = etDias.text.toString().toIntOrNull() ?: 0
-                val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
+            val grupoSeleccionado = grupos[posicion]
+            val codigoGrupo = grupoSeleccionado.grupo_id
 
-                // insert gruposplantas
-                val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
+            val nombre = etNombre.text.toString()
+            val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+            val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
 
-                plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                    val lista = plantaRepo.obtenerEstadoPlantas()
-                    withContext(Dispatchers.Main) {
-                        plantasAdapterAct.submitList(lista)
-                    }
+            // insert gruposplantas
+            val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
+
+            plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
+            Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val lista = plantaRepo.obtenerEstadoPlantas()
+                withContext(Dispatchers.Main) {
+                    plantasAdapterAct.submitList(lista)
                 }
             }
-            .setNegativeButton(getString(R.string.common_cancel), null)
-            .show()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<Button>(R.id.btnCancelar).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
