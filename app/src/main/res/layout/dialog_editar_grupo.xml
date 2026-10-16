@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/plantas_edit_group_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#1A3A1F"
+            android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/grupos_name_hint"
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxStrokeColor="#C8DFC0"
+            app:hintTextColor="#3A7D44"
+            app:startIconDrawable="@drawable/ic_grupo"
+            app:startIconTint="#3A7D44">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombreGrupoEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- BOTONES -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginTop="24dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelarGrupo"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="@string/common_cancel"
+                android:textColor="#E53935"
+                app:strokeColor="#E53935"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardarGrupo"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="@string/common_save"
+                android:textColor="#FFFFFF"
+                app:cornerRadius="14dp"
+                android:backgroundTint="#3A7D44"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

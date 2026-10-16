@@ -6,10 +6,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.example.waterdropapp.data.local.model.DBHelper
 import com.example.waterdropapp.ui.grupos.AdapterGrupos
 import com.example.waterdropapp.ui.grupos.GruposBottomSheet
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.example.waterdropapp.data.repository.GrupoRepository
 
@@ -53,21 +53,26 @@ class CargarGrupoFragment : Fragment(R.layout.fragment_cargar_grupo) {
     }
 
     fun editarGrupo(id:Int) {
-        val input = EditText(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_grupo, null)
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.plantas_edit_group_title))
-            .setView(input)
-            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
+        val etNombreGrupo = dialogView.findViewById<EditText>(R.id.etNombreGrupoEdit)
+        etNombreGrupo.setText(db.getGrupos().firstOrNull { it.grupo_id == id }?.nombre.orEmpty())
 
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .create()
 
-                val nombre = input.text.toString()
-                db.actualizarGrupos(id, nombre)
-                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
-                gruposAdapterAct.submitList(db.getEstadosGrupos())
-            }
-            .setNegativeButton(getString(R.string.common_cancel), null)
-            .show()
+        dialogView.findViewById<Button>(R.id.btnGuardarGrupo).setOnClickListener {
+            val nombre = etNombreGrupo.text.toString()
+            db.actualizarGrupos(id, nombre)
+            Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
+            gruposAdapterAct.submitList(db.getEstadosGrupos())
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<Button>(R.id.btnCancelarGrupo).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
     private fun eliminarGrupo(id: Int , view: View? = null) {

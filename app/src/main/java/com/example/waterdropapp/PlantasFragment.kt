@@ -17,7 +17,6 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -329,48 +328,57 @@ class PlantasFragment : Fragment(R.layout.fragment_plantas) {
             spGrupos.setSelection(posicionGrupoActual)
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.plantas_edit_plant_title))
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
-            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
+            .create()
 
-                // seleccion de spinner
-                val posicion = spGrupos.selectedItemPosition
+        dialogView.findViewById<Button>(R.id.btnGuardar).setOnClickListener {
 
-                val grupoSeleccionado = grupos[posicion]
-                val codigoGrupo = grupoSeleccionado.grupo_id
+            // seleccion de spinner
+            val posicion = spGrupos.selectedItemPosition
 
-                val nombre = etNombre.text.toString()
-                val diasInt = etDias.text.toString().toIntOrNull() ?: 0
-                val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
+            val grupoSeleccionado = grupos[posicion]
+            val codigoGrupo = grupoSeleccionado.grupo_id
 
-                // insert gruposplantas
-                val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
+            val nombre = etNombre.text.toString()
+            val diasInt = etDias.text.toString().toIntOrNull() ?: 0
+            val diasInt_inv = etDiasInv.text.toString().toIntOrNull() ?: 0
 
-                plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
-                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
-                recargarConFiltro()
-            }
-            .setNegativeButton(getString(R.string.common_cancel), null)
-            .show()
+            // insert gruposplantas
+            val grupo_plantas = grupoRepo.actualizarGrupoPlanta(id,codigoGrupo)
+
+            plantaRepo.actualizarPlantas(id, nombre, diasInt, imagenNuevaPath,diasInt_inv  )
+            Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
+            recargarConFiltro()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<Button>(R.id.btnCancelar).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
     fun editarGrupo(id:Int) {
-        val input = EditText(requireContext())
+        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_grupo, null)
 
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.plantas_edit_group_title))
-            .setView(input)
-            .setPositiveButton(getString(R.string.common_save)) { _, _ ->
+        val etNombreGrupo = dialogView.findViewById<EditText>(R.id.etNombreGrupoEdit)
+        etNombreGrupo.setText(grupoRepo.getGrupos().firstOrNull { it.grupo_id == id }?.nombre.orEmpty())
 
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .create()
 
-                val nombre = input.text.toString()
-                grupoRepo.actualizarGrupos(id, nombre)
-                Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
-                gruposAdapter.submitList(grupoRepo.getEstadosGrupos())
-            }
-            .setNegativeButton(getString(R.string.common_cancel), null)
-            .show()
+        dialogView.findViewById<Button>(R.id.btnGuardarGrupo).setOnClickListener {
+            val nombre = etNombreGrupo.text.toString()
+            grupoRepo.actualizarGrupos(id, nombre)
+            Toast.makeText(requireContext(), getString(R.string.common_saved), Toast.LENGTH_SHORT).show()
+            gruposAdapter.submitList(grupoRepo.getEstadosGrupos())
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<Button>(R.id.btnCancelarGrupo).setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
